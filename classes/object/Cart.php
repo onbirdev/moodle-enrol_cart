@@ -210,9 +210,15 @@ class Cart extends BaseCart
     }
 
     /**
-     * Return an array of user carts.
-     * @param int $userId
-     * @return array
+     * Retrieves an array of carts for a specific user, paginated by page number and limit.
+     *
+     * This method queries the database to get a list of user carts and paginates the results
+     * based on the given page number and limit per page.
+     *
+     * @param int $userId The ID of the user whose carts are being retrieved.
+     * @param int $page The current page number for pagination (starting from 0).
+     * @param int $limit The number of records to return per page.
+     * @return array An array of user carts. If no carts are found, returns an empty array.
      */
     public static function findAllByUserId(int $userId, int $page, int $limit): array
     {
@@ -235,13 +241,18 @@ class Cart extends BaseCart
     }
 
     /**
-     * Return count of the user carts.
-     * @param int $userId
-     * @return int
+     * Returns the total count of carts for a specific user.
+     *
+     * This method counts the number of cart records in the database for a given user.
+     *
+     * @param int $userId The ID of the user whose cart count is being retrieved.
+     * @return int The total number of carts associated with the user.
      */
     public static function countAllByUserId(int $userId): int
     {
         global $DB;
+
+        // Return the count of cart records associated with the user.
         return $DB->count_records('enrol_cart', [
             'user_id' => $userId,
         ]);

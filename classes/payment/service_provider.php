@@ -24,7 +24,10 @@ use moodle_url;
 class service_provider implements \core_payment\local\callback\service_provider
 {
     /**
-     * @inheritdoc
+     * @inheritDoc
+     * @param string $paymentArea Payment area
+     * @param int $itemId An identifier that is known to the plugin
+     * @return payable
      */
     public static function get_payable(string $paymentArea, int $itemId): payable
     {
@@ -49,6 +52,9 @@ class service_provider implements \core_payment\local\callback\service_provider
 
     /**
      * @inheritdoc
+     * @param string $paymentArea Payment area
+     * @param int $itemId An identifier that is known to the plugin
+     * @return \moodle_url
      */
     public static function get_success_url(string $paymentArea, int $itemId): moodle_url
     {
@@ -56,7 +62,16 @@ class service_provider implements \core_payment\local\callback\service_provider
     }
 
     /**
+     * Callback function that delivers what the user paid for to them.
+     *
      * @inheritdoc
+     *
+     * @param string $paymentArea Payment area
+     * @param int $itemId An identifier that is known to the plugin
+     * @param int $paymentId payment id as inserted into the 'payments' table, if needed for reference
+     * @param int $userId The userid the order is going to deliver to
+     *
+     * @return bool Whether successful or not
      */
     public static function deliver_order(string $paymentArea, int $itemId, int $paymentId, int $userId): bool
     {

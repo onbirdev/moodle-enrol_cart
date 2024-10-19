@@ -54,6 +54,9 @@ class enrol_cart_plugin extends enrol_plugin
 
     /**
      * @inheritdoc
+     *
+     * @param array $instances all enrol instances of this type in one course
+     * @return array of pix_icon
      */
     public function get_info_icons(array $instances): array
     {
@@ -88,6 +91,8 @@ class enrol_cart_plugin extends enrol_plugin
 
     /**
      * @inheritdoc
+     * @param stdClass $instance course enrol instance
+     * @return bool
      */
     public function allow_unenrol(stdClass $instance): bool
     {
@@ -97,6 +102,8 @@ class enrol_cart_plugin extends enrol_plugin
 
     /**
      * @inheritdoc
+     * @param stdClass $instance course enrol instance
+     * @return bool - true means it is possible to change enrol period and status in user_enrolments table
      */
     public function allow_manage(stdClass $instance): bool
     {
@@ -106,6 +113,8 @@ class enrol_cart_plugin extends enrol_plugin
 
     /**
      * @inheritdoc
+     * @param stdClass $instance course enrol instance
+     * @return bool - true means show "Enrol me in this course" link in course UI
      */
     public function show_enrolme_link(stdClass $instance): bool
     {
@@ -264,11 +273,13 @@ class enrol_cart_plugin extends enrol_plugin
     /**
      * Restore user enrolment.
      *
+     * @inheritDoc
+     *
      * @param restore_enrolments_structure_step $step
      * @param stdClass $data
      * @param stdClass $instance
-     * @param int $oldinstancestatus
      * @param int $userid
+     * @param int $oldinstancestatus
      * @throws coding_exception
      */
     public function restore_user_enrolment(

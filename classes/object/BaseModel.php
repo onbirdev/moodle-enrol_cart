@@ -102,7 +102,10 @@ class BaseModel extends BaseObject
     }
 
     /**
-     * {@inheritdoc}
+     * @inheritDoc
+     * @param string $name the property name
+     * @param bool $checkVars whether to treat member variables as properties
+     * @return bool whether the property can be read
      */
     public function canGetProperty(string $name, bool $checkVars = true): bool
     {
@@ -117,7 +120,10 @@ class BaseModel extends BaseObject
     }
 
     /**
-     * {@inheritdoc}
+     * @inheritDoc
+     * @param string $name the property name
+     * @param bool $checkVars whether to treat member variables as properties
+     * @return bool whether the property can be written
      */
     public function canSetProperty(string $name, bool $checkVars = true): bool
     {
