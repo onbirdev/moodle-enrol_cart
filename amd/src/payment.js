@@ -1,6 +1,6 @@
 import Notification from 'core/notification';
 
-const processPayment = async (gateway, component, paymentArea, itemId, description) => {
+const processPayment = async(gateway, component, paymentArea, itemId, description) => {
     const paymentMethod = await import(`paygw_${gateway}/gateways_modal`);
     return paymentMethod.process(component, paymentArea, itemId, description);
 };
