@@ -67,7 +67,7 @@ html[dir='rtl'] .currency {
 }
 
 .cart-item__price .currency {
-    text-decoration: line-through !important;
+    text-decoration: line-through;
 }
 
 .cart-item__payable {
@@ -86,7 +86,7 @@ html[dir='rtl'] .currency {
     align-items: center;
     justify-content: center;
     margin-left: 0.25rem;
-    padding: 0 .3rem;
+    padding: 0 0.3rem;
 }
 
 .cart-item__actions {
@@ -135,6 +135,7 @@ html[dir='rtl'] .currency {
     grid-template-columns: auto auto;
     grid-column-gap: 1rem;
     grid-row-gap: 0.75rem;
+    padding: 0.75rem;
 }
 
 .cart-summary__name {
@@ -144,10 +145,6 @@ html[dir='rtl'] .currency {
 .cart-summary__value {
     text-align: right;
     font-weight: bold;
-}
-
-.cart-summary__grid {
-    padding: 0.75rem;
 }
 
 .cart-summary__grid + .cart-summary__grid {
@@ -177,27 +174,31 @@ html[dir='rtl'] .currency {
     grid-template-columns: auto 140px;
 }
 
-.cart-summary--coupon-form .form-group {
-    display: block !important;
-    margin: 0 !important;
+.cart-summary--coupon-form .mform .form-inline .form-group {
+    margin: 0;
+}
+
+.cart-summary--coupon-form .mform .form-group {
+    display: block;
+    margin: 0;
 }
 
 .cart-summary--coupon-form .form-group .col-form-label {
-    display: none !important;
+    display: none;
 }
 
 .cart-summary--coupon-form .form-group .felement,
 .cart-summary--coupon-form .form-group .fitem {
-    width: 100% !important;
-    max-width: none !important;
-    padding: 0 !important;
+    width: 100%;
+    max-width: none;
+    padding: 0;
 }
 
 .cart-summary--coupon-form .form-group .form-control,
 .cart-summary--coupon-form .form-group .fitem span,
 .cart-summary--coupon-form .form-group input {
-    display: block !important;
-    width: 100% !important;
+    display: block;
+    width: 100%;
 }
 
 .cart-summary--coupon-form .form-group input[type='submit'] {
@@ -207,26 +208,24 @@ html[dir='rtl'] .currency {
     padding: 0;
 }
 
-.cart-summary--coupon-form__error {
-    display: block !important;
+.cart-summary--coupon-form__error.invalid-feedback {
+    display: block;
 }
 
-.cart-summary--coupon-form .btn-cancel {
-    display: none !important;
+.cart-summary--coupon-form .mform .form-group.btn-cancel {
+    display: none;
 }
 
-.cart-summary--coupon-form.has-coupon .btn-cancel {
-    display: block !important;
+.cart-summary--coupon-form.has-coupon .mform .form-inline .d-flex {
+    justify-content: space-between;
 }
 
-.cart-summary--coupon-form #fgroup_id_buttonar fieldset .d-flex {
-    display: grid !important;
-    grid-template-columns: 100%;
-    grid-column-gap: 0.25rem;
+.cart-summary--coupon-form.has-coupon .mform .form-inline .form-group {
+    width: 49%;
 }
 
-.cart-summary--coupon-form.has-coupon #fgroup_id_buttonar fieldset .d-flex {
-    grid-template-columns: 1fr 1fr;
+.cart-summary--coupon-form.has-coupon .mform .form-group.btn-cancel {
+    display: block;
 }
 
 .cart-summary--gateways {
