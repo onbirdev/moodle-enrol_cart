@@ -107,9 +107,9 @@ class BaseModel extends BaseObject
      * @param bool $checkVars whether to treat member variables as properties
      * @return bool whether the property can be read
      */
-    public function canGetProperty(string $name, bool $checkVars = true): bool
+    public function can_get_property(string $name, bool $checkVars = true): bool
     {
-        if (parent::canGetProperty($name, $checkVars)) {
+        if (parent::can_get_property($name, $checkVars)) {
             return true;
         }
         try {
@@ -125,9 +125,9 @@ class BaseModel extends BaseObject
      * @param bool $checkVars whether to treat member variables as properties
      * @return bool whether the property can be written
      */
-    public function canSetProperty(string $name, bool $checkVars = true): bool
+    public function can_set_property(string $name, bool $checkVars = true): bool
     {
-        if (parent::canSetProperty($name, $checkVars)) {
+        if (parent::can_set_property($name, $checkVars)) {
             return true;
         }
         try {
@@ -249,7 +249,7 @@ class BaseModel extends BaseObject
         foreach ($row as $name => $value) {
             if (isset($columns[$name])) {
                 $record->_attributes[$name] = $value;
-            } elseif ($record->canSetProperty($name)) {
+            } elseif ($record->can_set_property($name)) {
                 $record->$name = $value;
             }
         }

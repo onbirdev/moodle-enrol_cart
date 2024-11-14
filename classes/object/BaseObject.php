@@ -1,24 +1,37 @@
 <?php
+// This file is part of Moodle - http://moodle.org/
+//
+// Moodle is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+//
+// Moodle is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License
+// along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * @package    enrol_cart
- * @brief      Shopping Cart Enrolment Plugin for Moodle
- * @category   Moodle, Enrolment, Shopping Cart
+ * Shopping Cart Enrolment Plugin for Moodle
  *
- * @author     MohammadReza PourMohammad <onbirdev@gmail.com>
- * @copyright  2024 MohammadReza PourMohammad
- * @link       https://onbir.dev
- * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ * @package     enrol_cart
+ * @author      MohammadReza PourMohammad <onbirdev@gmail.com>
+ * @copyright   2024 MohammadReza PourMohammad
+ * @link        https://onbir.dev
+ * @license     http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
 namespace enrol_cart\object;
 
-defined('MOODLE_INTERNAL') || die();
-
 use Exception;
 
-class BaseObject
-{
+/**
+ * Base class for general object functionality.
+ */
+class BaseObject {
     /**
      * Constructor.
      *
@@ -27,8 +40,7 @@ class BaseObject
      *
      * @param array $config name-value pairs that will be used to initialize the object properties
      */
-    public function __construct(array $config = [])
-    {
+    public function __construct(array $config = []) {
         if (!empty($config)) {
             foreach ($config as $name => $value) {
                 $this->$name = $value;
@@ -42,8 +54,7 @@ class BaseObject
      * This method is invoked at the end of the constructor after the object is initialized with the
      * given configuration.
      */
-    public function init()
-    {
+    public function init() {
     }
 
     /**
@@ -56,8 +67,7 @@ class BaseObject
      * @throws Exception if the property is not defined
      * @see __set()
      */
-    public function __get(string $name)
-    {
+    public function __get(string $name) {
         $getter = 'get' . $name;
         if (method_exists($this, $getter)) {
             return $this->$getter();
@@ -75,8 +85,7 @@ class BaseObject
      * @throws Exception if the property is not defined
      * @see __get()
      */
-    public function __set(string $name, $value)
-    {
+    public function __set(string $name, $value) {
         $setter = 'set' . $name;
         if (method_exists($this, $setter)) {
             $this->$setter($value);
@@ -95,8 +104,7 @@ class BaseObject
      * @return bool whether the named property is set (not null).
      * @see https://www.php.net/manual/en/function.isset.php
      */
-    public function __isset(string $name)
-    {
+    public function __isset(string $name) {
         $getter = 'get' . $name;
         if (method_exists($this, $getter)) {
             return $this->$getter() !== null;
@@ -114,8 +122,7 @@ class BaseObject
      * If the property is read-only, it will throw an exception.
      * @param string $name the property name
      */
-    public function __unset(string $name)
-    {
+    public function __unset(string $name) {
         $setter = 'set' . $name;
         if (method_exists($this, $setter)) {
             $this->$setter(null);
@@ -129,17 +136,16 @@ class BaseObject
      *
      * - the class has a getter or setter method associated with the specified name
      *   (in this case, property name is case-insensitive);
-     * - the class has a member variable with the specified name (when `$checkVars` is true);
+     * - the class has a member variable with the specified name (when `$checkvars` is true);
      *
      * @param string $name the property name
-     * @param bool $checkVars whether to treat member variables as properties
+     * @param bool $checkvars whether to treat member variables as properties
      * @return bool whether the property is defined
-     * @see canGetProperty()
-     * @see canSetProperty()
+     * @see can_get_property()
+     * @see can_set_property()
      */
-    public function hasProperty(string $name, bool $checkVars = true): bool
-    {
-        return $this->canGetProperty($name, $checkVars) || $this->canSetProperty($name, false);
+    public function has_property(string $name, bool $checkvars = true): bool {
+        return $this->can_get_property($name, $checkvars) || $this->can_set_property($name, false);
     }
 
     /**
@@ -149,16 +155,15 @@ class BaseObject
      *
      * - the class has a getter method associated with the specified name
      *   (in this case, property name is case-insensitive);
-     * - the class has a member variable with the specified name (when `$checkVars` is true);
+     * - the class has a member variable with the specified name (when `$checkvars` is true);
      *
      * @param string $name the property name
-     * @param bool $checkVars whether to treat member variables as properties
+     * @param bool $checkvars whether to treat member variables as properties
      * @return bool whether the property can be read
-     * @see canSetProperty()
+     * @see can_set_property()
      */
-    public function canGetProperty(string $name, bool $checkVars = true): bool
-    {
-        return method_exists($this, 'get' . $name) || ($checkVars && property_exists($this, $name));
+    public function can_get_property(string $name, bool $checkvars = true): bool {
+        return method_exists($this, 'get' . $name) || ($checkvars && property_exists($this, $name));
     }
 
     /**
@@ -168,16 +173,15 @@ class BaseObject
      *
      * - the class has a setter method associated with the specified name
      *   (in this case, property name is case-insensitive);
-     * - the class has a member variable with the specified name (when `$checkVars` is true);
+     * - the class has a member variable with the specified name (when `$checkvars` is true);
      *
      * @param string $name the property name
-     * @param bool $checkVars whether to treat member variables as properties
+     * @param bool $checkvars whether to treat member variables as properties
      * @return bool whether the property can be written
-     * @see canGetProperty()
+     * @see can_get_property()
      */
-    public function canSetProperty(string $name, bool $checkVars = true): bool
-    {
-        return method_exists($this, 'set' . $name) || ($checkVars && property_exists($this, $name));
+    public function can_set_property(string $name, bool $checkvars = true): bool {
+        return method_exists($this, 'set' . $name) || ($checkvars && property_exists($this, $name));
     }
 
     /**
@@ -186,8 +190,7 @@ class BaseObject
      * @param string $name the method name
      * @return bool whether the method is defined
      */
-    public function hasMethod(string $name): bool
-    {
+    public function has_method(string $name): bool {
         return method_exists($this, $name);
     }
 }
