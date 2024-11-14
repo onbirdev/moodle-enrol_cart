@@ -108,6 +108,8 @@ $string['coupon_class_desc'] =
 $string['not_delete_cart_with_payment_record'] = 'عدم حذف سبد خرید های دارای رکورد پرداخت';
 $string['not_delete_cart_with_payment_record_desc'] =
     'در صورت انتخاب این گزینه سبد خرید های دارای رکورد در جدول payment حذف نخواهند شد.';
+$string['enable_guest_cart'] = 'اجازه به مهمان‌ها برای افزودن و حذف دوره از سبد خرید';
+$string['enable_guest_cart_desc'] = 'اگر این گزینه فعال شود، کاربران مهمان می‌توانند دوره‌ها را به سبد خرید اضافه کرده و در صورت نیاز آن‌ها را حذف کنند.';
 
 $string['status'] = 'فعال بودن ثبت‌نام با سبد خرید';
 $string['status_desc'] = 'به کاربران امکان می دهد به صورت پیش فرض یک دوره را به سبد خرید اضافه کنند.';

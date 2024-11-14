@@ -110,6 +110,16 @@ if ($ADMIN->fulltree) {
         ),
     );
 
+    // Guest cart.
+    $settings->add(
+        new admin_setting_configcheckbox(
+            'enrol_cart/enable_guest_cart',
+            get_string('enable_guest_cart', 'enrol_cart'),
+            get_string('enable_guest_cart_desc', 'enrol_cart'),
+            1,
+        ),
+    );
+
     // Coupon enable.
     $settings->add(
         new admin_setting_configcheckbox(

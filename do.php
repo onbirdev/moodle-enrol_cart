@@ -35,6 +35,12 @@ if (!enrol_is_enabled('cart')) {
     throw new moodle_exception('error_disabled', 'enrol_cart');
 }
 
+// If guest cart access is disabled, require user login.
+$enableguestcart = CartHelper::getConfig('enable_guest_cart');
+if (!$enableguestcart) {
+    require_login();
+}
+
 // Add or remove an item or a course.
 if ($action == 'add' || $action == 'remove') {
     $instanceid = optional_param('instance', null, PARAM_INT);

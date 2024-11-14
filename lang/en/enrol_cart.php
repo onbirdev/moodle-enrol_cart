@@ -108,6 +108,8 @@ $string['coupon_class_desc'] =
 $string['not_delete_cart_with_payment_record'] = 'Do not delete carts with payment records';
 $string['not_delete_cart_with_payment_record_desc'] =
     'If this option is selected, carts with records in the payment table will not be deleted.';
+$string['enable_guest_cart'] = 'Allow guests to add and remove courses from cart';
+$string['enable_guest_cart_desc'] = 'If enabled, guest users will be able to add courses to their cart and remove them.';
 
 $string['status'] = 'Enable manual enrolments';
 $string['status_desc'] = 'Allow users to add a course to cart by default.';
