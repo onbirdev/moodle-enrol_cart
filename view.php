@@ -1,32 +1,45 @@
 <?php
+// This file is part of Moodle - http://moodle.org/
+//
+// Moodle is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+//
+// Moodle is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License
+// along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * @package    enrol_cart
- * @brief      Shopping Cart Enrolment Plugin for Moodle
- * @category   Moodle, Enrolment, Shopping Cart
+ * Shopping Cart Enrolment Plugin for Moodle
  *
- * @author     MohammadReza PourMohammad <onbirdev@gmail.com>
- * @copyright  2024 MohammadReza PourMohammad
- * @link       https://onbir.dev
- * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ * @package     enrol_cart
+ * @author      MohammadReza PourMohammad <onbirdev@gmail.com>
+ * @copyright   2024 MohammadReza PourMohammad
+ * @link        https://onbir.dev
+ * @license     http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
+
+require_once('../../config.php');
 
 use enrol_cart\helper\CartHelper;
 use enrol_cart\object\Cart;
 
-require_once '../../config.php';
-
 global $PAGE, $OUTPUT, $CFG, $USER;
 
-// Retrieve the cart ID from the request
+// Retrieve the cart ID from the request.
 $id = optional_param('id', null, PARAM_INT);
 
-// Require login if cart ID is provided
+// Require login if cart ID is provided.
 if ($id) {
     require_login();
 }
 
-// Set up the page context and layout
+// Set up the page context and layout.
 $title = get_string($id ? 'order' : 'pluginname', 'enrol_cart');
 $url = CartHelper::getCartViewUrl($id);
 $context = context_system::instance();
@@ -38,13 +51,13 @@ $PAGE->set_heading($title);
 $PAGE->set_pagetype('cart');
 $PAGE->set_url($url);
 
-// Retrieve the cart object
+// Retrieve the cart object.
 $cart = $id ? Cart::findOne($id) : CartHelper::getCurrent();
 
-// Check if the current user can manage the cart
-$canManage = has_capability('enrol/cart:manage', $context);
+// Check if the current user can manage the cart.
+$canmanage = has_capability('enrol/cart:manage', $context);
 
-// Add navigation nodes
+// Add navigation nodes.
 if ($cart && $cart->isCurrentUserOwner) {
     $node1 = $PAGE->navigation->add(
         get_string('my_purchases', 'enrol_cart'),
@@ -56,7 +69,7 @@ if ($cart && $cart->isCurrentUserOwner) {
     $PAGE->navigation->add($title, $url, navigation_node::TYPE_CONTAINER);
 }
 
-// Render an empty cart view if the cart is empty or invalid
+// Render an empty cart view if the cart is empty or invalid.
 if (!$cart || $cart->isEmpty) {
     echo $OUTPUT->header();
     echo $OUTPUT->render_from_template('enrol_cart/view_empty', []);
@@ -64,21 +77,21 @@ if (!$cart || $cart->isEmpty) {
     exit();
 }
 
-// Ensure the current user owns the cart or has management capability
-if (!$cart->isCurrentUserOwner && !$canManage) {
-    print_error('error_invalid_cart', 'enrol_cart');
+// Ensure the current user owns the cart or has management capability.
+if (!$cart->isCurrentUserOwner && !$canmanage) {
+    throw new moodle_exception('error_invalid_cart', 'enrol_cart');
 }
 
-// Refresh the cart to validate and update item prices
+// Refresh the cart to validate and update item prices.
 $cart->refresh();
 
-// Render a cart view based on the user's capabilities and cart state
-if (!$cart->isCurrent || (!$cart->isCurrentUserOwner && $canManage)) {
+// Render a cart view based on the user's capabilities and cart state.
+if (!$cart->isCurrent || (!$cart->isCurrentUserOwner && $canmanage)) {
     echo $OUTPUT->header();
     echo $OUTPUT->render_from_template('enrol_cart/view', [
         'cart' => $cart,
         'items' => $cart->items,
-        'show_detail' => $canManage,
+        'show_detail' => $canmanage,
         'show_actions' => $cart->isCurrentUserOwner && ($cart->isCurrent || $cart->isCheckout),
         'checkout_url' => $cart->checkoutUrl,
         'cancel_url' => new moodle_url('/enrol/cart/cancel.php'),
@@ -88,7 +101,7 @@ if (!$cart->isCurrent || (!$cart->isCurrentUserOwner && $canManage)) {
     exit();
 }
 
-// Render the current cart view for the owner
+// Render the current cart view for the owner.
 echo $OUTPUT->header();
 echo $OUTPUT->render_from_template('enrol_cart/view_current', [
     'cart' => $cart,

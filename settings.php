@@ -1,14 +1,27 @@
 <?php
+// This file is part of Moodle - http://moodle.org/
+//
+// Moodle is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+//
+// Moodle is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License
+// along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * @package    enrol_cart
- * @brief      Shopping Cart Enrolment Plugin for Moodle
- * @category   Moodle, Enrolment, Shopping Cart
+ * Shopping Cart Enrolment Plugin for Moodle
  *
- * @author     MohammadReza PourMohammad <onbirdev@gmail.com>
- * @copyright  2024 MohammadReza PourMohammad
- * @link       https://onbir.dev
- * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ * @package     enrol_cart
+ * @author      MohammadReza PourMohammad <onbirdev@gmail.com>
+ * @copyright   2024 MohammadReza PourMohammad
+ * @link        https://onbir.dev
+ * @license     http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
 use core\output\notification;
@@ -23,74 +36,71 @@ if ($ADMIN->fulltree) {
 
     $account = CartHelper::getConfig('payment_account');
     $currency = CartHelper::getConfig('payment_currency');
-    // available payment accounts
-    $availableAccounts = PaymentHelper::getAvailablePaymentAccounts();
-    // available currencies
-    $availableCurrencies = PaymentHelper::getAvailableCurrencies();
-    // available payment gateways
-    $availableGateways = $account && $currency ? PaymentHelper::getAvailablePaymentGateways($account, $currency) : [];
+    // Available payment accounts.
+    $availableaccounts = PaymentHelper::getAvailablePaymentAccounts();
+    // Available currencies.
+    $availablecurrencies = PaymentHelper::getAvailableCurrencies();
+    // Available payment gateways.
+    $availablegateways = $account && $currency ? PaymentHelper::getAvailablePaymentGateways($account, $currency) : [];
 
-    // no payment account warning
-    if (empty($availableAccounts)) {
+    // No payment account warning.
+    if (empty($availableaccounts)) {
         $notify = new notification(
             get_string('error_no_payment_accounts_available', 'enrol_cart'),
             notification::NOTIFY_WARNING,
         );
         $settings->add(new admin_setting_heading('enrol_cart_no_payment_account', '', $OUTPUT->render($notify)));
     } else {
-        // payment account
         $settings->add(
             new admin_setting_configselect(
                 'enrol_cart/payment_account',
                 get_string('payment_account', 'enrol_cart'),
                 '',
                 '',
-                $availableAccounts,
+                $availableaccounts,
             ),
         );
     }
 
-    // no payment currency warning
-    if (empty($availableCurrencies)) {
+    // No payment currency warning.
+    if (empty($availablecurrencies)) {
         $notify = new notification(
             get_string('error_no_payment_currency_available', 'enrol_cart'),
             notification::NOTIFY_WARNING,
         );
         $settings->add(new admin_setting_heading('enrol_cart_no_payment_currency', '', $OUTPUT->render($notify)));
     } else {
-        // payment currency
         $settings->add(
             new admin_setting_configselect(
                 'enrol_cart/payment_currency',
                 get_string('payment_currency', 'enrol_cart'),
                 '',
                 '',
-                $availableCurrencies,
+                $availablecurrencies,
             ),
         );
     }
 
-    // no payment gateways warning
-    if (empty($availableGateways)) {
+    // No payment gateways warning.
+    if (empty($availablegateways)) {
         $notify = new notification(
             get_string('error_no_payment_gateway_available', 'enrol_cart'),
             notification::NOTIFY_WARNING,
         );
         $settings->add(new admin_setting_heading('enrol_cart_no_payment_gateway', '', $OUTPUT->render($notify)));
     } else {
-        // payment gateways
         $settings->add(
             new admin_setting_configmultiselect(
                 'enrol_cart/payment_gateways',
                 get_string('payment_gateways', 'enrol_cart'),
                 get_string('payment_gateways_desc', 'enrol_cart'),
                 [],
-                $availableGateways,
+                $availablegateways,
             ),
         );
     }
 
-    // auto select payment gateway
+    // Auto select payment gateway.
     $settings->add(
         new admin_setting_configcheckbox(
             'enrol_cart/auto_select_payment_gateway',
@@ -100,7 +110,7 @@ if ($ADMIN->fulltree) {
         ),
     );
 
-    // coupon enable
+    // Coupon enable.
     $settings->add(
         new admin_setting_configcheckbox(
             'enrol_cart/coupon_enable',
@@ -110,7 +120,7 @@ if ($ADMIN->fulltree) {
         ),
     );
 
-    // coupon class
+    // Coupon class.
     $settings->add(
         new admin_setting_configtext(
             'enrol_cart/coupon_class',
@@ -120,22 +130,22 @@ if ($ADMIN->fulltree) {
         ),
     );
 
-    $couponClass = CouponHelper::getCouponClassName();
-    $couponClassError = null;
-    if (!empty($couponClass)) {
-        if (!class_exists($couponClass)) {
-            $couponClassError = get_string('error_coupon_class_not_found', 'enrol_cart');
-        } elseif (!in_array('enrol_cart\object\CouponInterface', class_implements($couponClass))) {
-            $couponClassError = get_string('error_coupon_class_not_implemented', 'enrol_cart');
+    $couponclass = CouponHelper::getCouponClassName();
+    $couponclasserror = null;
+    if (!empty($couponclass)) {
+        if (!class_exists($couponclass)) {
+            $couponclasserror = get_string('error_coupon_class_not_found', 'enrol_cart');
+        } else if (!in_array('enrol_cart\object\CouponInterface', class_implements($couponclass))) {
+            $couponclasserror = get_string('error_coupon_class_not_implemented', 'enrol_cart');
         }
     }
 
-    if (!empty($couponClassError)) {
-        $notify = new notification($couponClassError, notification::NOTIFY_WARNING);
+    if (!empty($couponclasserror)) {
+        $notify = new notification($couponclasserror, notification::NOTIFY_WARNING);
         $settings->add(new admin_setting_heading('error_coupon_class_error', '', $OUTPUT->render($notify)));
     }
 
-    // payment completion window
+    // Payment completion window.
     $settings->add(
         new admin_setting_configduration(
             'enrol_cart/payment_completion_time',
@@ -145,7 +155,7 @@ if ($ADMIN->fulltree) {
         ),
     );
 
-    // canceled cart lifetime
+    // Canceled cart lifetime.
     $settings->add(
         new admin_setting_configduration(
             'enrol_cart/canceled_cart_lifetime',
@@ -155,7 +165,7 @@ if ($ADMIN->fulltree) {
         ),
     );
 
-    // pending payment cart lifetime
+    // Pending payment cart lifetime.
     $settings->add(
         new admin_setting_configduration(
             'enrol_cart/pending_payment_cart_lifetime',
@@ -165,7 +175,7 @@ if ($ADMIN->fulltree) {
         ),
     );
 
-    // not delete cart with payment record
+    // Not delete cart with payment record.
     $settings->add(
         new admin_setting_configcheckbox(
             'enrol_cart/not_delete_cart_with_payment_record',
@@ -175,7 +185,7 @@ if ($ADMIN->fulltree) {
         ),
     );
 
-    // verify payment on delivery
+    // Verify payment on delivery.
     $settings->add(
         new admin_setting_configcheckbox(
             'enrol_cart/verify_payment_on_delivery',
@@ -185,7 +195,7 @@ if ($ADMIN->fulltree) {
         ),
     );
 
-    // convert IRR to IRT
+    // Convert IRR to IRT.
     $settings->add(
         new admin_setting_configcheckbox(
             'enrol_cart/convert_irr_to_irt',
@@ -195,7 +205,7 @@ if ($ADMIN->fulltree) {
         ),
     );
 
-    // convert numbers to persian
+    // Convert numbers to persian.
     $settings->add(
         new admin_setting_configcheckbox(
             'enrol_cart/convert_numbers_to_persian',
@@ -213,7 +223,7 @@ if ($ADMIN->fulltree) {
         ),
     );
 
-    // default status
+    // Default status.
     $settings->add(
         new admin_setting_configselect(
             'enrol_cart/status',
@@ -224,7 +234,7 @@ if ($ADMIN->fulltree) {
         ),
     );
 
-    // default role
+    // Default role.
     if (!during_initial_install()) {
         $options = get_default_enrol_roles(context_system::instance());
         $student = get_archetype_roles('student');
@@ -240,7 +250,7 @@ if ($ADMIN->fulltree) {
         );
     }
 
-    // enrol period
+    // Enrol period.
     $settings->add(
         new admin_setting_configduration(
             'enrol_cart/enrol_period',

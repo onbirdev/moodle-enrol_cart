@@ -1,25 +1,38 @@
 <?php
+// This file is part of Moodle - http://moodle.org/
+//
+// Moodle is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+//
+// Moodle is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License
+// along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * @package    enrol_cart
- * @brief      Shopping Cart Enrolment Plugin for Moodle
- * @category   Moodle, Enrolment, Shopping Cart
+ * Shopping Cart Enrolment Plugin for Moodle
  *
- * @author     MohammadReza PourMohammad <onbirdev@gmail.com>
- * @copyright  2024 MohammadReza PourMohammad
- * @link       https://onbir.dev
- * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ * @package     enrol_cart
+ * @author      MohammadReza PourMohammad <onbirdev@gmail.com>
+ * @copyright   2024 MohammadReza PourMohammad
+ * @link        https://onbir.dev
+ * @license     http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-use enrol_cart\object\Cart;
+require_once('../../config.php');
 
-require_once '../../config.php';
+use enrol_cart\object\Cart;
 
 global $PAGE, $OUTPUT, $CFG, $USER;
 
 $page = optional_param('page', 0, PARAM_INT);
-$perPage = optional_param('perpage', 20, PARAM_INT);
-$userId = $USER->id;
+$perpage = optional_param('perpage', 20, PARAM_INT);
+$userid = $USER->id;
 
 require_login();
 
@@ -37,8 +50,8 @@ $PAGE->set_url($url);
 $PAGE->navigation->add($title, $url, navigation_node::TYPE_CONTAINER);
 
 /** @var Cart[] $carts */
-$carts = Cart::findAllByUserId($userId, $page, $perPage);
-$total = Cart::countAllByUserId($userId);
+$carts = Cart::findAllByUserId($userid, $page, $perpage);
+$total = Cart::countAllByUserId($userid);
 
 $table = new html_table();
 $table->head = [
@@ -94,8 +107,6 @@ if (empty($table->data)) {
 }
 
 echo $OUTPUT->header();
-// table
 echo html_writer::table($table);
-// pagination
-echo $OUTPUT->paging_bar($total, $page, $perPage, $url);
+echo $OUTPUT->paging_bar($total, $page, $perpage, $url);
 echo $OUTPUT->footer();
