@@ -41,7 +41,7 @@ if ($id) {
 
 // Set up the page context and layout.
 $title = get_string($id ? 'order' : 'pluginname', 'enrol_cart');
-$url = CartHelper::getCartViewUrl($id);
+$url = CartHelper::get_cart_view_url($id);
 $context = context_system::instance();
 
 $PAGE->set_context($context);
@@ -52,7 +52,7 @@ $PAGE->set_pagetype('cart');
 $PAGE->set_url($url);
 
 // Retrieve the cart object.
-$cart = $id ? Cart::findOne($id) : CartHelper::getCurrent();
+$cart = $id ? Cart::findOne($id) : CartHelper::get_current();
 
 // Check if the current user can manage the cart.
 $canmanage = has_capability('enrol/cart:manage', $context);

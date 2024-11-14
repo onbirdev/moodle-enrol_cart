@@ -304,7 +304,7 @@ class Cart extends BaseCart
         if ($this->canEditItems && !$this->hasItem($instanceId)) {
             // Ensure the user is not already enrolled in the instance, and add item to cart
             if (
-                !CartHelper::isUserEnrolled($instanceId, $this->user_id) &&
+                !CartHelper::is_user_enrolled($instanceId, $this->user_id) &&
                 CartItem::addItemToCart($this->id, $instanceId)
             ) {
                 return $this->refresh();
@@ -387,14 +387,14 @@ class Cart extends BaseCart
         // remove disabled or invalid enrol from the cart
         $items = CartItem::findAll($this->id);
         foreach ($items as $item) {
-            if (!CartHelper::hasInstance($item->instance_id)) {
+            if (!CartHelper::has_instance($item->instance_id)) {
                 $this->_changed = true;
                 $item->delete();
                 notification::info(get_string('msg_instance_deleted', 'enrol_cart'));
                 continue;
             }
 
-            if (CartHelper::isUserEnrolled($item->instance_id, $this->user_id)) {
+            if (CartHelper::is_user_enrolled($item->instance_id, $this->user_id)) {
                 $this->_changed = true;
                 $item->delete();
                 notification::info(
@@ -446,7 +446,7 @@ class Cart extends BaseCart
             return false;
         }
 
-        $timeLimit = CartHelper::getConfig('payment_completion_time');
+        $timeLimit = CartHelper::get_config('payment_completion_time');
 
         return time() - $this->checkout_at > $timeLimit;
     }
@@ -518,7 +518,7 @@ class Cart extends BaseCart
 
         try {
             $this->status = CartStatusInterface::STATUS_CANCELED;
-            $this->couponCancel();
+            $this->coupon_cancel();
             $this->save();
 
             $transaction->allow_commit();
@@ -622,7 +622,7 @@ class Cart extends BaseCart
             return false;
         }
 
-        if (!CouponHelper::isCouponEnable()) {
+        if (!CouponHelper::is_coupon_enable()) {
             $this->_couponResult->setOk(false);
             $this->_couponResult->setErrorMessage(get_string('error_coupon_disabled', 'enrol_cart'));
             return false;
@@ -637,9 +637,9 @@ class Cart extends BaseCart
      * @param string $couponCode The coupon code to validate.
      * @return bool True if the coupon code is valid, false otherwise.
      */
-    public function couponValidate(string $couponCode): bool
+    public function coupon_validate(string $couponCode): bool
     {
-        $couponId = CouponHelper::getCouponId($couponCode);
+        $couponId = CouponHelper::get_coupon_id($couponCode);
 
         if (!$couponId) {
             $this->_couponResult->setOk(false);
@@ -647,7 +647,7 @@ class Cart extends BaseCart
             return false;
         }
 
-        $this->_couponResult = CouponHelper::couponValidate(new CartDto($this), $couponId);
+        $this->_couponResult = CouponHelper::coupon_validate(new CartDto($this), $couponId);
 
         return $this->_couponResult->isOk();
     }
@@ -666,7 +666,7 @@ class Cart extends BaseCart
             return true;
         }
 
-        $this->_couponResult = CouponHelper::couponValidate(new CartDto($this), $this->coupon_id);
+        $this->_couponResult = CouponHelper::coupon_validate(new CartDto($this), $this->coupon_id);
 
         return $this->_couponResult->isOk() &&
             $this->_couponResult->getDiscountAmount() == $this->coupon_discount_amount;
@@ -681,16 +681,16 @@ class Cart extends BaseCart
      * @param string $couponCode The coupon code to apply.
      * @return bool True if the coupon is successfully applied, false otherwise.
      */
-    public function couponApply(string $couponCode): bool
+    public function coupon_apply(string $couponCode): bool
     {
-        if (!$this->coupon_id && $this->couponValidate($couponCode)) {
-            $this->_couponResult = CouponHelper::couponApply(
+        if (!$this->coupon_id && $this->coupon_validate($couponCode)) {
+            $this->_couponResult = CouponHelper::coupon_apply(
                 new CartDto($this),
-                CouponHelper::getCouponId($couponCode),
+                CouponHelper::get_coupon_id($couponCode),
             );
 
             if ($this->_couponResult->isOk()) {
-                $this->coupon_id = $this->_couponResult->getCouponId();
+                $this->coupon_id = $this->_couponResult->get_coupon_id();
                 $this->coupon_code = $this->_couponResult->getCouponCode();
                 $this->coupon_usage_id = $this->_couponResult->getCouponUsageId();
                 $this->coupon_discount_amount = $this->_couponResult->getDiscountAmount();
@@ -708,11 +708,11 @@ class Cart extends BaseCart
      *
      * @return bool True if the coupon is successfully canceled, false otherwise.
      */
-    public function couponCancel(): bool
+    public function coupon_cancel(): bool
     {
         if ($this->coupon_usage_id && $this->coupon_id) {
             if ($this->canEditItems) {
-                $this->_couponResult = CouponHelper::couponCancel(new CartDto($this));
+                $this->_couponResult = CouponHelper::coupon_cancel(new CartDto($this));
 
                 if ($this->_couponResult->isOk()) {
                     $this->_couponResult = new CouponResultDto();
@@ -787,7 +787,7 @@ class Cart extends BaseCart
     public function getCouponDiscountAmountFormatted(): ?string
     {
         if ($this->couponDiscountAmount) {
-            return CurrencyFormatter::getCostAsFormatted((float) $this->couponDiscountAmount, $this->finalCurrency);
+            return CurrencyFormatter::get_cost_as_formatted((float) $this->couponDiscountAmount, $this->finalCurrency);
         }
 
         return null;

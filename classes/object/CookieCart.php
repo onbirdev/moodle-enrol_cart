@@ -135,7 +135,7 @@ class CookieCart extends BaseCart
     {
         if (empty($this->_items)) {
             foreach ($this->_cookieItems as $instanceId) {
-                if ($instance = CartHelper::getInstance($instanceId)) {
+                if ($instance = CartHelper::get_instance($instanceId)) {
                     $this->_items[] = CartItem::populateOne([
                         'id' => $instance->id,
                         'cart_id' => 0,

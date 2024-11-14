@@ -122,7 +122,7 @@ class CartItem extends BaseModel
         // Check if the item does not already exist in the cart, and check if the instance exists.
         if (
             !$DB->record_exists('enrol_cart_items', ['cart_id' => $cartId, 'instance_id' => $instanceId]) &&
-            ($instance = CartHelper::getInstance($instanceId))
+            ($instance = CartHelper::get_instance($instanceId))
         ) {
             // Create a new cart item object.
             $item = (object) [
@@ -150,7 +150,7 @@ class CartItem extends BaseModel
             return;
         }
 
-        $instance = CartHelper::getInstance($this->instance_id);
+        $instance = CartHelper::get_instance($this->instance_id);
 
         // Updates the price and payable amount if they have changed.
         if ($instance && ($this->price != $instance->price || $this->payable != $instance->payable)) {
@@ -234,8 +234,8 @@ class CartItem extends BaseModel
 
         if ($discountPercent) {
             $discountPercent = $discountPercent . '%';
-            if (CartHelper::getConfig('convert_numbers_to_persian')) {
-                return CurrencyFormatter::convertEnglishNumbersToPersian($discountPercent);
+            if (CartHelper::get_config('convert_numbers_to_persian')) {
+                return CurrencyFormatter::convert_english_numbers_to_persian($discountPercent);
             }
 
             return $discountPercent;
@@ -252,7 +252,7 @@ class CartItem extends BaseModel
     public function getPriceFormatted(): string
     {
         if ($this->price > 0) {
-            return CurrencyFormatter::getCostAsFormatted((float) $this->price, $this->cart->finalCurrency);
+            return CurrencyFormatter::get_cost_as_formatted((float) $this->price, $this->cart->finalCurrency);
         }
 
         return get_string('free', 'enrol_cart'); // Return 'free' string if price is zero.
@@ -266,7 +266,7 @@ class CartItem extends BaseModel
     public function getPayableFormatted(): string
     {
         if ($this->payable > 0) {
-            return CurrencyFormatter::getCostAsFormatted((float) $this->payable, $this->cart->finalCurrency);
+            return CurrencyFormatter::get_cost_as_formatted((float) $this->payable, $this->cart->finalCurrency);
         }
 
         return get_string('free', 'enrol_cart'); // Return 'free' string if payable is zero.

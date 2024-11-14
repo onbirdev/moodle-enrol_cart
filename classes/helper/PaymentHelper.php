@@ -1,19 +1,31 @@
 <?php
+// This file is part of Moodle - http://moodle.org/
+//
+// Moodle is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+//
+// Moodle is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License
+// along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * @package    enrol_cart
- * @brief      Shopping Cart Enrolment Plugin for Moodle
- * @category   Moodle, Enrolment, Shopping Cart
+ * Shopping Cart Enrolment Plugin for Moodle
  *
- * @author     MohammadReza PourMohammad <onbirdev@gmail.com>
- * @copyright  2024 MohammadReza PourMohammad
- * @link       https://onbir.dev
- * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ * @package     enrol_cart
+ * @author      MohammadReza PourMohammad <onbirdev@gmail.com>
+ * @copyright   2024 MohammadReza PourMohammad
+ * @link        https://onbir.dev
+ * @license     http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
 namespace enrol_cart\helper;
 
-defined('MOODLE_INTERNAL') || die();
 
 use context_system;
 use core_payment\account;
@@ -26,19 +38,17 @@ use moodle_url;
  * Class PaymentHelper
  * Provides utility functions for managing payment gateways.
  */
-class PaymentHelper
-{
+class PaymentHelper {
     /**
      * Retrieve the list of available currencies with language strings that the payment system supports.
      *
      * @return array An associative array of currency codes to language strings.
      */
-    public static function getAvailableCurrencies(): array
-    {
-        $currencyCodes = helper::get_supported_currencies();
+    public static function get_available_currencies(): array {
+        $currencycodes = helper::get_supported_currencies();
 
         $currencies = [];
-        foreach ($currencyCodes as $code) {
+        foreach ($currencycodes as $code) {
             $currencies[$code] = new lang_string($code, 'core_currencies');
         }
 
@@ -52,8 +62,7 @@ class PaymentHelper
      *
      * @return array An array of available payment accounts.
      */
-    public static function getAvailablePaymentAccounts(): array
-    {
+    public static function get_available_payment_accounts(): array {
         $context = context_system::instance();
         return helper::get_payment_accounts_menu($context);
     }
@@ -61,15 +70,14 @@ class PaymentHelper
     /**
      * Retrieve the list of available payment gateways for a specific account and currency.
      *
-     * @param int $accountId The ID of the payment account.
+     * @param int $accountid The ID of the payment account.
      * @param string $currency The currency code.
      * @return array An array of available payment gateways.
      */
-    public static function getAvailablePaymentGateways(int $accountId, string $currency): array
-    {
+    public static function get_available_payment_gateways(int $accountid, string $currency): array {
         $gateways = [];
 
-        $account = new account($accountId);
+        $account = new account($accountid);
 
         if (!$account->get('id') || !$account->get('enabled')) {
             return $gateways;
@@ -79,13 +87,13 @@ class PaymentHelper
             if (!$gateway->get('enabled')) {
                 continue;
             }
-            /** @var gateway $className */
-            $className = '\paygw_' . $plugin . '\gateway';
+            /** @var gateway $classname */
+            $classname = '\paygw_' . $plugin . '\gateway';
 
-            $currencies = component_class_callback($className, 'get_supported_currencies', [], []);
-            $pluginName = get_string('pluginname', 'paygw_' . $plugin);
+            $currencies = component_class_callback($classname, 'get_supported_currencies', [], []);
+            $pluginname = get_string('pluginname', 'paygw_' . $plugin);
             if (in_array($currency, $currencies)) {
-                $gateways[$plugin] = $pluginName;
+                $gateways[$plugin] = $pluginname;
             }
         }
 
@@ -97,24 +105,23 @@ class PaymentHelper
      *
      * @return array An array of allowed payment gateways.
      */
-    public static function getAllowedPaymentGateways(): array
-    {
+    public static function get_allowed_payment_gateways(): array {
         global $CFG;
-        $accountId = CartHelper::getConfig('payment_account');
-        $currency = CartHelper::getConfig('payment_currency');
-        $allowedGateways = explode(',', CartHelper::getConfig('payment_gateways'));
-        $availableGateways = self::getAvailablePaymentGateways($accountId, $currency);
+        $accountid = CartHelper::get_config('payment_account');
+        $currency = CartHelper::get_config('payment_currency');
+        $allowedgateways = explode(',', CartHelper::get_config('payment_gateways'));
+        $availablegateways = self::get_available_payment_gateways($accountid, $currency);
 
         $gateways = [];
 
-        foreach ($allowedGateways as $plugin) {
-            if (!isset($availableGateways[$plugin])) {
+        foreach ($allowedgateways as $plugin) {
+            if (!isset($availablegateways[$plugin])) {
                 continue;
             }
 
             $gateways[] = (object) [
                 'name' => $plugin,
-                'title' => $availableGateways[$plugin],
+                'title' => $availablegateways[$plugin],
                 'icon_url' => (new moodle_url('/theme/image.php', [
                     'theme' => $CFG->theme,
                     'component' => 'paygw_' . $plugin,
@@ -137,13 +144,12 @@ class PaymentHelper
      * This method verifies if the provided payment gateway name is within the list
      * of allowed payment gateways.
      *
-     * @param string $gatewayName The name of the payment gateway to check.
+     * @param string $gatewayname The name of the payment gateway to check.
      * @return bool Returns true if the payment gateway is valid, otherwise false.
      */
-    public static function isPaymentGatewayValid(string $gatewayName): bool
-    {
-        foreach (self::getAllowedPaymentGateways() as $gateway) {
-            if ($gateway->name === $gatewayName) {
+    public static function is_payment_gateway_valid(string $gatewayname): bool {
+        foreach (self::get_allowed_payment_gateways() as $gateway) {
+            if ($gateway->name === $gatewayname) {
                 return true;
             }
         }
@@ -159,13 +165,12 @@ class PaymentHelper
      *
      * @return string|null The name of the random payment gateway, or null if no gateways are available.
      */
-    public static function getRandPaymentGateway(): ?string
-    {
-        $allowedGateways = self::getAllowedPaymentGateways();
+    public static function get_rand_payment_gateway(): ?string {
+        $allowedgateways = self::get_allowed_payment_gateways();
 
-        if (!empty($allowedGateways)) {
-            $randomIndex = rand(0, count($allowedGateways) - 1);
-            return $allowedGateways[$randomIndex]->name;
+        if (!empty($allowedgateways)) {
+            $randomindex = rand(0, count($allowedgateways) - 1);
+            return $allowedgateways[$randomindex]->name;
         }
 
         return null;

@@ -127,7 +127,7 @@ class CartEnrollmentInstance extends BaseModel
     public function afterFind()
     {
         if (empty($this->currency)) {
-            $this->currency = (string) CartHelper::getConfig('payment_currency');
+            $this->currency = (string) CartHelper::get_config('payment_currency');
         }
     }
 
@@ -171,8 +171,8 @@ class CartEnrollmentInstance extends BaseModel
 
         if ($discountPercentage) {
             $discountPercentage = '%' . $discountPercentage;
-            if (CartHelper::getConfig('convert_numbers_to_persian')) {
-                return CurrencyFormatter::convertEnglishNumbersToPersian($discountPercentage);
+            if (CartHelper::get_config('convert_numbers_to_persian')) {
+                return CurrencyFormatter::convert_english_numbers_to_persian($discountPercentage);
             }
 
             return $discountPercentage;
@@ -213,7 +213,7 @@ class CartEnrollmentInstance extends BaseModel
     {
         $discountAmount = $this->discountAmount;
 
-        return $discountAmount ? CurrencyFormatter::getCostAsFormatted($discountAmount, $this->currency) : null;
+        return $discountAmount ? CurrencyFormatter::get_cost_as_formatted($discountAmount, $this->currency) : null;
     }
 
     /**
@@ -234,7 +234,7 @@ class CartEnrollmentInstance extends BaseModel
     public function getPriceFormatted(): ?string
     {
         if ($this->price !== null && (float) $this->price > 0) {
-            return CurrencyFormatter::getCostAsFormatted($this->price, $this->currency);
+            return CurrencyFormatter::get_cost_as_formatted($this->price, $this->currency);
         }
 
         return get_string('free', 'enrol_cart');
@@ -259,7 +259,7 @@ class CartEnrollmentInstance extends BaseModel
     public function getPayableFormatted(): string
     {
         if ($this->payable !== null && (float) $this->payable > 0) {
-            return CurrencyFormatter::getCostAsFormatted($this->payable, $this->currency);
+            return CurrencyFormatter::get_cost_as_formatted($this->payable, $this->currency);
         }
 
         return get_string('free', 'enrol_cart');

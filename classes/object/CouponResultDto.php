@@ -77,7 +77,7 @@ class CouponResultDto
      */
     public function __construct()
     {
-        if (!CouponHelper::isCouponEnable()) {
+        if (!CouponHelper::is_coupon_enable()) {
             $this->setOk(false);
             $this->setErrorMessage(get_string('error_coupon_disabled', 'enrol_cart'));
         }
@@ -110,7 +110,7 @@ class CouponResultDto
      *
      * @return int|null The coupon ID.
      */
-    public function getCouponId(): ?int
+    public function get_coupon_id(): ?int
     {
         return $this->couponId;
     }

@@ -34,14 +34,14 @@ defined('MOODLE_INTERNAL') || die();
 if ($ADMIN->fulltree) {
     $settings->add(new admin_setting_heading('enrol_cart_settings', '', get_string('pluginname_desc', 'enrol_cart')));
 
-    $account = CartHelper::getConfig('payment_account');
-    $currency = CartHelper::getConfig('payment_currency');
+    $account = CartHelper::get_config('payment_account');
+    $currency = CartHelper::get_config('payment_currency');
     // Available payment accounts.
-    $availableaccounts = PaymentHelper::getAvailablePaymentAccounts();
+    $availableaccounts = PaymentHelper::get_available_payment_accounts();
     // Available currencies.
-    $availablecurrencies = PaymentHelper::getAvailableCurrencies();
+    $availablecurrencies = PaymentHelper::get_available_currencies();
     // Available payment gateways.
-    $availablegateways = $account && $currency ? PaymentHelper::getAvailablePaymentGateways($account, $currency) : [];
+    $availablegateways = $account && $currency ? PaymentHelper::get_available_payment_gateways($account, $currency) : [];
 
     // No payment account warning.
     if (empty($availableaccounts)) {
@@ -140,7 +140,7 @@ if ($ADMIN->fulltree) {
         ),
     );
 
-    $couponclass = CouponHelper::getCouponClassName();
+    $couponclass = CouponHelper::get_coupon_class_name();
     $couponclasserror = null;
     if (!empty($couponclass)) {
         if (!class_exists($couponclass)) {
@@ -240,7 +240,7 @@ if ($ADMIN->fulltree) {
             get_string('status', 'enrol_cart'),
             get_string('status_desc', 'enrol_cart'),
             ENROL_INSTANCE_DISABLED,
-            enrol_get_plugin('cart')->getStatusOptions(),
+            enrol_get_plugin('cart')->get_status_options(),
         ),
     );
 

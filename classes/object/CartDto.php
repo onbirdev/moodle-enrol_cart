@@ -59,7 +59,7 @@ class CartDto
      *
      * @return int|null The ID of the coupon, or null if no coupon is applied.
      */
-    public function getCouponId(): ?int
+    public function get_coupon_id(): ?int
     {
         return $this->cart->coupon_id;
     }

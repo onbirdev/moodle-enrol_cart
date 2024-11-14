@@ -1,19 +1,30 @@
 <?php
+// This file is part of Moodle - http://moodle.org/
+//
+// Moodle is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+//
+// Moodle is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License
+// along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * @package    enrol_cart
- * @brief      Shopping Cart Enrolment Plugin for Moodle
- * @category   Moodle, Enrolment, Shopping Cart
+ * Shopping Cart Enrolment Plugin for Moodle
  *
- * @author     MohammadReza PourMohammad <onbirdev@gmail.com>
- * @copyright  2024 MohammadReza PourMohammad
- * @link       https://onbir.dev
- * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ * @package     enrol_cart
+ * @author      MohammadReza PourMohammad <onbirdev@gmail.com>
+ * @copyright   2024 MohammadReza PourMohammad
+ * @link        https://onbir.dev
+ * @license     http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
 namespace enrol_cart\object;
-
-defined('MOODLE_INTERNAL') || die();
 
 use html_writer;
 
@@ -29,14 +40,12 @@ use html_writer;
  * @property bool $isCanceled
  * @property bool $isDelivered
  */
-trait CartStatusTrait
-{
+trait CartStatusTrait {
     /**
      * Returns an array of possible status values for the cart.
      * @return string[] An associative array of status values with their corresponding labels.
      */
-    public static function getStatusOptions(): array
-    {
+    public static function getStatusOptions(): array {
         return [
             CartStatusInterface::STATUS_CURRENT => get_string('status_current', 'enrol_cart'),
             CartStatusInterface::STATUS_CHECKOUT => get_string('status_checkout', 'enrol_cart'),
@@ -50,8 +59,7 @@ trait CartStatusTrait
      *
      * @return string The name of the status.
      */
-    public function getStatusName(): string
-    {
+    public function getStatusName(): string {
         $options = static::getStatusOptions();
         return $options[$this->status] ?? get_string('unknown', 'enrol_cart');
     }
@@ -60,8 +68,7 @@ trait CartStatusTrait
      * Return the status name.
      * @return string Return `<span class="badge badge-success">Delivered</span>` or `<span class="badge badge-dark">Current</span>`
      */
-    public function getStatusNameFormattedHtml(): string
-    {
+    public function getStatusNameFormattedHtml(): string {
         $class = 'badge badge-dark';
         switch ($this->status) {
             case CartStatusInterface::STATUS_CHECKOUT:
@@ -83,8 +90,7 @@ trait CartStatusTrait
      * Checks if the cart is in the "current" status.
      * @return bool True if the cart is in the "current" status, false otherwise.
      */
-    public function getIsCurrent(): bool
-    {
+    public function getIsCurrent(): bool {
         return $this->status == CartStatusInterface::STATUS_CURRENT;
     }
 
@@ -92,8 +98,7 @@ trait CartStatusTrait
      * Checks if the cart is in the "checkout" status.
      * @return bool True if the cart is in the "checkout" status, false otherwise.
      */
-    public function getIsCheckout(): bool
-    {
+    public function getIsCheckout(): bool {
         return $this->status == CartStatusInterface::STATUS_CHECKOUT;
     }
 
@@ -101,8 +106,7 @@ trait CartStatusTrait
      * Checks if the cart is in the "canceled" status.
      * @return bool True if the cart is in the "canceled" status, false otherwise.
      */
-    public function getIsCanceled(): bool
-    {
+    public function getIsCanceled(): bool {
         return $this->status == CartStatusInterface::STATUS_CANCELED;
     }
 
@@ -110,8 +114,7 @@ trait CartStatusTrait
      * Checks if the cart is in the "delivered" status.
      * @return bool True if the cart is in the "delivered" status, false otherwise.
      */
-    public function getIsDelivered(): bool
-    {
+    public function getIsDelivered(): bool {
         return $this->status == CartStatusInterface::STATUS_DELIVERED;
     }
 }

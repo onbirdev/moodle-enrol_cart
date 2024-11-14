@@ -43,7 +43,7 @@ require_login();
 
 // Set up the page context and layout.
 $title = get_string('pluginname', 'enrol_cart') . ' - ' . get_string('checkout', 'enrol_cart');
-$url = CartHelper::getCartCheckoutUrl($id);
+$url = CartHelper::get_cart_checkout_url($id);
 $context = context_system::instance();
 
 $PAGE->set_context($context);
@@ -61,17 +61,17 @@ $node1 = $PAGE->navigation->add(
 );
 $node2 = $node1->add(
     get_string('pluginname', 'enrol_cart'),
-    CartHelper::getCartViewUrl($id),
+    CartHelper::get_cart_view_url($id),
     navigation_node::TYPE_CONTAINER,
 );
 $node2->add(get_string('checkout', 'enrol_cart'), $url)->make_active();
 
 // Retrieve the cart object.
-$cart = $id ? Cart::findOne($id) : CartHelper::getCurrent();
+$cart = $id ? Cart::findOne($id) : CartHelper::get_current();
 
 // Check if the cart is empty or invalid.
 if (!$cart || $cart->isEmpty || !$cart->isCurrentUserOwner || $cart->isDelivered) {
-    redirect(CartHelper::getCartViewUrl());
+    redirect(CartHelper::get_cart_view_url());
     exit();
 }
 
@@ -80,7 +80,7 @@ $couponform = new CouponCodeForm(null, ['cart' => $cart]);
 
 // Cancel the coupon if requested.
 if ($couponform->is_cancelled()) {
-    $cart->couponCancel();
+    $cart->coupon_cancel();
     redirect($url);
     exit();
 }
@@ -105,9 +105,9 @@ if ($cart->isFinalPayableZero) {
 // Apply the coupon code if the form is submitted.
 if (($couponformdata = $couponform->get_data()) && $cart->canUseCoupon) {
     if ($cart->coupon_code && $cart->coupon_code != $couponformdata->coupon_code) {
-        $cart->couponCancel();
+        $cart->coupon_cancel();
     }
-    $cart->couponValidate($couponformdata->coupon_code);
+    $cart->coupon_validate($couponformdata->coupon_code);
 }
 
 // Render the checkout page.
@@ -116,9 +116,9 @@ echo $OUTPUT->render_from_template('enrol_cart/checkout', [
     'cart' => $cart,
     'items' => $cart->items,
     'payment_url' => new moodle_url('/enrol/cart/payment.php'),
-    'coupon_form' => $cart->canEditItems && CouponHelper::isCouponEnable() ? $couponform->render() : '',
+    'coupon_form' => $cart->canEditItems && CouponHelper::is_coupon_enable() ? $couponform->render() : '',
     'session_key' => sesskey(),
-    'gateways' => PaymentHelper::getAllowedPaymentGateways(),
-    'show_gateway' => !CartHelper::getConfig('auto_select_payment_gateway'),
+    'gateways' => PaymentHelper::get_allowed_payment_gateways(),
+    'show_gateway' => !CartHelper::get_config('auto_select_payment_gateway'),
 ]);
 echo $OUTPUT->footer();

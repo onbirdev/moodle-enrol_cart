@@ -63,13 +63,13 @@ $node1 = $PAGE->navigation->add(
 );
 $node2 = $node1->add(
     get_string('pluginname', 'enrol_cart'),
-    CartHelper::getCartViewUrl($cartid),
+    CartHelper::get_cart_view_url($cartid),
     navigation_node::TYPE_CONTAINER,
 );
 $node2->add(get_string('payment', 'enrol_cart'), $url)->make_active();
 
 // Get the cart object.
-$cart = $cartid ? Cart::findOne($cartid) : CartHelper::getCurrent();
+$cart = $cartid ? Cart::findOne($cartid) : CartHelper::get_current();
 
 // Check if the cart is payable.
 if (
@@ -79,13 +79,13 @@ if (
     !$cart->isCurrentUserOwner ||
     $cart->isDelivered
 ) {
-    redirect(CartHelper::getCartViewUrl());
+    redirect(CartHelper::get_cart_view_url());
     exit();
 }
 
 // Prepare and validate payment gateway.
-$gateway = $gateway ?: PaymentHelper::getRandPaymentGateway();
-if (!PaymentHelper::isPaymentGatewayValid($gateway)) {
+$gateway = $gateway ?: PaymentHelper::get_rand_payment_gateway();
+if (!PaymentHelper::is_payment_gateway_valid($gateway)) {
     notification::error(get_string('error_gateway_is_invalid', 'enrol_cart'));
     redirect($cart->checkoutUrl);
     exit();
@@ -95,7 +95,7 @@ if (!PaymentHelper::isPaymentGatewayValid($gateway)) {
 $cart->refresh();
 
 // Validate the coupon if any is applied.
-if (!$cart->couponCheckAvailability() && !$cart->couponCancel()) {
+if (!$cart->couponCheckAvailability() && !$cart->coupon_cancel()) {
     notification::warning($cart->couponErrorMessage ?: get_string('error_coupon_is_invalid', 'enrol_cart'));
     redirect($cart->checkoutUrl);
     exit();
@@ -109,7 +109,7 @@ if ($cart->hasChanged) {
 }
 
 // Apply the coupon code if provided.
-if (!$cart->coupon_id && $couponcode && !$cart->couponApply($couponcode)) {
+if (!$cart->coupon_id && $couponcode && !$cart->coupon_apply($couponcode)) {
     notification::error($cart->couponErrorMessage ?: get_string('error_coupon_apply_failed', 'enrol_cart'));
     redirect($cart->checkoutUrl);
     exit();

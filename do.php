@@ -36,7 +36,7 @@ if (!enrol_is_enabled('cart')) {
 }
 
 // If guest cart access is disabled, require user login.
-$enableguestcart = CartHelper::getConfig('enable_guest_cart');
+$enableguestcart = CartHelper::get_config('enable_guest_cart');
 if (!$enableguestcart) {
     require_login();
 }
@@ -52,17 +52,17 @@ if ($action == 'add' || $action == 'remove') {
 
     if ($action == 'add') {
         if ($instanceid) {
-            CartHelper::addInstanceToCart($instanceid);
+            CartHelper::add_instance_to_cart($instanceid);
         } else if ($courseid) {
-            CartHelper::addCourseToCart($courseid);
+            CartHelper::add_course_to_cart($courseid);
         }
     } else if ($action == 'remove') {
         if ($instanceid) {
-            CartHelper::removeInstanceFromCart($instanceid);
+            CartHelper::remove_instance_from_cart($instanceid);
         } else if ($courseid) {
-            CartHelper::removeCourseFromCart($courseid);
+            CartHelper::remove_course_from_cart($courseid);
         }
     }
 }
 
-redirect(CartHelper::getCartViewUrl());
+redirect(CartHelper::get_cart_view_url());

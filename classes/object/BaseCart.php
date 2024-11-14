@@ -71,7 +71,7 @@ abstract class BaseCart extends BaseModel
      */
     public function getFinalCurrency(): string
     {
-        return (string) CartHelper::getConfig('payment_currency');
+        return (string) CartHelper::get_config('payment_currency');
     }
 
     /**
@@ -95,7 +95,7 @@ abstract class BaseCart extends BaseModel
     public function getFinalPriceFormatted(): string
     {
         if ($this->finalPrice > 0) {
-            return CurrencyFormatter::getCostAsFormatted($this->finalPrice, $this->finalCurrency);
+            return CurrencyFormatter::get_cost_as_formatted($this->finalPrice, $this->finalCurrency);
         }
 
         return get_string('free', 'enrol_cart');
@@ -122,7 +122,7 @@ abstract class BaseCart extends BaseModel
     public function getFinalPayableFormatted(): string
     {
         if ($this->finalPayable > 0) {
-            return CurrencyFormatter::getCostAsFormatted($this->finalPayable, $this->finalCurrency);
+            return CurrencyFormatter::get_cost_as_formatted($this->finalPayable, $this->finalCurrency);
         }
 
         return get_string('free', 'enrol_cart');
@@ -150,7 +150,7 @@ abstract class BaseCart extends BaseModel
     public function getItemsDiscountAmountFormatted(): ?string
     {
         if ($this->itemsDiscountAmount) {
-            return CurrencyFormatter::getCostAsFormatted((float) $this->itemsDiscountAmount, $this->finalCurrency);
+            return CurrencyFormatter::get_cost_as_formatted((float) $this->itemsDiscountAmount, $this->finalCurrency);
         }
 
         return null;
@@ -172,7 +172,7 @@ abstract class BaseCart extends BaseModel
     public function getFinalDiscountAmountFormatted(): ?string
     {
         if ($this->finalDiscountAmount) {
-            return CurrencyFormatter::getCostAsFormatted((float) $this->finalDiscountAmount, $this->finalCurrency);
+            return CurrencyFormatter::get_cost_as_formatted((float) $this->finalDiscountAmount, $this->finalCurrency);
         }
 
         return null;
@@ -223,7 +223,7 @@ abstract class BaseCart extends BaseModel
      */
     public function getPaymentAccountId(): int
     {
-        return (int) CartHelper::getConfig('payment_account');
+        return (int) CartHelper::get_config('payment_account');
     }
 
     /**
@@ -233,7 +233,7 @@ abstract class BaseCart extends BaseModel
      */
     public function addCourse(int $courseId): bool
     {
-        $instanceId = CartHelper::getCourseInstanceId($courseId);
+        $instanceId = CartHelper::get_course_instance_id($courseId);
         if ($instanceId) {
             return $this->addItem($instanceId);
         }
@@ -248,7 +248,7 @@ abstract class BaseCart extends BaseModel
      */
     public function removeCourse(int $courseId): bool
     {
-        $instanceId = CartHelper::getCourseInstanceId($courseId);
+        $instanceId = CartHelper::get_course_instance_id($courseId);
         if ($instanceId) {
             return $this->removeItem($instanceId);
         }
@@ -290,7 +290,7 @@ abstract class BaseCart extends BaseModel
      */
     public function getViewUrl(): moodle_url
     {
-        return CartHelper::getCartViewUrl($this->id ?? null);
+        return CartHelper::get_cart_view_url($this->id ?? null);
     }
 
     /**
@@ -300,7 +300,7 @@ abstract class BaseCart extends BaseModel
      */
     public function getCheckoutUrl(): moodle_url
     {
-        return CartHelper::getCartCheckoutUrl($this->id ?? null);
+        return CartHelper::get_cart_checkout_url($this->id ?? null);
     }
 
     /**

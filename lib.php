@@ -43,9 +43,9 @@ function enrol_cart_render_navbar_output(renderer_base $renderer) {
         return '';
     }
 
-    $cart = CartHelper::getCurrent();
+    $cart = CartHelper::get_current();
     return $renderer->render_from_template('enrol_cart/cart_button', [
         'count' => $cart ? $cart->count : 0,
-        'view_url' => CartHelper::getCartViewUrl(),
+        'view_url' => CartHelper::get_cart_view_url(),
     ]);
 }

@@ -1,14 +1,27 @@
 <?php
+// This file is part of Moodle - http://moodle.org/
+//
+// Moodle is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+//
+// Moodle is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License
+// along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * @package    enrol_cart
- * @brief      Shopping Cart Enrolment Plugin for Moodle
- * @category   Moodle, Enrolment, Shopping Cart
+ * Shopping Cart Enrolment Plugin for Moodle
  *
- * @author     MohammadReza PourMohammad <onbirdev@gmail.com>
- * @copyright  2024 MohammadReza PourMohammad
- * @link       https://onbir.dev
- * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ * @package     enrol_cart
+ * @author      MohammadReza PourMohammad <onbirdev@gmail.com>
+ * @copyright   2024 MohammadReza PourMohammad
+ * @link        https://onbir.dev
+ * @license     http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
 namespace enrol_cart\task;
@@ -26,15 +39,13 @@ use enrol_cart\object\CartStatusInterface;
  * Class DeleteExpiredCarts
  * Scheduled task for deleting expired shopping carts in the enrol_cart plugin.
  */
-class DeleteExpiredCarts extends scheduled_task
-{
+class DeleteExpiredCarts extends scheduled_task {
     /**
      * Get the name of the scheduled task.
      *
      * @return string The localized name of the task.
      */
-    public function get_name()
-    {
+    public function get_name() {
         return get_string('delete_expired_carts', 'enrol_cart');
     }
 
@@ -42,19 +53,17 @@ class DeleteExpiredCarts extends scheduled_task
      * Execute the scheduled task.
      * This function deletes both canceled and pending payment carts that have expired.
      */
-    public function execute()
-    {
-        $this->processDeleteCanceledCarts();
-        $this->processDeletePendingPaymentCarts();
+    public function execute() {
+        $this->process_delete_canceled_carts();
+        $this->process_delete_pending_payment_carts();
     }
 
     /**
      * Process deletion of canceled carts that have expired.
      * It deletes carts with a 'canceled' status that have not been updated within the configured lifetime.
      */
-    protected function processDeleteCanceledCarts()
-    {
-        $time = $this->getTime('canceled_cart_lifetime');
+    protected function process_delete_canceled_carts() {
+        $time = $this->get_time('canceled_cart_lifetime');
         if (!$time) {
             return;
         }
@@ -66,16 +75,15 @@ class DeleteExpiredCarts extends scheduled_task
             'time' => $time,
         ]);
 
-        $this->processDeleteCarts($carts);
+        $this->process_delete_carts($carts);
     }
 
     /**
      * Process deletion of pending payment carts that have expired.
      * It deletes carts with a 'checkout' status that have not been checked out within the configured lifetime.
      */
-    protected function processDeletePendingPaymentCarts()
-    {
-        $time = $this->getTime('pending_payment_cart_lifetime');
+    protected function process_delete_pending_payment_carts() {
+        $time = $this->get_time('pending_payment_cart_lifetime');
         if (!$time) {
             return;
         }
@@ -87,7 +95,7 @@ class DeleteExpiredCarts extends scheduled_task
             'time' => $time,
         ]);
 
-        $this->processDeleteCarts($carts);
+        $this->process_delete_carts($carts);
     }
 
     /**
@@ -96,9 +104,8 @@ class DeleteExpiredCarts extends scheduled_task
      * @param string $item The configuration item for the cart lifetime.
      * @return int The timestamp for expiration or 0 if not configured.
      */
-    protected function getTime(string $item): int
-    {
-        $lifetime = (int) CartHelper::getConfig($item);
+    protected function get_time(string $item): int {
+        $lifetime = (int) CartHelper::get_config($item);
         if (!$lifetime) {
             return 0;
         }
@@ -109,16 +116,15 @@ class DeleteExpiredCarts extends scheduled_task
     /**
      * Check if a cart has associated payment records.
      *
-     * @param int $cartId The ID of the cart.
+     * @param int $cartid The ID of the cart.
      * @return bool True if the cart has payment records, false otherwise.
      */
-    protected function hasPaymentRecord(int $cartId): bool
-    {
+    protected function has_payment_record(int $cartid): bool {
         global $DB;
         return $DB->record_exists('payments', [
             'component' => 'enrol_cart',
             'paymentarea' => 'cart',
-            'itemid' => $cartId,
+            'itemid' => $cartid,
         ]);
     }
 
@@ -127,23 +133,22 @@ class DeleteExpiredCarts extends scheduled_task
      *
      * @param object $cart The object of the cart to delete.
      */
-    private function deleteCart(object $cart)
-    {
+    private function delete_cart(object $cart) {
         global $DB;
 
-        $systemContext = context_system::instance();
+        $systemcontext = context_system::instance();
         $cart = Cart::populateOne($cart);
 
         if ($cart->coupon_id && $cart->coupon_usage_id) {
-            CouponHelper::couponCancel(new CartDto($cart));
+            CouponHelper::coupon_cancel(new CartDto($cart));
         }
 
         $DB->delete_records('enrol_cart_items', ['cart_id' => $cart->id]);
         $DB->delete_records('enrol_cart', ['id' => $cart->id]);
 
-        // Trigger cart deleted event
+        // Trigger cart deleted event.
         $event = cart_deleted::create([
-            'context' => $systemContext,
+            'context' => $systemcontext,
             'objectid' => $cart->id,
             'other' => (array) $cart->getAttributes(),
         ]);
@@ -156,13 +161,12 @@ class DeleteExpiredCarts extends scheduled_task
      *
      * @param array $carts The list of carts to process.
      */
-    private function processDeleteCarts(array $carts)
-    {
+    private function process_delete_carts(array $carts) {
         foreach ($carts as $cart) {
-            if (CartHelper::getConfig('not_delete_cart_with_payment_record') && $this->hasPaymentRecord($cart->id)) {
+            if (CartHelper::get_config('not_delete_cart_with_payment_record') && $this->has_payment_record($cart->id)) {
                 continue;
             }
-            $this->deleteCart($cart);
+            $this->delete_cart($cart);
         }
     }
 }
