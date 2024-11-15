@@ -88,7 +88,7 @@ class coupon_result_dto {
     public function __construct() {
         if (!coupon_helper::is_coupon_enable()) {
             $this->set_ok(false);
-            $this->setErrorMessage(get_string('error_coupon_disabled', 'enrol_cart'));
+            $this->set_error_message(get_string('error_coupon_disabled', 'enrol_cart'));
         }
     }
 
