@@ -27,16 +27,16 @@
 namespace enrol_cart\helper;
 
 use context_course;
-use enrol_cart\object\Cart;
-use enrol_cart\object\CartEnrollmentInstance;
-use enrol_cart\object\CookieCart;
+use enrol_cart\object\cart;
+use enrol_cart\object\cart_enrollment_instance;
+use enrol_cart\object\cookie_cart;
 use moodle_url;
 
 /**
- * Class CartHelper
+ * Class cart_helper
  * Provides utility functions for managing shopping cart-related operations.
  */
-class CartHelper {
+class cart_helper {
     /**
      * Retrieve the configuration setting for enrol_cart.
      *
@@ -85,12 +85,12 @@ class CartHelper {
      * Return an active cart enrol record.
      *
      * @param int $instanceid The ID of the enrolment instance.
-     * @return false|CartEnrollmentInstance The cart enrolment record or false if not found.
+     * @return false|cart_enrollment_instance The cart enrolment record or false if not found.
      */
     public static function get_instance(int $instanceid) {
         static $cache = [];
         if (!isset($cache[$instanceid])) {
-            $instance = CartEnrollmentInstance::findOneById($instanceid);
+            $instance = cart_enrollment_instance::find_one_by_id($instanceid);
             if (
                 (!$instance->enrol_start_date || $instance->enrol_start_date < time()) &&
                 (!$instance->enrol_end_date || $instance->enrol_end_date > time())
@@ -147,20 +147,20 @@ class CartHelper {
      * Move the not-authenticated user cookie cart to the database when the user logs in.
      *
      * @return void
-     * @see UserObserver::userLoggedIn()
+     * @see user_observer::user_logged_in()
      */
     public static function move_cookie_cart_to_db() {
         global $USER;
 
-        $cookiecart = new CookieCart();
+        $cookiecart = new cookie_cart();
 
         if (empty($cookiecart->items) || !$USER->id || isguestuser()) {
             return;
         }
 
-        $cart = Cart::findCurrent(true);
+        $cart = cart::find_current(true);
         foreach ($cookiecart->items as $item) {
-            $cart->addItem($item->instance_id);
+            $cart->add_item($item->instance_id);
         }
 
         $cookiecart->flush();
@@ -170,7 +170,7 @@ class CartHelper {
      * Return the cart object.
      *
      * @param bool $forcenew Create an active cart on the database for the current user.
-     * @return Cart|CookieCart|null The shopping cart object.
+     * @return cart|cookie_cart|null The shopping cart object.
      */
     public static function get_current(bool $forcenew = false) {
         global $USER;
@@ -179,9 +179,9 @@ class CartHelper {
 
         if (!$current) {
             if (!$USER->id || isguestuser()) {
-                $current = new CookieCart();
+                $current = new cookie_cart();
             } else {
-                $current = Cart::findCurrent($forcenew);
+                $current = cart::find_current($forcenew);
             }
         }
 
@@ -196,7 +196,7 @@ class CartHelper {
      */
     public static function add_course_to_cart(int $courseid): bool {
         $cart = self::get_current(true);
-        return $cart->addCourse($courseid);
+        return $cart->add_course($courseid);
     }
 
     /**
@@ -207,7 +207,7 @@ class CartHelper {
      */
     public static function add_instance_to_cart(int $instanceid): bool {
         $cart = self::get_current(true);
-        return $cart->addItem($instanceid);
+        return $cart->add_item($instanceid);
     }
 
     /**
@@ -218,7 +218,7 @@ class CartHelper {
      */
     public static function remove_course_from_cart(int $courseid): bool {
         $cart = self::get_current(true);
-        return $cart->removeCourse($courseid);
+        return $cart->remove_course($courseid);
     }
 
     /**
@@ -229,7 +229,7 @@ class CartHelper {
      */
     public static function remove_instance_from_cart(int $instanceid): bool {
         $cart = self::get_current(true);
-        return $cart->removeItem($instanceid);
+        return $cart->remove_item($instanceid);
     }
 
     /**

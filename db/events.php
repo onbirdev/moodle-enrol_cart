@@ -29,6 +29,6 @@ defined('MOODLE_INTERNAL') || die();
 $observers = [
     [
         'eventname' => '\core\event\user_loggedin',
-        'callback' => '\enrol_cart\observer\UserObserver::user_logged_in',
+        'callback' => '\enrol_cart\observer\user_observer::user_logged_in',
     ],
 ];

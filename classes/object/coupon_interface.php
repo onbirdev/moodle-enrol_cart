@@ -26,13 +26,12 @@
 
 namespace enrol_cart\object;
 
-
 /**
  * Interface for managing coupons in the shopping cart enrolment plugin.
  *
  * This interface defines the methods required for handling coupons in the shopping cart.
  */
-interface CouponInterface {
+interface coupon_interface {
     /**
      * Get the ID of a coupon based on its code.
      *
@@ -44,26 +43,26 @@ interface CouponInterface {
     /**
      * Validate a coupon for a given cart.
      *
-     * @param CartDto $cart The cart object.
+     * @param cart_dto $cart The cart object.
      * @param int $couponid The ID of the coupon to be validated.
-     * @return CouponResultDto The result of the coupon validation.
+     * @return coupon_result_dto The result of the coupon validation.
      */
-    public static function validate_coupon(CartDto $cart, int $couponid): CouponResultDto;
+    public static function validate_coupon(cart_dto $cart, int $couponid): coupon_result_dto;
 
     /**
      * Apply a coupon to a given cart.
      *
-     * @param CartDto $cart The cart object.
+     * @param cart_dto $cart The cart object.
      * @param int $couponid The ID of the coupon to be applied.
-     * @return CouponResultDto The result of the coupon application.
+     * @return coupon_result_dto The result of the coupon application.
      */
-    public static function apply_coupon(CartDto $cart, int $couponid): CouponResultDto;
+    public static function apply_coupon(cart_dto $cart, int $couponid): coupon_result_dto;
 
     /**
      * Cancel the applied coupon for a given cart.
      *
-     * @param CartDto $cart The cart object.
-     * @return CouponResultDto The result of the coupon cancellation.
+     * @param cart_dto $cart The cart object.
+     * @return coupon_result_dto The result of the coupon cancellation.
      */
-    public static function cancel_coupon(CartDto $cart): CouponResultDto;
+    public static function cancel_coupon(cart_dto $cart): coupon_result_dto;
 }

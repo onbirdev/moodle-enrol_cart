@@ -27,11 +27,11 @@
 require_once('../../config.php');
 
 use core\notification;
-use enrol_cart\form\CouponCodeForm;
-use enrol_cart\helper\CartHelper;
-use enrol_cart\helper\CouponHelper;
-use enrol_cart\helper\PaymentHelper;
-use enrol_cart\object\Cart;
+use enrol_cart\form\coupon_code_form;
+use enrol_cart\helper\cart_helper;
+use enrol_cart\helper\coupon_helper;
+use enrol_cart\helper\payment_helper;
+use enrol_cart\object\cart;
 
 global $PAGE, $OUTPUT, $CFG;
 
@@ -43,7 +43,7 @@ require_login();
 
 // Set up the page context and layout.
 $title = get_string('pluginname', 'enrol_cart') . ' - ' . get_string('checkout', 'enrol_cart');
-$url = CartHelper::get_cart_checkout_url($id);
+$url = cart_helper::get_cart_checkout_url($id);
 $context = context_system::instance();
 
 $PAGE->set_context($context);
@@ -61,22 +61,22 @@ $node1 = $PAGE->navigation->add(
 );
 $node2 = $node1->add(
     get_string('pluginname', 'enrol_cart'),
-    CartHelper::get_cart_view_url($id),
+    cart_helper::get_cart_view_url($id),
     navigation_node::TYPE_CONTAINER,
 );
 $node2->add(get_string('checkout', 'enrol_cart'), $url)->make_active();
 
 // Retrieve the cart object.
-$cart = $id ? Cart::findOne($id) : CartHelper::get_current();
+$cart = $id ? cart::find_one($id) : cart_helper::get_current();
 
 // Check if the cart is empty or invalid.
-if (!$cart || $cart->isEmpty || !$cart->isCurrentUserOwner || $cart->isDelivered) {
-    redirect(CartHelper::get_cart_view_url());
+if (!$cart || $cart->is_empty || !$cart->is_current_user_owner || $cart->is_delivered) {
+    redirect(cart_helper::get_cart_view_url());
     exit();
 }
 
 // Initialize the coupon form.
-$couponform = new CouponCodeForm(null, ['cart' => $cart]);
+$couponform = new coupon_code_form(null, ['cart' => $cart]);
 
 // Cancel the coupon if requested.
 if ($couponform->is_cancelled()) {
@@ -89,21 +89,21 @@ if ($couponform->is_cancelled()) {
 $cart->refresh();
 
 // Check if the cart has changed during the process.
-if ($cart->hasChanged) {
+if ($cart->has_changed) {
     notification::warning(get_string('msg_cart_changed', 'enrol_cart'));
     redirect($url);
     exit();
 }
 
 // Process the cart if the final payable amount is zero.
-if ($cart->isFinalPayableZero) {
-    $cart->processFreeItems();
-    redirect($cart->viewUrl);
+if ($cart->is_final_payable_zero) {
+    $cart->process_free_items();
+    redirect($cart->view_url);
     exit();
 }
 
 // Apply the coupon code if the form is submitted.
-if (($couponformdata = $couponform->get_data()) && $cart->canUseCoupon) {
+if (($couponformdata = $couponform->get_data()) && $cart->can_use_coupon) {
     if ($cart->coupon_code && $cart->coupon_code != $couponformdata->coupon_code) {
         $cart->coupon_cancel();
     }
@@ -116,9 +116,9 @@ echo $OUTPUT->render_from_template('enrol_cart/checkout', [
     'cart' => $cart,
     'items' => $cart->items,
     'payment_url' => new moodle_url('/enrol/cart/payment.php'),
-    'coupon_form' => $cart->canEditItems && CouponHelper::is_coupon_enable() ? $couponform->render() : '',
+    'coupon_form' => $cart->can_edit_items && coupon_helper::is_coupon_enable() ? $couponform->render() : '',
     'session_key' => sesskey(),
-    'gateways' => PaymentHelper::get_allowed_payment_gateways(),
-    'show_gateway' => !CartHelper::get_config('auto_select_payment_gateway'),
+    'gateways' => payment_helper::get_allowed_payment_gateways(),
+    'show_gateway' => !cart_helper::get_config('auto_select_payment_gateway'),
 ]);
 echo $OUTPUT->footer();

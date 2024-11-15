@@ -26,8 +26,8 @@
 
 require_once('../../config.php');
 
-use enrol_cart\helper\CartHelper;
-use enrol_cart\object\Cart;
+use enrol_cart\helper\cart_helper;
+use enrol_cart\object\cart;
 
 global $PAGE, $OUTPUT, $CFG, $USER;
 
@@ -41,7 +41,7 @@ if ($id) {
 
 // Set up the page context and layout.
 $title = get_string($id ? 'order' : 'pluginname', 'enrol_cart');
-$url = CartHelper::get_cart_view_url($id);
+$url = cart_helper::get_cart_view_url($id);
 $context = context_system::instance();
 
 $PAGE->set_context($context);
@@ -52,13 +52,13 @@ $PAGE->set_pagetype('cart');
 $PAGE->set_url($url);
 
 // Retrieve the cart object.
-$cart = $id ? Cart::findOne($id) : CartHelper::get_current();
+$cart = $id ? cart::find_one($id) : cart_helper::get_current();
 
 // Check if the current user can manage the cart.
 $canmanage = has_capability('enrol/cart:manage', $context);
 
 // Add navigation nodes.
-if ($cart && $cart->isCurrentUserOwner) {
+if ($cart && $cart->is_current_user_owner) {
     $node1 = $PAGE->navigation->add(
         get_string('my_purchases', 'enrol_cart'),
         new moodle_url('/enrol/cart/my.php'),
@@ -70,7 +70,7 @@ if ($cart && $cart->isCurrentUserOwner) {
 }
 
 // Render an empty cart view if the cart is empty or invalid.
-if (!$cart || $cart->isEmpty) {
+if (!$cart || $cart->is_empty) {
     echo $OUTPUT->header();
     echo $OUTPUT->render_from_template('enrol_cart/view_empty', []);
     echo $OUTPUT->footer();
@@ -78,7 +78,7 @@ if (!$cart || $cart->isEmpty) {
 }
 
 // Ensure the current user owns the cart or has management capability.
-if (!$cart->isCurrentUserOwner && !$canmanage) {
+if (!$cart->is_current_user_owner && !$canmanage) {
     throw new moodle_exception('error_invalid_cart', 'enrol_cart');
 }
 
@@ -86,14 +86,14 @@ if (!$cart->isCurrentUserOwner && !$canmanage) {
 $cart->refresh();
 
 // Render a cart view based on the user's capabilities and cart state.
-if (!$cart->isCurrent || (!$cart->isCurrentUserOwner && $canmanage)) {
+if (!$cart->is_current || (!$cart->is_current_user_owner && $canmanage)) {
     echo $OUTPUT->header();
     echo $OUTPUT->render_from_template('enrol_cart/view', [
         'cart' => $cart,
         'items' => $cart->items,
         'show_detail' => $canmanage,
-        'show_actions' => $cart->isCurrentUserOwner && ($cart->isCurrent || $cart->isCheckout),
-        'checkout_url' => $cart->checkoutUrl,
+        'show_actions' => $cart->is_current_user_owner && ($cart->is_current || $cart->is_checkout),
+        'checkout_url' => $cart->checkout_url,
         'cancel_url' => new moodle_url('/enrol/cart/cancel.php'),
         'session_key' => sesskey(),
     ]);
@@ -107,6 +107,6 @@ echo $OUTPUT->render_from_template('enrol_cart/view_current', [
     'cart' => $cart,
     'items' => $cart->items,
     'checkout_url' => new moodle_url('/enrol/cart/checkout.php'),
-    'can_remove_items' => $cart->canEditItems,
+    'can_remove_items' => $cart->can_edit_items,
 ]);
 echo $OUTPUT->footer();

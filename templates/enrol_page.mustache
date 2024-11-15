@@ -3,11 +3,11 @@
 }}
 <div class="cart-enrol d-flex flex-column align-items-center py-3">
     <div class="cart-enrol__price">
-        {{#instance.hasDiscount}}<div class="cart-item__price"><span class="price currency">{{{instance.priceFormatted}}}</span></div>{{/instance.hasDiscount}}
-        {{#instance.payable}}<div class="cart-item__payable"><span class="payable currency">{{{instance.payableFormatted}}}</span></div>{{/instance.payable}}
+        {{#instance.has_discount}}<div class="cart-item__price"><span class="price currency">{{{instance.price_formatted}}}</span></div>{{/instance.has_discount}}
+        {{#instance.payable}}<div class="cart-item__payable"><span class="payable currency">{{{instance.payable_formatted}}}</span></div>{{/instance.payable}}
     </div>
     <div class="cart-enrol__btn mt-2">
-        <a class="btn btn-secondary btn-add-to-cart" href="{{{instance.addToCartUrl}}}">
+        <a class="btn btn-secondary btn-add-to-cart" href="{{{instance.add_to_cart_url}}}">
             <i class="fa fa-cart-plus"></i>{{#str}} add_to_cart, enrol_cart {{/str}}
         </a>
     </div>

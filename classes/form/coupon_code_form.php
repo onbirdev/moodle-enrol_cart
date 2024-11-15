@@ -28,7 +28,8 @@ namespace enrol_cart\form;
 
 defined('MOODLE_INTERNAL') || die();
 
-use enrol_cart\object\Cart;
+use enrol_cart\object\cart;
+use moodle_exception;
 use moodleform;
 
 require_once("$CFG->libdir/formslib.php");
@@ -39,7 +40,7 @@ require_once("$CFG->libdir/formslib.php");
  * This class extends the moodleform class to provide the form structure and
  * validation logic for users to submit coupon codes in Moodle.
  */
-class CouponCodeForm extends moodleform {
+class coupon_code_form extends moodleform {
     /**
      * {@inheritdoc}
      */
@@ -47,10 +48,10 @@ class CouponCodeForm extends moodleform {
         $form = $this->_form;
 
         $cart = $this->_customdata['cart'];
-        if (!$cart instanceof Cart) {
-            throw new \moodle_exception('error_invalid_cart', 'enrol_cart');
+        if (!$cart instanceof cart) {
+            throw new moodle_exception('error_invalid_cart', 'enrol_cart');
         }
-        $this->set_data(['coupon_code' => $cart->coupon_code]);
+        $this->set_data(['coupon_code' => $cart->get_coupon_code()]);
 
         $form->addElement('hidden', 'id', $cart->id);
         $form->setType('id', PARAM_INT);

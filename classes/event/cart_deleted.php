@@ -29,7 +29,6 @@ namespace enrol_cart\event;
 use core\event\base;
 use moodle_url;
 
-
 /**
  * Event class for when a cart is deleted in Moodle.
  */

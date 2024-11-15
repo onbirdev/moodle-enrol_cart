@@ -22,17 +22,17 @@
 
     <div class="cart-summary cart-summary--payment">
         <input type="hidden" name="id" value="{{cart.id}}"/>
-        {{#cart.couponDiscountAmount}}
-            <input type="hidden" name="coupon_code" value="{{cart.couponCode}}"/>
-        {{/cart.couponDiscountAmount}}
+        {{#cart.coupon_discount_amount}}
+            <input type="hidden" name="coupon_code" value="{{cart.coupon_code}}"/>
+        {{/cart.coupon_discount_amount}}
         <input type="hidden" name="sesskey" value="{{session_key}}">
-        {{#cart.finalPayable}}
+        {{#cart.final_payable}}
             <button class="btn btn-primary btn-block" type="submit">{{#str}} pay, enrol_cart {{/str}}</button>
-        {{/cart.finalPayable}}
-        {{^cart.finalPayable}}
+        {{/cart.final_payable}}
+        {{^cart.final_payable}}
             <button class="btn btn-primary btn-block" type="submit">{{#str}}
                 complete_purchase, enrol_cart {{/str}}</button>
-        {{/cart.finalPayable}}
+        {{/cart.final_payable}}
     </div>
 
 </form>

@@ -28,7 +28,7 @@ defined('MOODLE_INTERNAL') || die();
 
 $tasks = [
     [
-        'classname' => 'enrol_cart\task\DeleteExpiredCarts',
+        'classname' => 'enrol_cart\task\delete_expired_carts',
         'blocking' => 0,
         'minute' => '*/10',
         'hour' => '*',

@@ -27,23 +27,16 @@
 namespace enrol_cart\object;
 
 /**
- * Interface DiscountTypeInterface
- *
- * Defines constants representing different types of discounts.
+ * Interface cart_status_interface
+ * Defines constants for cart status.
  */
-interface DiscountTypeInterface {
-    /**
-     * No discount applied.
-     */
-    public const NO_DISCOUNT = 0;
-
-    /**
-     * Percentage-based discount.
-     */
-    public const PERCENTAGE = 10;
-
-    /**
-     * Fixed amount discount.
-     */
-    public const FIXED = 20;
+interface cart_status_interface {
+    /** @var int The current status of the cart */
+    public const STATUS_CURRENT = 0;
+    /** @var int The status when user is in the process of checkout */
+    public const STATUS_CHECKOUT = 10;
+    /** @var int The status when the cart has been canceled by the user */
+    public const STATUS_CANCELED = 70;
+    /** @var int The status when items in the cart have been delivered to the user */
+    public const STATUS_DELIVERED = 90;
 }

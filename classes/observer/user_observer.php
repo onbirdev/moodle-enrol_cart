@@ -24,19 +24,23 @@
  * @license     http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-namespace enrol_cart\object;
+namespace enrol_cart\observer;
+
+use core\event\user_loggedin;
+use enrol_cart\helper\cart_helper;
 
 /**
- * Interface CartStatus
- * Defines constants for cart status.
+ * The user_observer class observes user login events and performs actions accordingly.
  */
-interface CartStatusInterface {
-    /** @var int The current status of the cart */
-    public const STATUS_CURRENT = 0;
-    /** @var int The status when user is in the process of checkout */
-    public const STATUS_CHECKOUT = 10;
-    /** @var int The status when the cart has been canceled by the user */
-    public const STATUS_CANCELED = 70;
-    /** @var int The status when items in the cart have been delivered to the user */
-    public const STATUS_DELIVERED = 90;
+class user_observer {
+    /**
+     * Handles the user_loggedin event, triggered when a user successfully logs in.
+     *
+     * @param user_loggedin $event The user_loggedin event object.
+     * @return void
+     */
+    public static function user_logged_in(user_loggedin $event) {
+        // Move the contents of the user's cookie cart to the database upon login.
+        cart_helper::move_cookie_cart_to_db();
+    }
 }

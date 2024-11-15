@@ -28,8 +28,8 @@ namespace enrol_cart\payment;
 
 use core\notification;
 use core_payment\local\entities\payable;
-use enrol_cart\helper\CartHelper;
-use enrol_cart\object\Cart;
+use enrol_cart\helper\cart_helper;
+use enrol_cart\object\cart;
 use moodle_url;
 
 /**
@@ -46,20 +46,20 @@ class service_provider implements \core_payment\local\callback\service_provider 
      * @return payable
      */
     public static function get_payable(string $paymentarea, int $itemid): payable {
-        $cart = Cart::findOne($itemid);
+        $cart = cart::find_one($itemid);
 
         if (
             $cart &&
-            $cart->isCurrentUserOwner &&
-            $cart->finalPayable > 0 &&
-            ($cart->isCurrent || $cart->isCheckout) &&
-            !$cart->canEditItems
+            $cart->is_current_user_owner &&
+            $cart->final_payable > 0 &&
+            ($cart->is_current || $cart->is_checkout) &&
+            !$cart->can_edit_items
         ) {
-            if (!$cart->isCheckout) {
+            if (!$cart->is_checkout) {
                 $cart->checkout();
             }
 
-            return new payable($cart->finalPayable, $cart->finalCurrency, $cart->paymentAccountId);
+            return new payable($cart->final_payable, $cart->final_currency, $cart->payment_account_id);
         }
 
         return new payable(-1, '', -1);
@@ -69,10 +69,10 @@ class service_provider implements \core_payment\local\callback\service_provider 
      * {@inheritdoc}
      * @param string $paymentarea Payment area
      * @param int $itemid An identifier that is known to the plugin
-     * @return \moodle_url
+     * @return moodle_url
      */
     public static function get_success_url(string $paymentarea, int $itemid): moodle_url {
-        return CartHelper::get_cart_view_url($itemid);
+        return cart_helper::get_cart_view_url($itemid);
     }
 
     /**
@@ -88,14 +88,14 @@ class service_provider implements \core_payment\local\callback\service_provider 
      * @return bool Whether successful or not
      */
     public static function deliver_order(string $paymentarea, int $itemid, int $paymentid, int $userid): bool {
-        $verifypaymentondelivery = CartHelper::get_config('verify_payment_on_delivery');
-        $cart = Cart::findOne($itemid);
-        $verified = $cart->user_id == $userid && $cart->isCheckout;
+        $verifypaymentondelivery = cart_helper::get_config('verify_payment_on_delivery');
+        $cart = cart::find_one($itemid);
+        $verified = $cart->user_id == $userid && $cart->is_checkout;
 
         if ($verifypaymentondelivery) {
             global $DB;
             $payment = $DB->get_record('payments', ['id' => $paymentid], '*', MUST_EXIST);
-            $verified = $payment->amount == $cart->finalPayable;
+            $verified = $payment->amount == $cart->final_payable;
         }
 
         if ($verified && $cart->deliver()) {

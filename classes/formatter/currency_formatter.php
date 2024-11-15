@@ -27,13 +27,13 @@
 namespace enrol_cart\formatter;
 
 use core_payment\helper;
-use enrol_cart\helper\CartHelper;
+use enrol_cart\helper\cart_helper;
 
 /**
  * Class CurrencyHelper
  * Provides utility functions for managing payment currency.
  */
-class CurrencyFormatter {
+class currency_formatter {
     /**
      * Get the mapping of currency codes to human-readable names.
      *
@@ -69,13 +69,13 @@ class CurrencyFormatter {
      */
     public static function get_cost_as_formatted(float $amount, string $currency): string {
         // Convert IRR to IRT if configured.
-        if ($currency == 'IRR' && CartHelper::get_config('convert_irr_to_irt')) {
+        if ($currency == 'IRR' && cart_helper::get_config('convert_irr_to_irt')) {
             $amount = $amount / 10;
         }
         $cost = helper::get_cost_as_string($amount, $currency);
 
         // Replace IRR with IRT in the cost string if configured.
-        if ($currency == 'IRR' && CartHelper::get_config('convert_irr_to_irt')) {
+        if ($currency == 'IRR' && cart_helper::get_config('convert_irr_to_irt')) {
             $cost = str_replace('IRR', 'IRT', $cost);
         }
 
@@ -85,7 +85,7 @@ class CurrencyFormatter {
         }
 
         // Convert numbers to Persian if configured.
-        if (CartHelper::get_config('convert_numbers_to_persian')) {
+        if (cart_helper::get_config('convert_numbers_to_persian')) {
             $cost = self::convert_english_numbers_to_persian($cost);
         }
 

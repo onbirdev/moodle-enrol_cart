@@ -25,10 +25,10 @@
  */
 
 use core_payment\helper;
-use enrol_cart\helper\CartHelper;
-use enrol_cart\helper\PaymentHelper;
-use enrol_cart\object\CartEnrollmentInstance;
-use enrol_cart\object\DiscountTypeInterface;
+use enrol_cart\helper\cart_helper;
+use enrol_cart\helper\payment_helper;
+use enrol_cart\object\cart_enrollment_instance;
+use enrol_cart\object\discount_type_interface;
 
 /**
  * enrol_cart_plugin class for handling cart-based enrolment in Moodle.
@@ -61,7 +61,7 @@ class enrol_cart_plugin extends enrol_plugin {
         if ($instance->id) {
             $roles = get_default_enrol_roles($context, $instance->roleid);
         } else {
-            $roles = get_default_enrol_roles($context, CartHelper::get_config('assign_role'));
+            $roles = get_default_enrol_roles($context, cart_helper::get_config('assign_role'));
         }
 
         return $roles;
@@ -133,6 +133,7 @@ class enrol_cart_plugin extends enrol_plugin {
 
     /**
      * Returns true if the user can add a new instance in this course.
+     *
      * @param int $courseid
      * @return boolean
      * @throws coding_exception
@@ -163,12 +164,13 @@ class enrol_cart_plugin extends enrol_plugin {
 
     /**
      * Add new instance of enrol plugin.
+     *
      * @param object $course
      * @param array $fields instance fields
      * @return int|null id of new instance, null when can not be created
      * @throws coding_exception
      */
-    public function add_instance($course, array $fields = []): ?int {
+    public function add_instance($course, ?array $fields = null): ?int {
         if ($fields && !empty($fields['cost'])) {
             $fields['cost'] = unformat_float($fields['cost']);
             $fields['customint1'] = unformat_float($fields['customint1']);
@@ -181,6 +183,7 @@ class enrol_cart_plugin extends enrol_plugin {
 
     /**
      * Update instance of enrol plugin.
+     *
      * @param stdClass $instance
      * @param stdClass $data modified instance fields
      * @return boolean
@@ -227,7 +230,7 @@ class enrol_cart_plugin extends enrol_plugin {
             return '';
         }
 
-        $instanceobject = CartEnrollmentInstance::findOneById($instance->id);
+        $instanceobject = cart_enrollment_instance::find_one_by_id($instance->id);
 
         return $OUTPUT->box(
             $OUTPUT->render_from_template('enrol_cart/enrol_page', [
@@ -314,7 +317,7 @@ class enrol_cart_plugin extends enrol_plugin {
 
         // Instance status.
         $mform->addElement('select', 'status', get_string('status', 'enrol_cart'), $this->get_status_options());
-        $mform->setDefault('status', CartHelper::get_config('status'));
+        $mform->setDefault('status', cart_helper::get_config('status'));
 
         $mform->addElement('html', '<hr/>');
 
@@ -328,7 +331,7 @@ class enrol_cart_plugin extends enrol_plugin {
             'select',
             'customint1',
             get_string('discount_type', 'enrol_cart'),
-            CartEnrollmentInstance::getDiscountTypeOptions(),
+            cart_enrollment_instance::get_discount_type_options(),
         );
         $mform->setType('customint1', PARAM_RAW);
 
@@ -341,10 +344,10 @@ class enrol_cart_plugin extends enrol_plugin {
             'select',
             'currency',
             get_string('currency', 'enrol_cart'),
-            PaymentHelper::get_available_currencies(),
+            payment_helper::get_available_currencies(),
             ['disabled' => true],
         );
-        $mform->setDefault('currency', CartHelper::get_config('currency'));
+        $mform->setDefault('currency', cart_helper::get_config('currency'));
 
         // Payable amount (only show).
         $mform->addElement('static', 'payable', get_string('payable', 'enrol_cart'));
@@ -358,14 +361,14 @@ class enrol_cart_plugin extends enrol_plugin {
             get_string('assign_role', 'enrol_cart'),
             $this->get_role_id_options($instance, $context),
         );
-        $mform->setDefault('roleid', CartHelper::get_config('assign_role'));
+        $mform->setDefault('roleid', cart_helper::get_config('assign_role'));
 
         // Enrol period.
         $mform->addElement('duration', 'enrolperiod', get_string('enrol_period', 'enrol_cart'), [
             'optional' => true,
             'defaultunit' => 86400,
         ]);
-        $mform->setDefault('enrolperiod', CartHelper::get_config('enrol_period'));
+        $mform->setDefault('enrolperiod', cart_helper::get_config('enrol_period'));
         $mform->addHelpButton('enrolperiod', 'enrol_period', 'enrol_cart');
 
         // Enrol start date.
@@ -417,7 +420,7 @@ class enrol_cart_plugin extends enrol_plugin {
 
         // Discount type validate.
         $discounttype = $data['customint1'];
-        if (!in_array($discounttype, array_keys(CartEnrollmentInstance::getDiscountTypeOptions()))) {
+        if (!in_array($discounttype, array_keys(cart_enrollment_instance::get_discount_type_options()))) {
             $errors['customint1'] = get_string('error_discount_type_is_invalid', 'enrol_cart');
         }
 
@@ -430,7 +433,7 @@ class enrol_cart_plugin extends enrol_plugin {
 
             if (
                 empty($errors['customchar1']) &&
-                $discounttype == DiscountTypeInterface::FIXED &&
+                $discounttype == discount_type_interface::FIXED &&
                 $discountamount > $cost
             ) {
                 $errors['customchar1'] = get_string('error_discount_amount_is_higher', 'enrol_cart');
@@ -438,7 +441,7 @@ class enrol_cart_plugin extends enrol_plugin {
 
             if (
                 empty($errors['customchar1']) &&
-                $discounttype == DiscountTypeInterface::PERCENTAGE &&
+                $discounttype == discount_type_interface::PERCENTAGE &&
                 (!ctype_digit(strval($discountamount)) || $discountamount > 100 || $discountamount < 0)
             ) {
                 $errors['customchar1'] = get_string('error_discount_amount_percentage_is_invalid', 'enrol_cart');
@@ -447,11 +450,11 @@ class enrol_cart_plugin extends enrol_plugin {
 
         // Status validate.
         if ($data['status'] == ENROL_INSTANCE_ENABLED) {
-            if (!CartHelper::get_config('payment_account')) {
+            if (!cart_helper::get_config('payment_account')) {
                 $errors['status'] = get_string('error_status_no_payment_account', 'enrol_cart');
-            } else if (!CartHelper::get_config('payment_currency')) {
+            } else if (!cart_helper::get_config('payment_currency')) {
                 $errors['status'] = get_string('error_status_no_payment_currency', 'enrol_cart');
-            } else if (!CartHelper::get_config('payment_gateways')) {
+            } else if (!cart_helper::get_config('payment_gateways')) {
                 $errors['status'] = get_string('error_status_no_payment_gateways', 'enrol_cart');
             }
         }
@@ -472,6 +475,7 @@ class enrol_cart_plugin extends enrol_plugin {
 
     /**
      * Execute synchronisation.
+     *
      * @param progress_trace $trace
      * @return int exit code, 0 means ok
      */

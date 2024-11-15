@@ -29,17 +29,17 @@ namespace enrol_cart\task;
 use context_system;
 use core\task\scheduled_task;
 use enrol_cart\event\cart_deleted;
-use enrol_cart\helper\CartHelper;
-use enrol_cart\helper\CouponHelper;
-use enrol_cart\object\Cart;
-use enrol_cart\object\CartDto;
-use enrol_cart\object\CartStatusInterface;
+use enrol_cart\helper\cart_helper;
+use enrol_cart\helper\coupon_helper;
+use enrol_cart\object\cart;
+use enrol_cart\object\cart_dto;
+use enrol_cart\object\cart_status_interface;
 
 /**
- * Class DeleteExpiredCarts
+ * Class delete_expired_carts
  * Scheduled task for deleting expired shopping carts in the enrol_cart plugin.
  */
-class DeleteExpiredCarts extends scheduled_task {
+class delete_expired_carts extends scheduled_task {
     /**
      * Get the name of the scheduled task.
      *
@@ -71,7 +71,7 @@ class DeleteExpiredCarts extends scheduled_task {
         global $DB;
 
         $carts = $DB->get_records_sql('SELECT * FROM {enrol_cart} WHERE status = :status AND updated_at < :time', [
-            'status' => CartStatusInterface::STATUS_CANCELED,
+            'status' => cart_status_interface::STATUS_CANCELED,
             'time' => $time,
         ]);
 
@@ -91,7 +91,7 @@ class DeleteExpiredCarts extends scheduled_task {
         global $DB;
 
         $carts = $DB->get_records_sql('SELECT * FROM {enrol_cart} WHERE status = :status AND checkout_at < :time', [
-            'status' => CartStatusInterface::STATUS_CHECKOUT,
+            'status' => cart_status_interface::STATUS_CHECKOUT,
             'time' => $time,
         ]);
 
@@ -105,7 +105,7 @@ class DeleteExpiredCarts extends scheduled_task {
      * @return int The timestamp for expiration or 0 if not configured.
      */
     protected function get_time(string $item): int {
-        $lifetime = (int) CartHelper::get_config($item);
+        $lifetime = (int) cart_helper::get_config($item);
         if (!$lifetime) {
             return 0;
         }
@@ -137,10 +137,10 @@ class DeleteExpiredCarts extends scheduled_task {
         global $DB;
 
         $systemcontext = context_system::instance();
-        $cart = Cart::populateOne($cart);
+        $cart = cart::populate_one($cart);
 
         if ($cart->coupon_id && $cart->coupon_usage_id) {
-            CouponHelper::coupon_cancel(new CartDto($cart));
+            coupon_helper::coupon_cancel(new cart_dto($cart));
         }
 
         $DB->delete_records('enrol_cart_items', ['cart_id' => $cart->id]);
@@ -150,7 +150,7 @@ class DeleteExpiredCarts extends scheduled_task {
         $event = cart_deleted::create([
             'context' => $systemcontext,
             'objectid' => $cart->id,
-            'other' => (array) $cart->getAttributes(),
+            'other' => (array) $cart->get_attributes(),
         ]);
         $event->trigger();
     }
@@ -163,7 +163,7 @@ class DeleteExpiredCarts extends scheduled_task {
      */
     private function process_delete_carts(array $carts) {
         foreach ($carts as $cart) {
-            if (CartHelper::get_config('not_delete_cart_with_payment_record') && $this->has_payment_record($cart->id)) {
+            if (cart_helper::get_config('not_delete_cart_with_payment_record') && $this->has_payment_record($cart->id)) {
                 continue;
             }
             $this->delete_cart($cart);

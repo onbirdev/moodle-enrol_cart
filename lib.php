@@ -24,7 +24,7 @@
  * @license     http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-use enrol_cart\helper\CartHelper;
+use enrol_cart\helper\cart_helper;
 
 /**
  * Renders the shopping cart button in the Moodle navbar.
@@ -43,9 +43,9 @@ function enrol_cart_render_navbar_output(renderer_base $renderer) {
         return '';
     }
 
-    $cart = CartHelper::get_current();
+    $cart = cart_helper::get_current();
     return $renderer->render_from_template('enrol_cart/cart_button', [
         'count' => $cart ? $cart->count : 0,
-        'view_url' => CartHelper::get_cart_view_url(),
+        'view_url' => cart_helper::get_cart_view_url(),
     ]);
 }

@@ -29,9 +29,9 @@ namespace enrol_cart\object;
 use moodle_url;
 
 /**
- * Class User
+ * Class user
  *
- * Represents a user in the system and extends functionality from BaseModel.
+ * Represents a user in the system and extends functionality from base_model.
  *
  * @property int $id The ID of the user.
  * @property string $username The username of the user.
@@ -39,17 +39,16 @@ use moodle_url;
  * @property string $first_name The first name of the user.
  * @property string $last_name The last name of the user.
  *
- * @property string $fullName The full name of the user.
- * @property string $profileUrl The url of the user profile.
+ * @property string $full_name The full name of the user.
+ * @property string $profile_url The url of the user profile.
  */
-class User extends BaseModel {
+class user extends base_model {
     /**
      * Retrieves the attributes of the course.
      *
      * @return array An array of course attributes including id, name, and title.
      */
-    public function attributes(): array
-    {
+    public function attributes(): array {
         return ['id', 'username', 'email', 'first_name', 'last_name'];
     }
 
@@ -59,25 +58,35 @@ class User extends BaseModel {
      * @param int $userid The user ID of the user.
      * @return null|self The User object corresponding to the user ID.
      */
-    public static function findOneId(int $userid): ?self {
+    public static function find_one_id(int $userid): ?self {
         global $DB;
 
         // SQL query to retrieve user details based on user ID.
         $row = $DB->get_record_sql(
             'SELECT id, username, email, firstname as first_name, lastname as last_name
-                 FROM {user} u 
+                 FROM {user} u
                  WHERE id = :id',
             ['id' => $userid],
         );
 
-        return $row ? static::populateOne($row) : null;
+        return $row ? static::populate_one($row) : null;
     }
 
-    public function getFullName(): string {
+    /**
+     * Gets the full name of the user by combining first and last names.
+     *
+     * @return string The full name of the user.
+     */
+    public function get_full_name(): string {
         return $this->first_name . ' ' . $this->last_name;
     }
 
-    public function getProfileUrl(): moodle_url {
+    /**
+     * Generates the URL to the user's profile page.
+     *
+     * @return moodle_url The URL for the user's profile page.
+     */
+    public function get_profile_url(): moodle_url {
         return new moodle_url('/user/profile.php', ['id' => $this->id]);
     }
 }

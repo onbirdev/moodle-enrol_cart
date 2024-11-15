@@ -1,31 +1,42 @@
 <?php
+// This file is part of Moodle - http://moodle.org/
+//
+// Moodle is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+//
+// Moodle is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License
+// along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * @package    enrol_cart
- * @brief      Shopping Cart Enrolment Plugin for Moodle
- * @category   Moodle, Enrolment, Shopping Cart
+ * Shopping Cart Enrolment Plugin for Moodle
  *
- * @author     MohammadReza PourMohammad <onbirdev@gmail.com>
- * @copyright  2024 MohammadReza PourMohammad
- * @link       https://onbir.dev
- * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ * @package     enrol_cart
+ * @author      MohammadReza PourMohammad <onbirdev@gmail.com>
+ * @copyright   2024 MohammadReza PourMohammad
+ * @link        https://onbir.dev
+ * @license     http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
 namespace enrol_cart\object;
 
-defined('MOODLE_INTERNAL') || die();
-
 use core\notification;
 use dml_exception;
-use enrol_cart\formatter\CurrencyFormatter;
-use enrol_cart\helper\CartHelper;
-use enrol_cart\helper\CouponHelper;
+use enrol_cart\formatter\currency_formatter;
+use enrol_cart\helper\cart_helper;
+use enrol_cart\helper\coupon_helper;
 use Exception;
 
 /**
- * Class Cart
+ * Class cart
  *
- * Represents a shopping cart and extends functionality from BaseCart.
+ * Represents a shopping cart and extends functionality from base_cart.
  * Provides methods to manage cart items, handle coupon discounts, and process enrolments.
  *
  * @property int $id The unique identifier for the cart.
@@ -35,9 +46,7 @@ use Exception;
  * @property float|null $price The total price of items in the cart.
  * @property float|null $payable The total payable amount after apply discount, tax, ....
  * @property int|null $coupon_id The ID of the applied coupon, if any.
- * @property string|null $coupon_code The code of the applied coupon.
  * @property int|null $coupon_usage_id The ID of the coupon user usage record.
- * @property float|null $coupon_discount_amount The discount amount from the applied coupon.
  * @property array|null $data Additional data related to the cart.
  * @property int|null $checkout_at The timestamp when the cart status changed for checkout.
  * @property int $created_at The timestamp when the cart was created.
@@ -45,42 +54,50 @@ use Exception;
  * @property int|null $updated_at The timestamp when the cart was last updated.
  * @property int|null $updated_by The user ID who last updated the cart.
  *
- * @property bool $hasChanged Returns true if the cart has changed, false otherwise.
- * @property bool $isCheckoutExpired Returns true if the checkout session has expired, false otherwise.
- * @property bool $isFinalPayableZero Check if the cart's payable amount is zero
+ * @property bool $has_changed Returns true if the cart has changed, false otherwise.
+ * @property bool $is_checkout_expired Returns true if the checkout session has expired, false otherwise.
+ * @property bool $is_final_payable_zero Check if the cart's payable amount is zero
  *
- * @property User $user The user object associated with this cart.
- * @property CartItem[] $items An array of CartItem objects representing the items in the cart.
+ * @property user $user The user object associated with this cart.
+ * @property cart_item[] $items An array of cart_item objects representing the items in the cart.
  *
- * @property bool $hasCoupon Checks if a coupon is applied to the cart.
- * @property bool $canUseCoupon Determines if a coupon can be used with the cart.
- * @property string|null $couponCode The code of the last applied coupon, if any.
- * @property string|null $couponErrorCode The error code from the last applied coupon, if any.
- * @property string|null $couponErrorMessage The error message from the last applied coupon, if any.
- * @property float|null $couponDiscountAmount The discount amount from the applied coupon.
- * @property string|null $couponDiscountAmountFormatted The formatted coupon discount amount.
+ * @property bool $has_coupon Checks if a coupon is applied to the cart.
+ * @property bool $can_use_coupon Determines if a coupon can be used with the cart.
+ * @property string|null $coupon_code The code of the last applied coupon, if any.
+ * @property string|null $coupon_error_code The error code from the last applied coupon, if any.
+ * @property string|null $coupon_error_message The error message from the last applied coupon, if any.
+ * @property float|null $coupon_discount_amount The discount amount from the applied coupon.
+ * @property string|null $coupon_discount_amount_formatted The formatted coupon discount amount.
  *
  */
-class Cart extends BaseCart
-{
+class cart extends base_cart {
+    /**
+     * @var bool Indicates if the cart has been changed since last save.
+     */
     private bool $_changed = false;
-    private CouponResultDto $_couponResult;
-    private ?User $_user = null;
 
     /**
-     * @inheritDoc
+     * @var coupon_result_dto Holds the result details of the last applied coupon.
      */
-    public function init()
-    {
-        $this->_couponResult = new CouponResultDto();
+    private coupon_result_dto $_coupon_result;
+
+    /**
+     * @var user|null The user associated with this cart, or null if not set.
+     */
+    private ?user $_user = null;
+
+    /**
+     * {@inheritDoc}
+     */
+    public function init() {
+        $this->_coupon_result = new coupon_result_dto();
     }
 
     /**
-     * @inheritdoc
+     * {@inheritDoc}
      * @return string[]
      */
-    public function attributes(): array
-    {
+    public function attributes(): array {
         return [
             'id',
             'user_id',
@@ -103,71 +120,71 @@ class Cart extends BaseCart
 
     /**
      * Retrieve the cart currency.
+     *
      * @return string The currency code of the cart.
      */
-    public function getFinalCurrency(): string
-    {
-        return $this->currency ?: parent::getFinalCurrency();
+    public function get_final_currency(): string {
+        return $this->currency ?: parent::get_final_currency();
     }
 
     /**
      * Retrieve the cart price.
-     * @return int|string The total price of items in the cart.
+     *
+     * @return float|int|null The total price of items in the cart.
      */
-    public function getFinalPrice()
-    {
-        if ($this->isDelivered) {
+    public function get_final_price() {
+        if ($this->is_delivered) {
             return $this->price;
         }
 
-        return parent::getFinalPrice();
+        return parent::get_final_price();
     }
 
     /**
      * Retrieve the cart payable.
+     *
      * @return float|int|null The total payable amount of items in the cart.
      */
-    public function getFinalPayable()
-    {
-        if (!$this->canEditItems) {
+    public function get_final_payable() {
+        if (!$this->can_edit_items) {
             return $this->payable;
         }
 
-        $finalPayable = parent::getFinalPayable();
+        $finalpayable = parent::get_final_payable();
 
-        if ($this->hasCoupon) {
-            $finalPayable -= $this->couponDiscountAmount;
+        if ($this->has_coupon) {
+            $finalpayable -= $this->coupon_discount_amount;
         }
 
-        return $finalPayable;
+        return $finalpayable;
     }
 
     /**
      * Retrieve the cart total payable.
+     *
      * @return float|int|null The total payable amount of items in the cart.
      */
-    public function getFinalTotalPayable()
-    {
-        if ($this->isDelivered) {
+    public function get_final_total_payable() {
+        if ($this->is_delivered) {
             return $this->payable;
         }
 
-        $finalTotalPayable = parent::getFinalPayable();
+        $finaltotalpayable = parent::get_final_payable();
 
-        if ($this->hasCoupon) {
-            $finalTotalPayable -= $this->couponDiscountAmount;
+        if ($this->has_coupon) {
+            $finaltotalpayable -= $this->coupon_discount_amount;
         }
 
-        return $finalTotalPayable;
+        return $finaltotalpayable;
     }
 
     /**
      * Return the cart object.
-     * @param bool $forceNew Create an active cart on the database for the current user.
-     * @return Cart|null
+     *
+     * @param bool $forcenew Create an active cart on the database for the current user.
+     * @return cart|null
      */
-    public static function findCurrent(bool $forceNew = false): ?Cart
-    {
+    public static function find_current(bool $forcenew = false): ?cart {
         global $DB, $USER;
 
         static $current = null;
@@ -175,37 +192,40 @@ class Cart extends BaseCart
         if (!$current) {
             $cart = $DB->get_record('enrol_cart', [
                 'user_id' => $USER->id,
-                'status' => CartStatusInterface::STATUS_CURRENT,
+                'status' => cart_status_interface::STATUS_CURRENT,
             ]);
-            if (!$cart && $forceNew) {
+            if (!$cart && $forcenew) {
                 $cart = (object) [
                     'user_id' => $USER->id,
-                    'status' => CartStatusInterface::STATUS_CURRENT,
+                    'status' => cart_status_interface::STATUS_CURRENT,
                     'created_at' => time(),
                     'created_by' => $USER->id,
                 ];
                 $cart->id = $DB->insert_record('enrol_cart', $cart);
             }
-            $current = $cart ? static::populateOne($cart) : null;
+            $current = $cart ? static::populate_one($cart) : null;
         }
 
         return $current;
     }
 
     /**
+     * Return the cart object.
+     *
      * @param int $id The ID of the cart to retrieve.
-     * @return Cart|null
-     * @throws dml_exception
+     * @return cart|null
      */
-    public static function findOne(int $id): ?Cart
-    {
+    public static function find_one(int $id): ?cart {
         global $DB;
+
         $cart = $DB->get_record('enrol_cart', [
             'id' => $id,
         ]);
+
         if ($cart) {
-            return static::populateOne($cart);
+            return static::populate_one($cart);
         }
+
         return null;
     }
 
@@ -215,19 +235,18 @@ class Cart extends BaseCart
      * This method queries the database to get a list of user carts and paginates the results
      * based on the given page number and limit per page.
      *
-     * @param int $userId The ID of the user whose carts are being retrieved.
+     * @param int $userid The ID of the user whose carts are being retrieved.
      * @param int $page The current page number for pagination (starting from 0).
      * @param int $limit The number of records to return per page.
      * @return array An array of user carts. If no carts are found, returns an empty array.
      */
-    public static function findAllByUserId(int $userId, int $page, int $limit): array
-    {
+    public static function find_all_by_user_id(int $userid, int $page, int $limit): array {
         global $DB;
 
         $rows = $DB->get_records_sql(
             'SELECT * FROM {enrol_cart} WHERE user_id = :user_id ORDER BY id DESC',
             [
-                'user_id' => $userId,
+                'user_id' => $userid,
             ],
             $page * $limit,
             $limit,
@@ -245,26 +264,25 @@ class Cart extends BaseCart
      *
      * This method counts the number of cart records in the database for a given user.
      *
-     * @param int $userId The ID of the user whose cart count is being retrieved.
+     * @param int $userid The ID of the user whose cart count is being retrieved.
      * @return int The total number of carts associated with the user.
      */
-    public static function countAllByUserId(int $userId): int
-    {
+    public static function count_all_by_user_id(int $userid): int {
         global $DB;
 
         // Return the count of cart records associated with the user.
         return $DB->count_records('enrol_cart', [
-            'user_id' => $userId,
+            'user_id' => $userid,
         ]);
     }
 
     /**
      * Save cart to DB.
+     *
      * @return bool
      * @throws dml_exception
      */
-    public function save(): bool
-    {
+    public function save(): bool {
         global $DB, $USER;
 
         $data = [];
@@ -272,7 +290,7 @@ class Cart extends BaseCart
             $data[$attribute] = $this->$attribute;
         }
 
-        // create new record
+        // Create new record.
         if (empty($data['id'])) {
             $data['created_at'] = time();
             $data['created_by'] = $USER->id;
@@ -283,7 +301,7 @@ class Cart extends BaseCart
             return true;
         }
 
-        // update
+        // Update.
         $data['updated_at'] = time();
         $data['updated_by'] = $USER->id;
 
@@ -295,22 +313,21 @@ class Cart extends BaseCart
      *
      * This method adds an enrolment instance to the shopping cart.
      *
-     * @param int $instanceId The ID of the enrolment instance to be added to the cart.
+     * @param int $instanceid The ID of the enrolment instance to be added to the cart.
      * @return bool True if the item is successfully added, false otherwise.
      */
-    public function addItem(int $instanceId): bool
-    {
-        // Check if the user has permission to edit items in the cart, and the item does not already exist in the cart
-        if ($this->canEditItems && !$this->hasItem($instanceId)) {
-            // Ensure the user is not already enrolled in the instance, and add item to cart
+    public function add_item(int $instanceid): bool {
+        // Check if the user has permission to edit items in the cart, and the item does not already exist in the cart.
+        if ($this->can_edit_items && !$this->has_item($instanceid)) {
+            // Ensure the user is not already enrolled in the instance, and add item to cart.
             if (
-                !CartHelper::is_user_enrolled($instanceId, $this->user_id) &&
-                CartItem::addItemToCart($this->id, $instanceId)
+                !cart_helper::is_user_enrolled($instanceid, $this->user_id) &&
+                cart_item::add_item_to_cart($this->id, $instanceid)
             ) {
                 return $this->refresh();
             } else {
-                $course = Course::findOneByInstanceId($instanceId);
-                // User already enrolled
+                $course = course::find_one_by_instance_id($instanceid);
+                // User already enrolled.
                 notification::info(
                     get_string('msg_already_enrolled', 'enrol_cart', [
                         'title' => $course ? $course->title : '',
@@ -319,20 +336,19 @@ class Cart extends BaseCart
             }
         }
 
-        return false; // Item not added
+        return false;
     }
 
     /**
      * Remove an item from the cart.
      *
-     * @param int $instanceId The ID of the enrolment instance to be removed from the cart.
+     * @param int $instanceid The ID of the enrolment instance to be removed from the cart.
      * @return bool True if the item is successfully removed, false otherwise.
      */
-    public function removeItem(int $instanceId): bool
-    {
-        if ($this->canEditItems) {
+    public function remove_item(int $instanceid): bool {
+        if ($this->can_edit_items) {
             foreach ($this->items as $item) {
-                if ($item->instance_id == $instanceId && $item->delete()) {
+                if ($item->instance_id == $instanceid && $item->delete()) {
                     return $this->refresh();
                 }
             }
@@ -342,13 +358,12 @@ class Cart extends BaseCart
     }
 
     /**
-     * @inheritDoc
-     * @return CartItem[] An array of CartItem objects representing the cart items.
+     * {@inheritDoc}
+     * @return cart_item[] An array of cart_item objects representing the cart items.
      */
-    public function getItems(): array
-    {
+    public function get_items(): array {
         if (empty($this->_items)) {
-            $this->_items = CartItem::findAll($this->id);
+            $this->_items = cart_item::find_all($this->id);
         }
 
         return $this->_items;
@@ -357,12 +372,11 @@ class Cart extends BaseCart
     /**
      * Retrieves the user object associated with the cart.
      *
-     * @return User|null The user object associated with the cart.
+     * @return user|null The user object associated with the cart.
      */
-    public function getUser(): ?User
-    {
+    public function get_user(): ?user {
         if (!$this->_user) {
-            $this->_user = User::findOneId($this->user_id);
+            $this->_user = user::find_one_id($this->user_id);
         }
 
         return $this->_user;
@@ -372,29 +386,29 @@ class Cart extends BaseCart
      * Refresh the cart items.
      * Calculate the price and payable.
      * Remove disabled or invalid enrol items.
+     *
      * @param bool $force
      * @return bool
      */
-    public function refresh(bool $force = false): bool
-    {
-        if (!$this->canEditItems && !$force) {
+    public function refresh(bool $force = false): bool {
+        if (!$this->can_edit_items && !$force) {
             return false;
         }
 
         $this->_changed = false;
         $this->_items = [];
 
-        // remove disabled or invalid enrol from the cart
-        $items = CartItem::findAll($this->id);
+        // Remove disabled or invalid enrol from the cart.
+        $items = cart_item::find_all($this->id);
         foreach ($items as $item) {
-            if (!CartHelper::has_instance($item->instance_id)) {
+            if (!cart_helper::has_instance($item->instance_id)) {
                 $this->_changed = true;
                 $item->delete();
                 notification::info(get_string('msg_instance_deleted', 'enrol_cart'));
                 continue;
             }
 
-            if (CartHelper::is_user_enrolled($item->instance_id, $this->user_id)) {
+            if (cart_helper::is_user_enrolled($item->instance_id, $this->user_id)) {
                 $this->_changed = true;
                 $item->delete();
                 notification::info(
@@ -405,16 +419,16 @@ class Cart extends BaseCart
                 continue;
             }
 
-            $item->updatePriceAndPayable();
+            $item->update_price_and_payable();
         }
 
-        // set calculated price and payable
-        if ($this->price != $this->finalPrice || $this->payable != $this->finalPayable) {
+        // Set calculated price and payable.
+        if ($this->price != $this->final_price || $this->payable != $this->final_payable) {
             $this->_changed = true;
-            $this->price = $this->finalPrice;
-            $this->payable = $this->finalPayable;
+            $this->price = $this->final_price;
+            $this->payable = $this->final_payable;
 
-            // save changes
+            // Save changes.
             return $this->save();
         }
 
@@ -430,8 +444,7 @@ class Cart extends BaseCart
      *
      * @return bool Returns true if the cart has changed, false otherwise.
      */
-    public function getHasChanged(): bool
-    {
+    public function get_has_changed(): bool {
         return $this->_changed;
     }
 
@@ -440,25 +453,24 @@ class Cart extends BaseCart
      *
      * @return bool Returns true if the checkout session has expired, false otherwise.
      */
-    public function getIsCheckoutExpired(): bool
-    {
-        if (!$this->isCheckout) {
+    public function get_is_checkout_expired(): bool {
+        if (!$this->is_checkout) {
             return false;
         }
 
-        $timeLimit = CartHelper::get_config('payment_completion_time');
+        $timelimit = cart_helper::get_config('payment_completion_time');
 
-        return time() - $this->checkout_at > $timeLimit;
+        return time() - $this->checkout_at > $timelimit;
     }
 
     /**
      * Determine if items in the cart can still be edited.
      *
-     * @return bool Returns true if items can be edited (either the cart is current or it is checked out but not expired), false otherwise.
+     * @return bool Returns true if items can be edited (either the cart is current or it is checked out but not expired), false
+     *     otherwise.
      */
-    public function getCanEditItems(): bool
-    {
-        return $this->isCurrentUserOwner && ($this->isCurrent || ($this->isCheckout && $this->isCheckoutExpired));
+    public function get_can_edit_items(): bool {
+        return $this->is_current_user_owner && ($this->is_current || ($this->is_checkout && $this->is_checkout_expired));
     }
 
     /**
@@ -468,9 +480,8 @@ class Cart extends BaseCart
      *
      * @return bool True if the payable amount is zero, false otherwise.
      */
-    public function getIsFinalPayableZero(): bool
-    {
-        return $this->finalPayable <= 0;
+    public function get_is_final_payable_zero(): bool {
+        return $this->final_payable <= 0;
     }
 
     /**
@@ -481,9 +492,8 @@ class Cart extends BaseCart
      *
      * @return bool True if the processing of free items is successful, false otherwise.
      */
-    public function processFreeItems(): bool
-    {
-        if ($this->getFinalPayable() <= 0) {
+    public function process_free_items(): bool {
+        if ($this->get_final_payable() <= 0) {
             if ($this->checkout() && $this->deliver()) {
                 notification::success(get_string('msg_delivery_successful', 'enrol_cart'));
 
@@ -496,28 +506,26 @@ class Cart extends BaseCart
     }
 
     /**
-     * @inheritDoc
+     * {@inheritDoc}
      */
-    public function checkout(): bool
-    {
-        $this->currency = $this->finalCurrency;
-        $this->status = CartStatusInterface::STATUS_CHECKOUT;
+    public function checkout(): bool {
+        $this->currency = $this->final_currency;
+        $this->status = cart_status_interface::STATUS_CHECKOUT;
         $this->checkout_at = time();
 
         return $this->save();
     }
 
     /**
-     * @inheritDoc
+     * {@inheritDoc}
      */
-    public function cancel(): bool
-    {
+    public function cancel(): bool {
         global $DB;
 
         $transaction = $DB->start_delegated_transaction();
 
         try {
-            $this->status = CartStatusInterface::STATUS_CANCELED;
+            $this->status = cart_status_interface::STATUS_CANCELED;
             $this->coupon_cancel();
             $this->save();
 
@@ -541,11 +549,10 @@ class Cart extends BaseCart
      *
      * @return bool True if the delivery is successful, false otherwise.
      */
-    public function deliver(): bool
-    {
+    public function deliver(): bool {
         global $DB;
 
-        if (!$this->isCheckout) {
+        if (!$this->is_checkout) {
             return false;
         }
 
@@ -570,19 +577,19 @@ class Cart extends BaseCart
                 );
 
                 // Set the enrolment period (if applicable).
-                $timeStart = 0;
-                $timeEnd = 0;
+                $timestart = 0;
+                $timeend = 0;
                 if ($instance->enrolperiod) {
-                    $timeStart = time();
-                    $timeEnd = $timeStart + $instance->enrolperiod;
+                    $timestart = time();
+                    $timeend = $timestart + $instance->enrolperiod;
                 }
 
                 // Enrol the user in the course using the cart plugin.
-                $plugin->enrol_user($instance, $this->user_id, $instance->roleid, $timeStart, $timeEnd);
+                $plugin->enrol_user($instance, $this->user_id, $instance->roleid, $timestart, $timeend);
             }
 
             // Update the cart status to indicate successful delivery.
-            $this->status = CartStatusInterface::STATUS_DELIVERED;
+            $this->status = cart_status_interface::STATUS_DELIVERED;
             $this->save();
 
             // Allow the transaction to commit.
@@ -604,9 +611,8 @@ class Cart extends BaseCart
      *
      * @return bool True if a coupon is applied, false otherwise.
      */
-    public function getHasCoupon(): bool
-    {
-        return ($this->coupon_id && $this->coupon_usage_id) || !empty($this->_couponResult->getDiscountAmount());
+    public function get_has_coupon(): bool {
+        return ($this->coupon_id && $this->coupon_usage_id) || !empty($this->_coupon_result->get_discount_amount());
     }
 
     /**
@@ -614,17 +620,16 @@ class Cart extends BaseCart
      *
      * @return bool True if a coupon can be used, false otherwise.
      */
-    public function getCanUseCoupon(): bool
-    {
-        if (!$this->canEditItems) {
-            $this->_couponResult->setOk(false);
-            $this->_couponResult->setErrorMessage(get_string('msg_cart_cannot_be_edited', 'enrol_cart'));
+    public function get_can_use_coupon(): bool {
+        if (!$this->can_edit_items) {
+            $this->_coupon_result->set_ok(false);
+            $this->_coupon_result->set_error_message(get_string('msg_cart_cannot_be_edited', 'enrol_cart'));
             return false;
         }
 
-        if (!CouponHelper::is_coupon_enable()) {
-            $this->_couponResult->setOk(false);
-            $this->_couponResult->setErrorMessage(get_string('error_coupon_disabled', 'enrol_cart'));
+        if (!coupon_helper::is_coupon_enable()) {
+            $this->_coupon_result->set_ok(false);
+            $this->_coupon_result->set_error_message(get_string('error_coupon_disabled', 'enrol_cart'));
             return false;
         }
 
@@ -634,42 +639,41 @@ class Cart extends BaseCart
     /**
      * Validates a coupon code against the cart items.
      *
-     * @param string $couponCode The coupon code to validate.
+     * @param string $couponcode The coupon code to validate.
      * @return bool True if the coupon code is valid, false otherwise.
      */
-    public function coupon_validate(string $couponCode): bool
-    {
-        $couponId = CouponHelper::get_coupon_id($couponCode);
+    public function coupon_validate(string $couponcode): bool {
+        $couponid = coupon_helper::get_coupon_id($couponcode);
 
-        if (!$couponId) {
-            $this->_couponResult->setOk(false);
-            $this->_couponResult->setErrorMessage(get_string('error_coupon_is_invalid', 'enrol_cart'));
+        if (!$couponid) {
+            $this->_coupon_result->set_ok(false);
+            $this->_coupon_result->set_error_message(get_string('error_coupon_is_invalid', 'enrol_cart'));
             return false;
         }
 
-        $this->_couponResult = CouponHelper::coupon_validate(new CartDto($this), $couponId);
+        $this->_coupon_result = coupon_helper::coupon_validate(new cart_dto($this), $couponid);
 
-        return $this->_couponResult->isOk();
+        return $this->_coupon_result->is_ok();
     }
 
     /**
      * Checks if a coupon is available for the cart.
      *
      * This method validates if the coupon has been purchased in this cart and returns false if the coupon is not valid.
-     * If the coupon has already been applied, this function is executed before connecting to the payment gateway to validate the coupon.
+     * If the coupon has already been applied, this function is executed before connecting to the payment gateway to validate the
+     * coupon.
      *
      * @return bool False if the coupon is used and it is not valid, true otherwise.
      */
-    public function couponCheckAvailability(): bool
-    {
+    public function coupon_check_availability(): bool {
         if (!$this->coupon_id) {
             return true;
         }
 
-        $this->_couponResult = CouponHelper::coupon_validate(new CartDto($this), $this->coupon_id);
+        $this->_coupon_result = coupon_helper::coupon_validate(new cart_dto($this), $this->coupon_id);
 
-        return $this->_couponResult->isOk() &&
-            $this->_couponResult->getDiscountAmount() == $this->coupon_discount_amount;
+        return $this->_coupon_result->is_ok() &&
+            $this->_coupon_result->get_discount_amount() == $this->coupon_discount_amount;
     }
 
     /**
@@ -678,23 +682,22 @@ class Cart extends BaseCart
      * Validates the coupon code against the cart items and calculates the discount amount.
      * Updates the cart properties accordingly.
      *
-     * @param string $couponCode The coupon code to apply.
+     * @param string $couponcode The coupon code to apply.
      * @return bool True if the coupon is successfully applied, false otherwise.
      */
-    public function coupon_apply(string $couponCode): bool
-    {
-        if (!$this->coupon_id && $this->coupon_validate($couponCode)) {
-            $this->_couponResult = CouponHelper::coupon_apply(
-                new CartDto($this),
-                CouponHelper::get_coupon_id($couponCode),
+    public function coupon_apply(string $couponcode): bool {
+        if (!$this->coupon_id && $this->coupon_validate($couponcode)) {
+            $this->_coupon_result = coupon_helper::coupon_apply(
+                new cart_dto($this),
+                coupon_helper::get_coupon_id($couponcode),
             );
 
-            if ($this->_couponResult->isOk()) {
-                $this->coupon_id = $this->_couponResult->get_coupon_id();
-                $this->coupon_code = $this->_couponResult->getCouponCode();
-                $this->coupon_usage_id = $this->_couponResult->getCouponUsageId();
-                $this->coupon_discount_amount = $this->_couponResult->getDiscountAmount();
-                $this->payable = $this->finalPayable;
+            if ($this->_coupon_result->is_ok()) {
+                $this->coupon_id = $this->_coupon_result->get_coupon_id();
+                $this->coupon_code = $this->_coupon_result->get_coupon_code();
+                $this->coupon_usage_id = $this->_coupon_result->get_coupon_usage_id();
+                $this->coupon_discount_amount = $this->_coupon_result->get_discount_amount();
+                $this->payable = $this->final_payable;
 
                 return $this->save();
             }
@@ -708,14 +711,13 @@ class Cart extends BaseCart
      *
      * @return bool True if the coupon is successfully canceled, false otherwise.
      */
-    public function coupon_cancel(): bool
-    {
+    public function coupon_cancel(): bool {
         if ($this->coupon_usage_id && $this->coupon_id) {
-            if ($this->canEditItems) {
-                $this->_couponResult = CouponHelper::coupon_cancel(new CartDto($this));
+            if ($this->can_edit_items) {
+                $this->_coupon_result = coupon_helper::coupon_cancel(new cart_dto($this));
 
-                if ($this->_couponResult->isOk()) {
-                    $this->_couponResult = new CouponResultDto();
+                if ($this->_coupon_result->is_ok()) {
+                    $this->_coupon_result = new coupon_result_dto();
                     $this->coupon_id = null;
                     $this->coupon_code = null;
                     $this->coupon_usage_id = null;
@@ -736,9 +738,8 @@ class Cart extends BaseCart
      *
      * @return string|null The error code, or null if no error occurred.
      */
-    public function getCouponErrorCode(): ?string
-    {
-        return $this->_couponResult->getErrorCode();
+    public function get_coupon_error_code(): ?string {
+        return $this->_coupon_result->get_error_code();
     }
 
     /**
@@ -746,9 +747,8 @@ class Cart extends BaseCart
      *
      * @return string|null The error message, or null if no error occurred.
      */
-    public function getCouponErrorMessage(): ?string
-    {
-        return $this->_couponResult->getErrorMessage();
+    public function get_coupon_error_message(): ?string {
+        return $this->_coupon_result->get_error_message();
     }
 
     /**
@@ -756,13 +756,13 @@ class Cart extends BaseCart
      *
      * @return string|null The coupon code, or null if no coupon is applied.
      */
-    public function getCouponCode(): ?string
-    {
-        if (!empty($this->coupon_code)) {
-            return $this->coupon_code;
+    public function get_coupon_code(): ?string {
+        $couponcode = $this->get_attribute('coupon_code');
+        if (!empty($couponcode)) {
+            return $couponcode;
         }
 
-        return $this->_couponResult->getCouponCode();
+        return $this->_coupon_result->get_coupon_code();
     }
 
     /**
@@ -770,13 +770,13 @@ class Cart extends BaseCart
      *
      * @return float|null The discount amount, or null if no coupon is applied.
      */
-    public function getCouponDiscountAmount(): ?float
-    {
-        if (!empty($this->coupon_discount_amount)) {
-            return $this->coupon_discount_amount;
+    public function get_coupon_discount_amount(): ?float {
+        $coupondiscountamount = $this->get_attribute('coupon_discount_amount');
+        if (!empty($coupondiscountamount)) {
+            return $coupondiscountamount;
         }
 
-        return $this->_couponResult->getDiscountAmount();
+        return $this->_coupon_result->get_discount_amount();
     }
 
     /**
@@ -784,10 +784,9 @@ class Cart extends BaseCart
      *
      * @return string|null The formatted discount amount, or null if no coupon is applied.
      */
-    public function getCouponDiscountAmountFormatted(): ?string
-    {
-        if ($this->couponDiscountAmount) {
-            return CurrencyFormatter::get_cost_as_formatted((float) $this->couponDiscountAmount, $this->finalCurrency);
+    public function get_coupon_discount_amount_formatted(): ?string {
+        if ($this->coupon_discount_amount) {
+            return currency_formatter::get_cost_as_formatted((float) $this->coupon_discount_amount, $this->final_currency);
         }
 
         return null;

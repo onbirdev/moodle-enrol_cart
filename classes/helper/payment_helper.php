@@ -26,7 +26,6 @@
 
 namespace enrol_cart\helper;
 
-
 use context_system;
 use core_payment\account;
 use core_payment\gateway;
@@ -35,10 +34,10 @@ use lang_string;
 use moodle_url;
 
 /**
- * Class PaymentHelper
+ * Class payment_helper
  * Provides utility functions for managing payment gateways.
  */
-class PaymentHelper {
+class payment_helper {
     /**
      * Retrieve the list of available currencies with language strings that the payment system supports.
      *
@@ -107,9 +106,9 @@ class PaymentHelper {
      */
     public static function get_allowed_payment_gateways(): array {
         global $CFG;
-        $accountid = CartHelper::get_config('payment_account');
-        $currency = CartHelper::get_config('payment_currency');
-        $allowedgateways = explode(',', CartHelper::get_config('payment_gateways'));
+        $accountid = cart_helper::get_config('payment_account');
+        $currency = cart_helper::get_config('payment_currency');
+        $allowedgateways = explode(',', cart_helper::get_config('payment_gateways'));
         $availablegateways = self::get_available_payment_gateways($accountid, $currency);
 
         $gateways = [];

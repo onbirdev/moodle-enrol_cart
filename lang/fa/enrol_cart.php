@@ -74,7 +74,6 @@ $string['no_items'] = 'آیتمی پیدا نشد.';
 $string['no_discount'] = 'بدون تخفیف';
 $string['percentage'] = 'درصد';
 $string['fixed'] = 'مبلغ ثابت';
-$string['unknown'] = 'نامشخص';
 $string['never'] = 'هیچ وقت';
 $string['unlimited'] = 'نامحدود';
 $string['one_day'] = 'یک روز';
@@ -117,7 +116,7 @@ $string['coupon_enable_desc'] =
     'سبد خرید امکان استفاده از کوپن تخفیف را پشتیبانی می‌کنید در صورتیکه پلاگین کوپن تخفیف در سسیستم باشد استفاده از آن در سبد خرید امکان پذیر می‌باشد.';
 $string['coupon_class'] = 'کلاس کوپن تخفیف';
 $string['coupon_class_desc'] =
-    'مسیر کلاس کوپن تخفیف را مشخص کنید. مانند: <code dir="ltr">local_coupon\object\coupon</code> کلاس کوپن تخفیف باید <code dir="ltr">enrol_cart\object\CouponInterface</code> را اجرا کند.';
+    'مسیر کلاس کوپن تخفیف را مشخص کنید. مانند: <code dir="ltr">local_coupon\object\coupon</code> کلاس کوپن تخفیف باید <code dir="ltr">enrol_cart\object\coupon_interface</code> را اجرا کند.';
 $string['not_delete_cart_with_payment_record'] = 'عدم حذف سبد خرید های دارای رکورد پرداخت';
 $string['not_delete_cart_with_payment_record_desc'] =
     'در صورت انتخاب این گزینه سبد خرید های دارای رکورد در جدول payment حذف نخواهند شد.';
@@ -126,7 +125,6 @@ $string['enable_guest_cart_desc'] = 'اگر این گزینه فعال شود، 
 
 $string['status'] = 'فعال بودن ثبت‌نام با سبد خرید';
 $string['status_desc'] = 'به کاربران امکان می دهد به صورت پیش فرض یک دوره را به سبد خرید اضافه کنند.';
-$string['payment_account'] = 'حساب پرداخت';
 $string['payment_account_help'] = 'مبالغ پرداخت شده به این حساب واریز خواهد شد.';
 $string['cost'] = 'مبلغ';
 $string['cost_help'] = 'مبلغ دوره می‌توانید از ۰ شروع شود. مقدار ۰ به معنی رایگان بودن دوره می‌باشد.';

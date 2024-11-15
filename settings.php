@@ -25,23 +25,23 @@
  */
 
 use core\output\notification;
-use enrol_cart\helper\CartHelper;
-use enrol_cart\helper\CouponHelper;
-use enrol_cart\helper\PaymentHelper;
+use enrol_cart\helper\cart_helper;
+use enrol_cart\helper\coupon_helper;
+use enrol_cart\helper\payment_helper;
 
 defined('MOODLE_INTERNAL') || die();
 
 if ($ADMIN->fulltree) {
     $settings->add(new admin_setting_heading('enrol_cart_settings', '', get_string('pluginname_desc', 'enrol_cart')));
 
-    $account = CartHelper::get_config('payment_account');
-    $currency = CartHelper::get_config('payment_currency');
+    $account = cart_helper::get_config('payment_account');
+    $currency = cart_helper::get_config('payment_currency');
     // Available payment accounts.
-    $availableaccounts = PaymentHelper::get_available_payment_accounts();
+    $availableaccounts = payment_helper::get_available_payment_accounts();
     // Available currencies.
-    $availablecurrencies = PaymentHelper::get_available_currencies();
+    $availablecurrencies = payment_helper::get_available_currencies();
     // Available payment gateways.
-    $availablegateways = $account && $currency ? PaymentHelper::get_available_payment_gateways($account, $currency) : [];
+    $availablegateways = $account && $currency ? payment_helper::get_available_payment_gateways($account, $currency) : [];
 
     // No payment account warning.
     if (empty($availableaccounts)) {
@@ -140,12 +140,12 @@ if ($ADMIN->fulltree) {
         ),
     );
 
-    $couponclass = CouponHelper::get_coupon_class_name();
+    $couponclass = coupon_helper::get_coupon_class_name();
     $couponclasserror = null;
     if (!empty($couponclass)) {
         if (!class_exists($couponclass)) {
             $couponclasserror = get_string('error_coupon_class_not_found', 'enrol_cart');
-        } else if (!in_array('enrol_cart\object\CouponInterface', class_implements($couponclass))) {
+        } else if (!in_array('enrol_cart\object\coupon_interface', class_implements($couponclass))) {
             $couponclasserror = get_string('error_coupon_class_not_implemented', 'enrol_cart');
         }
     }

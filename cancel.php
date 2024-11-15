@@ -26,7 +26,7 @@
 
 require_once('../../config.php');
 
-use enrol_cart\object\Cart;
+use enrol_cart\object\cart;
 
 global $PAGE, $OUTPUT, $CFG, $USER;
 
@@ -51,14 +51,14 @@ $PAGE->set_pagetype('cart');
 $PAGE->set_url($url);
 
 // Fetch the cart object using the provided cart ID.
-$cart = Cart::findOne($cartid);
+$cart = cart::find_one($cartid);
 
 // Check if the cart exists, is not empty, can be edited, and belongs to the current user.
-if ($cart && !$cart->isEmpty && $cart->canEditItems && $cart->isCurrentUserOwner) {
+if ($cart && !$cart->is_empty && $cart->can_edit_items && $cart->is_current_user_owner) {
     // Cancel the cart.
     $cart->cancel();
 }
 
 // Redirect the user to the cart view URL after cancellation.
-redirect($cart->viewUrl);
+redirect($cart->view_url);
 exit();

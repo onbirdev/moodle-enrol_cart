@@ -6,31 +6,31 @@
         <div class="cart-item">
             <div class="cart-item__grid">
                 <div class="cart-item__thumb">
-                    {{#course.imageUrl}}
-                        <a class="cart-item__image d-flex justify-content-sm-center" href="{{{viewUrl}}}">
-                            <img class="img-responsive" src="{{course.imageUrl}}" alt="{{course.title}}"/>
+                    {{#course.image_url}}
+                        <a class="cart-item__image d-flex justify-content-sm-center" href="{{{view_url}}}">
+                            <img class="img-responsive" src="{{course.image_url}}" alt="{{course.title}}"/>
                         </a>
-                    {{/course.imageUrl}}
+                    {{/course.image_url}}
                 </div>
                 <div class="cart-item__info">
                     <h5 class="cart-item__title">
-                        <a href="{{{viewUrl}}}">{{course.title}}</a>
+                        <a href="{{{view_url}}}">{{course.title}}</a>
                     </h5>
                     <div class="cart-item__cost">
-                        {{#hasDiscount}}
-                            <div class="cart-item__price"><span class="currency">{{{priceFormatted}}}</span></div>
+                        {{#has_discount}}
+                            <div class="cart-item__price"><span class="currency">{{{price_formatted}}}</span></div>
                             <div class="cart-item__payable">
-                                <span class="currency">{{{payableFormatted}}}</span>
-                                <span class="cart-item__discount-percent">{{discountPercentFormatted}}</span>
+                                <span class="currency">{{{payable_formatted}}}</span>
+                                <span class="cart-item__discount-percent">{{discount_percent_formatted}}</span>
                             </div>
-                        {{/hasDiscount}}
-                        {{^hasDiscount}}
-                            <div class="cart-item__payable"><span class="currency">{{{payableFormatted}}}</span></div>
-                        {{/hasDiscount}}
+                        {{/has_discount}}
+                        {{^has_discount}}
+                            <div class="cart-item__payable"><span class="currency">{{{payable_formatted}}}</span></div>
+                        {{/has_discount}}
                     </div>
                     {{#can_remove_items}}
                         <div class="cart-item__actions">
-                            <a href="{{{removeUrl}}}" class="btn btn-secondary"><i class="fa fa-remove"></i> {{#str}}
+                            <a href="{{{remove_url}}}" class="btn btn-secondary"><i class="fa fa-remove"></i> {{#str}}
                                 remove{{/str}}</a>
                         </div>
                     {{/can_remove_items}}

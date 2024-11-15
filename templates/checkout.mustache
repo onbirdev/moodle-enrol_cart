@@ -6,13 +6,13 @@
     {{> enrol_cart/_items }}
 
     {{#coupon_form}}
-        <div class="cart-summary cart-summary--coupon-form{{#cart.couponCode}} has-coupon{{/cart.couponCode}}{{#cart.coupon_code}} has-coupon{{/cart.coupon_code}}">
+        <div class="cart-summary cart-summary--coupon-form{{#cart.coupon_code}} has-coupon{{/cart.coupon_code}}{{#cart.coupon_code}} has-coupon{{/cart.coupon_code}}">
             {{{coupon_form}}}
-            {{#cart.couponErrorMessage}}
+            {{#cart.coupon_error_message}}
                 <div class="cart-summary--coupon-form__error invalid-feedback">
-                    {{{cart.couponErrorMessage}}}
+                    {{{cart.coupon_error_message}}}
                 </div>
-            {{/cart.couponErrorMessage}}
+            {{/cart.coupon_error_message}}
         </div>
     {{/coupon_form}}
 

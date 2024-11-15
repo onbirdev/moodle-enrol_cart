@@ -26,26 +26,26 @@
 
 namespace enrol_cart\helper;
 
-use enrol_cart\object\CartDto;
-use enrol_cart\object\CouponInterface;
-use enrol_cart\object\CouponResultDto;
+use enrol_cart\object\cart_dto;
+use enrol_cart\object\coupon_interface;
+use enrol_cart\object\coupon_result_dto;
 
 /**
- * Class CouponHelper
+ * Class coupon_helper
  * Provides helper functions to manage coupon-related functionalities in the shopping cart.
  */
-class CouponHelper {
+class coupon_helper {
     /**
      * Retrieves the name of the coupon class from the configuration.
      *
      * @return string|null The name of the coupon class, or null if not defined.
      */
     public static function get_coupon_class_name(): ?string {
-        return (string) CartHelper::get_config('coupon_class') ?: null;
+        return (string) cart_helper::get_config('coupon_class') ?: null;
     }
 
     /**
-     * Checks if the coupon class is defined and implements the CouponInterface.
+     * Checks if the coupon class is defined and implements the coupon_interface.
      *
      * @return bool True if the coupon class is defined and valid, false otherwise.
      */
@@ -54,7 +54,7 @@ class CouponHelper {
 
         return $couponclass &&
             class_exists($couponclass) &&
-            in_array('enrol_cart\object\CouponInterface', class_implements($couponclass));
+            in_array('enrol_cart\object\coupon_interface', class_implements($couponclass));
     }
 
     /**
@@ -63,7 +63,7 @@ class CouponHelper {
      * @return bool True if the coupon functionality is enabled, false otherwise.
      */
     public static function is_coupon_enable(): bool {
-        return CartHelper::get_config('coupon_enable') && static::exists_coupon_class();
+        return cart_helper::get_config('coupon_enable') && static::exists_coupon_class();
     }
 
     /**
@@ -77,7 +77,7 @@ class CouponHelper {
             return null;
         }
 
-        /** @var CouponInterface $couponclassname */
+        /** @var coupon_interface $couponclassname */
         $couponclassname = self::get_coupon_class_name();
 
         return $couponclassname::get_coupon_id($couponcode);
@@ -86,16 +86,16 @@ class CouponHelper {
     /**
      * Validates a coupon for a given cart.
      *
-     * @param CartDto $cart The cart to validate the coupon for.
+     * @param cart_dto $cart The cart to validate the coupon for.
      * @param int $couponid The ID of the coupon to validate.
-     * @return CouponResultDto The result of the coupon validation.
+     * @return coupon_result_dto The result of the coupon validation.
      */
-    public static function coupon_validate(CartDto $cart, int $couponid): CouponResultDto {
+    public static function coupon_validate(cart_dto $cart, int $couponid): coupon_result_dto {
         if (!self::is_coupon_enable()) {
-            return new CouponResultDto();
+            return new coupon_result_dto();
         }
 
-        /** @var CouponInterface $couponclassname */
+        /** @var coupon_interface $couponclassname */
         $couponclassname = self::get_coupon_class_name();
 
         return $couponclassname::validate_coupon($cart, $couponid);
@@ -104,16 +104,16 @@ class CouponHelper {
     /**
      * Applies a coupon to a given cart.
      *
-     * @param CartDto $cart The cart to apply the coupon to.
+     * @param cart_dto $cart The cart to apply the coupon to.
      * @param int $couponid The ID of the coupon to apply.
-     * @return CouponResultDto The result of the coupon application.
+     * @return coupon_result_dto The result of the coupon application.
      */
-    public static function coupon_apply(CartDto $cart, int $couponid): CouponResultDto {
+    public static function coupon_apply(cart_dto $cart, int $couponid): coupon_result_dto {
         if (!static::is_coupon_enable()) {
-            return new CouponResultDto();
+            return new coupon_result_dto();
         }
 
-        /** @var CouponInterface $couponclassname */
+        /** @var coupon_interface $couponclassname */
         $couponclassname = self::get_coupon_class_name();
 
         return $couponclassname::apply_coupon($cart, $couponid);
@@ -122,15 +122,15 @@ class CouponHelper {
     /**
      * Cancels the usage of a coupon for a given cart.
      *
-     * @param CartDto $cart The cart to cancel the coupon for.
-     * @return CouponResultDto The result of the coupon cancellation.
+     * @param cart_dto $cart The cart to cancel the coupon for.
+     * @return coupon_result_dto The result of the coupon cancellation.
      */
-    public static function coupon_cancel(CartDto $cart): CouponResultDto {
+    public static function coupon_cancel(cart_dto $cart): coupon_result_dto {
         if (!static::is_coupon_enable()) {
-            return new CouponResultDto();
+            return new coupon_result_dto();
         }
 
-        /** @var CouponInterface $couponclassname */
+        /** @var coupon_interface $couponclassname */
         $couponclassname = self::get_coupon_class_name();
 
         return $couponclassname::cancel_coupon($cart);

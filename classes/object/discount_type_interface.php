@@ -24,23 +24,26 @@
  * @license     http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-namespace enrol_cart\observer;
-
-use core\event\user_loggedin;
-use enrol_cart\helper\CartHelper;
+namespace enrol_cart\object;
 
 /**
- * The UserObserver class observes user login events and performs actions accordingly.
+ * Interface discount_type_interface
+ *
+ * Defines constants representing different types of discounts.
  */
-class UserObserver {
+interface discount_type_interface {
     /**
-     * Handles the user_loggedin event, triggered when a user successfully logs in.
-     *
-     * @param user_loggedin $event The user_loggedin event object.
-     * @return void
+     * No discount applied.
      */
-    public static function user_logged_in(user_loggedin $event) {
-        // Move the contents of the user's cookie cart to the database upon login.
-        CartHelper::move_cookie_cart_to_db();
-    }
+    public const NO_DISCOUNT = 0;
+
+    /**
+     * Percentage-based discount.
+     */
+    public const PERCENTAGE = 10;
+
+    /**
+     * Fixed amount discount.
+     */
+    public const FIXED = 20;
 }

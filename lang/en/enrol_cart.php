@@ -74,7 +74,6 @@ $string['no_items'] = 'No item found.';
 $string['no_discount'] = 'No discount';
 $string['percentage'] = 'Percentage';
 $string['fixed'] = 'Fixed amount';
-$string['unknown'] = 'Unknown';
 $string['never'] = 'Never';
 $string['unlimited'] = 'Unlimited';
 $string['one_day'] = 'One day';
@@ -117,7 +116,7 @@ $string['coupon_enable_desc'] =
     'The shopping cart supports the use of discount coupons if the discount coupon plugin is available in the system. If so, it can be used in the shopping cart.';
 $string['coupon_class'] = 'Discount Coupon Class';
 $string['coupon_class_desc'] =
-    'Specify the path to the discount coupon class. For example: <code>local_coupon\object\coupon</code>. The discount coupon class must implement <code>enrol_cart\object\CouponInterface</code>.';
+    'Specify the path to the discount coupon class. For example: <code>local_coupon\object\coupon</code>. The discount coupon class must implement <code>enrol_cart\object\coupon_interface</code>.';
 $string['not_delete_cart_with_payment_record'] = 'Do not delete carts with payment records';
 $string['not_delete_cart_with_payment_record_desc'] =
     'If this option is selected, carts with records in the payment table will not be deleted.';
@@ -126,7 +125,6 @@ $string['enable_guest_cart_desc'] = 'If enabled, guest users will be able to add
 
 $string['status'] = 'Enable manual enrolments';
 $string['status_desc'] = 'Allow users to add a course to cart by default.';
-$string['payment_account'] = 'Payment account';
 $string['payment_account_help'] = 'Enrolment fees will be paid to this account.';
 $string['cost'] = 'Cost';
 $string['cost_help'] = 'The cost of the course can start from 0. The value 0 means that the course is free.';

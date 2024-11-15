@@ -26,7 +26,7 @@
 
 require_once('../../config.php');
 
-use enrol_cart\helper\CartHelper;
+use enrol_cart\helper\cart_helper;
 
 $action = required_param('action', PARAM_ALPHANUMEXT);
 
@@ -36,7 +36,7 @@ if (!enrol_is_enabled('cart')) {
 }
 
 // If guest cart access is disabled, require user login.
-$enableguestcart = CartHelper::get_config('enable_guest_cart');
+$enableguestcart = cart_helper::get_config('enable_guest_cart');
 if (!$enableguestcart) {
     require_login();
 }
@@ -52,17 +52,17 @@ if ($action == 'add' || $action == 'remove') {
 
     if ($action == 'add') {
         if ($instanceid) {
-            CartHelper::add_instance_to_cart($instanceid);
+            cart_helper::add_instance_to_cart($instanceid);
         } else if ($courseid) {
-            CartHelper::add_course_to_cart($courseid);
+            cart_helper::add_course_to_cart($courseid);
         }
     } else if ($action == 'remove') {
         if ($instanceid) {
-            CartHelper::remove_instance_from_cart($instanceid);
+            cart_helper::remove_instance_from_cart($instanceid);
         } else if ($courseid) {
-            CartHelper::remove_course_from_cart($courseid);
+            cart_helper::remove_course_from_cart($courseid);
         }
     }
 }
 
-redirect(CartHelper::get_cart_view_url());
+redirect(cart_helper::get_cart_view_url());

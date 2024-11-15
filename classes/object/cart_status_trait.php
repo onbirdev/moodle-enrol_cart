@@ -29,28 +29,29 @@ namespace enrol_cart\object;
 use html_writer;
 
 /**
- * Trait CartStatusTrait
+ * Trait cart_status_trait
  * Provides methods related to cart status.
  *
  * @property int $status The status of the cart (e.g., active, checkout, delivered).
- * @property string $statusName
- * @property string $statusNameFormattedHtml
- * @property bool $isCurrent
- * @property bool $isCheckout
- * @property bool $isCanceled
- * @property bool $isDelivered
+ * @property string $status_name
+ * @property string $status_name_formatted_html
+ * @property bool $is_current
+ * @property bool $is_checkout
+ * @property bool $is_canceled
+ * @property bool $is_delivered
  */
-trait CartStatusTrait {
+trait cart_status_trait {
     /**
      * Returns an array of possible status values for the cart.
+     *
      * @return string[] An associative array of status values with their corresponding labels.
      */
-    public static function getStatusOptions(): array {
+    public static function get_status_options(): array {
         return [
-            CartStatusInterface::STATUS_CURRENT => get_string('status_current', 'enrol_cart'),
-            CartStatusInterface::STATUS_CHECKOUT => get_string('status_checkout', 'enrol_cart'),
-            CartStatusInterface::STATUS_CANCELED => get_string('status_canceled', 'enrol_cart'),
-            CartStatusInterface::STATUS_DELIVERED => get_string('status_delivered', 'enrol_cart'),
+            cart_status_interface::STATUS_CURRENT => get_string('status_current', 'enrol_cart'),
+            cart_status_interface::STATUS_CHECKOUT => get_string('status_checkout', 'enrol_cart'),
+            cart_status_interface::STATUS_CANCELED => get_string('status_canceled', 'enrol_cart'),
+            cart_status_interface::STATUS_DELIVERED => get_string('status_delivered', 'enrol_cart'),
         ];
     }
 
@@ -59,62 +60,67 @@ trait CartStatusTrait {
      *
      * @return string The name of the status.
      */
-    public function getStatusName(): string {
-        $options = static::getStatusOptions();
+    public function get_status_name(): string {
+        $options = static::get_status_options();
         return $options[$this->status] ?? get_string('unknown', 'enrol_cart');
     }
 
     /**
      * Return the status name.
+     *
      * @return string Return `<span class="badge badge-success">Delivered</span>` or `<span class="badge badge-dark">Current</span>`
      */
-    public function getStatusNameFormattedHtml(): string {
+    public function get_status_name_formatted_html(): string {
         $class = 'badge badge-dark';
         switch ($this->status) {
-            case CartStatusInterface::STATUS_CHECKOUT:
+            case cart_status_interface::STATUS_CHECKOUT:
                 $class = 'badge badge-warning';
                 break;
-            case CartStatusInterface::STATUS_DELIVERED:
+            case cart_status_interface::STATUS_DELIVERED:
                 $class = 'badge badge-success';
                 break;
-            case CartStatusInterface::STATUS_CANCELED:
+            case cart_status_interface::STATUS_CANCELED:
                 $class = 'badge badge-danger';
                 break;
         }
-        return html_writer::tag('span', $this->statusName, [
+        return html_writer::tag('span', $this->status_name, [
             'class' => $class,
         ]);
     }
 
     /**
      * Checks if the cart is in the "current" status.
+     *
      * @return bool True if the cart is in the "current" status, false otherwise.
      */
-    public function getIsCurrent(): bool {
-        return $this->status == CartStatusInterface::STATUS_CURRENT;
+    public function get_is_current(): bool {
+        return $this->status == cart_status_interface::STATUS_CURRENT;
     }
 
     /**
      * Checks if the cart is in the "checkout" status.
+     *
      * @return bool True if the cart is in the "checkout" status, false otherwise.
      */
-    public function getIsCheckout(): bool {
-        return $this->status == CartStatusInterface::STATUS_CHECKOUT;
+    public function get_is_checkout(): bool {
+        return $this->status == cart_status_interface::STATUS_CHECKOUT;
     }
 
     /**
      * Checks if the cart is in the "canceled" status.
+     *
      * @return bool True if the cart is in the "canceled" status, false otherwise.
      */
-    public function getIsCanceled(): bool {
-        return $this->status == CartStatusInterface::STATUS_CANCELED;
+    public function get_is_canceled(): bool {
+        return $this->status == cart_status_interface::STATUS_CANCELED;
     }
 
     /**
      * Checks if the cart is in the "delivered" status.
+     *
      * @return bool True if the cart is in the "delivered" status, false otherwise.
      */
-    public function getIsDelivered(): bool {
-        return $this->status == CartStatusInterface::STATUS_DELIVERED;
+    public function get_is_delivered(): bool {
+        return $this->status == cart_status_interface::STATUS_DELIVERED;
     }
 }

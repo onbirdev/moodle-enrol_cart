@@ -31,7 +31,7 @@ use Exception;
 /**
  * Base class for general object functionality.
  */
-class BaseObject {
+class base_object {
     /**
      * Constructor.
      *
@@ -62,13 +62,14 @@ class BaseObject {
      *
      * Do not call this method directly as it is a PHP magic method that
      * will be implicitly called when executing `$value = $object->property;`.
+     *
      * @param string $name the property name
      * @return mixed the property value
      * @throws Exception if the property is not defined
      * @see __set()
      */
     public function __get(string $name) {
-        $getter = 'get' . $name;
+        $getter = 'get_' . $name;
         if (method_exists($this, $getter)) {
             return $this->$getter();
         }
@@ -80,13 +81,14 @@ class BaseObject {
      *
      * Do not call this method directly as it is a PHP magic method that
      * will be implicitly called when executing `$object->property = $value;`.
+     *
      * @param string $name the property name or the event name
      * @param mixed $value the property value
      * @throws Exception if the property is not defined
      * @see __get()
      */
     public function __set(string $name, $value) {
-        $setter = 'set' . $name;
+        $setter = 'set_' . $name;
         if (method_exists($this, $setter)) {
             $this->$setter($value);
         }
@@ -100,12 +102,13 @@ class BaseObject {
      * will be implicitly called when executing `isset($object->property)`.
      *
      * Note that if the property is not defined, false will be returned.
+     *
      * @param string $name the property name or the event name
      * @return bool whether the named property is set (not null).
      * @see https://www.php.net/manual/en/function.isset.php
      */
     public function __isset(string $name) {
-        $getter = 'get' . $name;
+        $getter = 'get_' . $name;
         if (method_exists($this, $getter)) {
             return $this->$getter() !== null;
         }
@@ -120,10 +123,11 @@ class BaseObject {
      *
      * Note that if the property is not defined, this method will do nothing.
      * If the property is read-only, it will throw an exception.
+     *
      * @param string $name the property name
      */
     public function __unset(string $name) {
-        $setter = 'set' . $name;
+        $setter = 'set_' . $name;
         if (method_exists($this, $setter)) {
             $this->$setter(null);
         }
@@ -163,7 +167,7 @@ class BaseObject {
      * @see can_set_property()
      */
     public function can_get_property(string $name, bool $checkvars = true): bool {
-        return method_exists($this, 'get' . $name) || ($checkvars && property_exists($this, $name));
+        return method_exists($this, 'get_' . $name) || ($checkvars && property_exists($this, $name));
     }
 
     /**
@@ -181,7 +185,7 @@ class BaseObject {
      * @see can_get_property()
      */
     public function can_set_property(string $name, bool $checkvars = true): bool {
-        return method_exists($this, 'set' . $name) || ($checkvars && property_exists($this, $name));
+        return method_exists($this, 'set_' . $name) || ($checkvars && property_exists($this, $name));
     }
 
     /**

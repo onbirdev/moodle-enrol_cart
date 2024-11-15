@@ -26,7 +26,7 @@
 
 require_once('../../config.php');
 
-use enrol_cart\object\Cart;
+use enrol_cart\object\cart;
 
 global $PAGE, $OUTPUT, $CFG, $USER;
 
@@ -49,9 +49,9 @@ $PAGE->set_url($url);
 
 $PAGE->navigation->add($title, $url, navigation_node::TYPE_CONTAINER);
 
-/** @var Cart[] $carts */
-$carts = Cart::findAllByUserId($userid, $page, $perpage);
-$total = Cart::countAllByUserId($userid);
+/** @var cart[] $carts */
+$carts = cart::find_all_by_user_id($userid, $page, $perpage);
+$total = cart::count_all_by_user_id($userid);
 
 $table = new html_table();
 $table->head = [
@@ -71,27 +71,27 @@ foreach ($carts as $cart) {
     $i++;
     $actions = [
         html_writer::tag('a', get_string('view', 'enrol_cart'), [
-            'href' => $cart->viewUrl,
+            'href' => $cart->view_url,
         ]),
     ];
-    if ($cart->isCheckout) {
+    if ($cart->is_checkout) {
         $actions[] = html_writer::tag('a', get_string('pay', 'enrol_cart'), [
-            'href' => $cart->checkoutUrl,
+            'href' => $cart->checkout_url,
         ]);
     }
     $table->data[] = [
         $i,
         $cart->id,
         userdate($cart->checkout_at ?: $cart->created_at),
-        $cart->finalDiscountAmount
-            ? html_writer::tag('span', $cart->finalDiscountAmountFormatted, [
+        $cart->final_discount_amount
+            ? html_writer::tag('span', $cart->final_discount_amount_formatted, [
                 'class' => 'currency text-danger',
             ])
             : '-',
-        html_writer::tag('span', $cart->finalPayableFormatted, [
+        html_writer::tag('span', $cart->final_payable_formatted, [
             'class' => 'currency',
         ]),
-        $cart->statusNameFormattedHtml,
+        $cart->status_name_formatted_html,
         implode(' | ', $actions),
     ];
 }

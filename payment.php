@@ -28,9 +28,9 @@ require_once('../../config.php');
 
 use core\notification;
 use core_payment\helper;
-use enrol_cart\helper\CartHelper;
-use enrol_cart\helper\PaymentHelper;
-use enrol_cart\object\Cart;
+use enrol_cart\helper\cart_helper;
+use enrol_cart\helper\payment_helper;
+use enrol_cart\object\cart;
 
 global $PAGE, $OUTPUT, $CFG, $USER;
 
@@ -63,31 +63,31 @@ $node1 = $PAGE->navigation->add(
 );
 $node2 = $node1->add(
     get_string('pluginname', 'enrol_cart'),
-    CartHelper::get_cart_view_url($cartid),
+    cart_helper::get_cart_view_url($cartid),
     navigation_node::TYPE_CONTAINER,
 );
 $node2->add(get_string('payment', 'enrol_cart'), $url)->make_active();
 
 // Get the cart object.
-$cart = $cartid ? Cart::findOne($cartid) : CartHelper::get_current();
+$cart = $cartid ? cart::find_one($cartid) : cart_helper::get_current();
 
 // Check if the cart is payable.
 if (
     !$cart ||
-    $cart->isEmpty ||
-    !($cart->isCheckout || $cart->isCurrent) ||
-    !$cart->isCurrentUserOwner ||
-    $cart->isDelivered
+    $cart->is_empty ||
+    !($cart->is_checkout || $cart->is_current) ||
+    !$cart->is_current_user_owner ||
+    $cart->is_delivered
 ) {
-    redirect(CartHelper::get_cart_view_url());
+    redirect(cart_helper::get_cart_view_url());
     exit();
 }
 
 // Prepare and validate payment gateway.
-$gateway = $gateway ?: PaymentHelper::get_rand_payment_gateway();
-if (!PaymentHelper::is_payment_gateway_valid($gateway)) {
+$gateway = $gateway ?: payment_helper::get_rand_payment_gateway();
+if (!payment_helper::is_payment_gateway_valid($gateway)) {
     notification::error(get_string('error_gateway_is_invalid', 'enrol_cart'));
-    redirect($cart->checkoutUrl);
+    redirect($cart->checkout_url);
     exit();
 }
 
@@ -95,30 +95,30 @@ if (!PaymentHelper::is_payment_gateway_valid($gateway)) {
 $cart->refresh();
 
 // Validate the coupon if any is applied.
-if (!$cart->couponCheckAvailability() && !$cart->coupon_cancel()) {
-    notification::warning($cart->couponErrorMessage ?: get_string('error_coupon_is_invalid', 'enrol_cart'));
-    redirect($cart->checkoutUrl);
+if (!$cart->coupon_check_availability() && !$cart->coupon_cancel()) {
+    notification::warning($cart->coupon_error_message ?: get_string('error_coupon_is_invalid', 'enrol_cart'));
+    redirect($cart->checkout_url);
     exit();
 }
 
 // Check if the cart has changed during the process.
-if ($cart->hasChanged) {
+if ($cart->has_changed) {
     notification::warning(get_string('msg_cart_changed', 'enrol_cart'));
-    redirect($cart->checkoutUrl);
+    redirect($cart->checkout_url);
     exit();
 }
 
 // Apply the coupon code if provided.
 if (!$cart->coupon_id && $couponcode && !$cart->coupon_apply($couponcode)) {
-    notification::error($cart->couponErrorMessage ?: get_string('error_coupon_apply_failed', 'enrol_cart'));
-    redirect($cart->checkoutUrl);
+    notification::error($cart->coupon_error_message ?: get_string('error_coupon_apply_failed', 'enrol_cart'));
+    redirect($cart->checkout_url);
     exit();
 }
 
 // Process the cart if the final payable amount is zero.
-if ($cart->isFinalPayableZero) {
-    $cart->processFreeItems();
-    redirect($cart->viewUrl);
+if ($cart->is_final_payable_zero) {
+    $cart->process_free_items();
+    redirect($cart->view_url);
     exit();
 }
 
