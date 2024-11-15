@@ -18,7 +18,7 @@ export const init = (gateway, component, paymentArea, itemId, successUrl, descri
 
                 setTimeout(() => {
                     location.href = successUrl;
-                }, 3000);
+                }, 2000);
 
                 return message; // Satisfies eslint, although it's never reached
             })
@@ -27,7 +27,7 @@ export const init = (gateway, component, paymentArea, itemId, successUrl, descri
 
                 setTimeout(() => {
                     location.href = successUrl;
-                }, 3000);
+                }, 2000);
             });
     }
 };

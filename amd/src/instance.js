@@ -41,11 +41,7 @@ const calcPayable = () => {
 
 const toggleDiscountAmount = () => {
     const discountType = $('#id_customint1').val();
-    if (discountType == 10 || discountType == 20) {
-        $('#id_customchar1').attr('disabled', false);
-    } else {
-        $('#id_customchar1').attr('disabled', true);
-    }
+    $('#id_customchar1').attr('disabled', !(discountType == 10 || discountType == 20));
 };
 
 export const init = () => {
