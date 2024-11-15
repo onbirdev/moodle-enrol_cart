@@ -347,7 +347,7 @@ class enrol_cart_plugin extends enrol_plugin {
             payment_helper::get_available_currencies(),
             ['disabled' => true],
         );
-        $mform->setDefault('currency', cart_helper::get_config('currency'));
+        $mform->setDefault('currency', cart_helper::get_config('payment_currency'));
 
         // Payable amount (only show).
         $mform->addElement('static', 'payable', get_string('payable', 'enrol_cart'));
