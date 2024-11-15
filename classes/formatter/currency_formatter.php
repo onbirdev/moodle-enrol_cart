@@ -47,6 +47,24 @@ class currency_formatter {
     }
 
     /**
+     * Retrieves the current language in use, with caching for performance optimization.
+     *
+     * This method uses a static cache to avoid repeated calls to the `current_language()` function,
+     * ensuring that the current language is only fetched once per request.
+     *
+     * @return string The current language code (e.g., 'en', 'fa', 'es').
+     */
+    protected static function get_current_language(): string {
+        static $cache = null;
+
+        if (is_null($cache)) {
+            $cache = current_language();
+        }
+
+        return $cache;
+    }
+
+    /**
      * Convert English numbers in a given text to Farsi numbers.
      *
      * @param string $text The text containing English numbers.
@@ -85,7 +103,7 @@ class currency_formatter {
         }
 
         // Convert numbers to Persian if configured.
-        if (cart_helper::get_config('convert_numbers_to_persian')) {
+        if (cart_helper::get_config('convert_numbers_to_persian') && self::get_current_language() == 'fa') {
             $cost = self::convert_english_numbers_to_persian($cost);
         }
 
