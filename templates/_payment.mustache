@@ -1,5 +1,47 @@
 {{!
+    This file is part of Moodle - http://moodle.org/
+
+    Moodle is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    Moodle is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
+}}
+{{!
     @template enrol_cart/_payment
+
+    Example context (json):
+    {
+        "payment_url": "https://site.com/enrol/cart/payment.php",
+        "show_gateway": true,
+        "gateways": [
+            {
+                "name": "paypal",
+                "title": "PayPal",
+                "selected": true,
+                "icon_url": ""
+            }
+        ],
+        "cart": {
+            "id": 123,
+            "coupon_code": "OFF30",
+            "final_price": 19.00,
+            "final_price_formatted": "19.00$",
+            "items_discount_amount": 3.8,
+            "items_discount_amount_formatted": "3.8$",
+            "coupon_discount_amount": 5.2,
+            "coupon_discount_amount_formatted": "5.2$",
+            "final_payable": 10.00,
+            "final_payable_formatted": "10.00$"
+        }
+    }
 }}
 <form action="{{{payment_url}}}" method="post">
 
@@ -11,7 +53,7 @@
         {{#gateways}}
             <div class="cart-gateway-item">
                 <label class="cart-gateway-item__label">
-                    <input name="gateway" type="radio" value="{{name}}"{{#selected}} checked="checked"{{/selected}}/>
+                    <input name="gateway" type="radio" value="{{name}}"{{#selected}} checked="checked"{{/selected}}>
                     {{#icon_url}}<span class="cart-gateway-item__img"><img src="{{icon_url}}" alt="{{name}}"/></span>{{/icon_url}}
                     <span class="cart-gateway-item__title">{{title}}</span>
                 </label>
@@ -21,9 +63,9 @@
     {{/show_gateway}}
 
     <div class="cart-summary cart-summary--payment">
-        <input type="hidden" name="id" value="{{cart.id}}"/>
+        <input type="hidden" name="id" value="{{cart.id}}">
         {{#cart.coupon_discount_amount}}
-            <input type="hidden" name="coupon_code" value="{{cart.coupon_code}}"/>
+            <input type="hidden" name="coupon_code" value="{{cart.coupon_code}}">
         {{/cart.coupon_discount_amount}}
         <input type="hidden" name="sesskey" value="{{session_key}}">
         {{#cart.final_payable}}

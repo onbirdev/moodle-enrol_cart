@@ -1,5 +1,38 @@
 {{!
+    This file is part of Moodle - http://moodle.org/
+
+    Moodle is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    Moodle is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
+}}
+{{!
     @template enrol_cart/_summary_bill
+
+    Example context (json):
+    {
+        "cart": {
+            "id": 123,
+            "coupon_code": "OFF30",
+            "coupon_error_message": "",
+            "final_price": 19.00,
+            "final_price_formatted": "19.00$",
+            "items_discount_amount": 3.8,
+            "items_discount_amount_formatted": "3.8$",
+            "coupon_discount_amount": 5.2,
+            "coupon_discount_amount_formatted": "5.2$",
+            "final_payable": 10.00,
+            "final_payable_formatted": "10.00$"
+        }
+    }
 }}
 <div class="cart-summary cart-summary--bill">
     <div class="cart-summary__grid cart-summary__price">
