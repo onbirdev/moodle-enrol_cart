@@ -217,7 +217,7 @@ class base_model extends base_object {
     /**
      * Returns attribute values.
      *
-     * @param array $names list of attributes whose value needs to be returned.
+     * @param array|null $names list of attributes whose value needs to be returned.
      * @return array attribute values (name => value).
      */
     public function get_attributes(?array $names = null): array {

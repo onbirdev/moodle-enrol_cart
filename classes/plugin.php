@@ -166,7 +166,7 @@ class enrol_cart_plugin extends enrol_plugin {
      * Add new instance of enrol plugin.
      *
      * @param object $course
-     * @param array $fields instance fields
+     * @param array|null $fields instance fields
      * @return int|null id of new instance, null when can not be created
      * @throws coding_exception
      */
