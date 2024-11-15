@@ -119,6 +119,6 @@ echo $OUTPUT->render_from_template('enrol_cart/checkout', [
     'coupon_form' => $cart->can_edit_items && coupon_helper::is_coupon_enable() ? $couponform->render() : '',
     'session_key' => sesskey(),
     'gateways' => payment_helper::get_allowed_payment_gateways(),
-    'show_gateway' => !cart_helper::get_config('auto_select_payment_gateway'),
+    'show_gateway' => !$cart->is_final_payable_zero && !cart_helper::get_config('auto_select_payment_gateway'),
 ]);
 echo $OUTPUT->footer();
