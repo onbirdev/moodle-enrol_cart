@@ -25,9 +25,9 @@
  */
 
 use core\output\notification;
-use enrol_cart\helper\cart_helper;
-use enrol_cart\helper\coupon_helper;
-use enrol_cart\helper\payment_helper;
+use enrol_cart\local\helper\cart_helper;
+use enrol_cart\local\helper\coupon_helper;
+use enrol_cart\local\helper\payment_helper;
 
 defined('MOODLE_INTERNAL') || die();
 
@@ -145,7 +145,7 @@ if ($ADMIN->fulltree) {
     if (!empty($couponclass)) {
         if (!class_exists($couponclass)) {
             $couponclasserror = get_string('error_coupon_class_not_found', 'enrol_cart');
-        } else if (!in_array('enrol_cart\object\coupon_interface', class_implements($couponclass))) {
+        } else if (!in_array('enrol_cart\local\object\coupon_interface', class_implements($couponclass))) {
             $couponclasserror = get_string('error_coupon_class_not_implemented', 'enrol_cart');
         }
     }

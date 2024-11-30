@@ -26,7 +26,7 @@
 
 require_once('../../config.php');
 
-use enrol_cart\helper\cart_helper;
+use enrol_cart\local\helper\cart_helper;
 
 $action = required_param('action', PARAM_ALPHANUMEXT);
 

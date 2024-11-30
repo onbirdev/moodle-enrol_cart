@@ -116,7 +116,7 @@ $string['coupon_enable_desc'] =
     'سبد خرید امکان استفاده از کوپن تخفیف را پشتیبانی می‌کنید در صورتیکه پلاگین کوپن تخفیف در سسیستم باشد استفاده از آن در سبد خرید امکان پذیر می‌باشد.';
 $string['coupon_class'] = 'کلاس کوپن تخفیف';
 $string['coupon_class_desc'] =
-    'مسیر کلاس کوپن تخفیف را مشخص کنید. مانند: <code dir="ltr">local_coupon\object\coupon</code> کلاس کوپن تخفیف باید <code dir="ltr">enrol_cart\object\coupon_interface</code> را اجرا کند.';
+    'مسیر کلاس کوپن تخفیف را مشخص کنید. مانند: <code dir="ltr">local_coupon\object\coupon</code> کلاس کوپن تخفیف باید <code dir="ltr">enrol_cart\local\object\coupon_interface</code> را اجرا کند.';
 $string['not_delete_cart_with_payment_record'] = 'عدم حذف سبد خرید های دارای رکورد پرداخت';
 $string['not_delete_cart_with_payment_record_desc'] =
     'در صورت انتخاب این گزینه سبد خرید های دارای رکورد در جدول payment حذف نخواهند شد.';

@@ -116,7 +116,7 @@ $string['coupon_enable_desc'] =
     'The shopping cart supports the use of discount coupons if the discount coupon plugin is available in the system. If so, it can be used in the shopping cart.';
 $string['coupon_class'] = 'Discount Coupon Class';
 $string['coupon_class_desc'] =
-    'Specify the path to the discount coupon class. For example: <code>local_coupon\object\coupon</code>. The discount coupon class must implement <code>enrol_cart\object\coupon_interface</code>.';
+    'Specify the path to the discount coupon class. For example: <code>local_coupon\object\coupon</code>. The discount coupon class must implement <code>enrol_cart\local\object\coupon_interface</code>.';
 $string['not_delete_cart_with_payment_record'] = 'Do not delete carts with payment records';
 $string['not_delete_cart_with_payment_record_desc'] =
     'If this option is selected, carts with records in the payment table will not be deleted.';

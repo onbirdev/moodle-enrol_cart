@@ -24,11 +24,11 @@
  * @license     http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-namespace enrol_cart\helper;
+namespace enrol_cart\local\helper;
 
-use enrol_cart\object\cart_dto;
-use enrol_cart\object\coupon_interface;
-use enrol_cart\object\coupon_result_dto;
+use enrol_cart\local\object\cart_dto;
+use enrol_cart\local\object\coupon_interface;
+use enrol_cart\local\object\coupon_result_dto;
 
 /**
  * Class coupon_helper
@@ -54,7 +54,7 @@ class coupon_helper {
 
         return $couponclass &&
             class_exists($couponclass) &&
-            in_array('enrol_cart\object\coupon_interface', class_implements($couponclass));
+            in_array('enrol_cart\local\object\coupon_interface', class_implements($couponclass));
     }
 
     /**

@@ -24,12 +24,12 @@
  * @license     http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-namespace enrol_cart\helper;
+namespace enrol_cart\local\helper;
 
 use context_course;
-use enrol_cart\object\cart;
-use enrol_cart\object\cart_enrollment_instance;
-use enrol_cart\object\cookie_cart;
+use enrol_cart\local\object\cart;
+use enrol_cart\local\object\cart_enrollment_instance;
+use enrol_cart\local\object\cookie_cart;
 use moodle_url;
 
 /**

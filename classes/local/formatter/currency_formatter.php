@@ -24,10 +24,10 @@
  * @license     http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-namespace enrol_cart\formatter;
+namespace enrol_cart\local\formatter;
 
 use core_payment\helper;
-use enrol_cart\helper\cart_helper;
+use enrol_cart\local\helper\cart_helper;
 
 /**
  * Class CurrencyHelper

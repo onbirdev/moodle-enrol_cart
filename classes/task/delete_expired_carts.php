@@ -29,11 +29,11 @@ namespace enrol_cart\task;
 use context_system;
 use core\task\scheduled_task;
 use enrol_cart\event\cart_deleted;
-use enrol_cart\helper\cart_helper;
-use enrol_cart\helper\coupon_helper;
-use enrol_cart\object\cart;
-use enrol_cart\object\cart_dto;
-use enrol_cart\object\cart_status_interface;
+use enrol_cart\local\helper\cart_helper;
+use enrol_cart\local\helper\coupon_helper;
+use enrol_cart\local\object\cart;
+use enrol_cart\local\object\cart_dto;
+use enrol_cart\local\object\cart_status_interface;
 
 /**
  * Class delete_expired_carts

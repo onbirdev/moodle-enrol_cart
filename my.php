@@ -26,7 +26,7 @@
 
 require_once('../../config.php');
 
-use enrol_cart\object\cart;
+use enrol_cart\local\object\cart;
 
 global $PAGE, $OUTPUT, $CFG, $USER;
 

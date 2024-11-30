@@ -25,10 +25,10 @@
  */
 
 use core_payment\helper;
-use enrol_cart\helper\cart_helper;
-use enrol_cart\helper\payment_helper;
-use enrol_cart\object\cart_enrollment_instance;
-use enrol_cart\object\discount_type_interface;
+use enrol_cart\local\helper\cart_helper;
+use enrol_cart\local\helper\payment_helper;
+use enrol_cart\local\object\cart_enrollment_instance;
+use enrol_cart\local\object\discount_type_interface;
 
 /**
  * enrol_cart_plugin class for handling cart-based enrolment in Moodle.

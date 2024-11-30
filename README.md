@@ -11,7 +11,7 @@ information stored in a cookie. After logging in, the cart is transferred from t
 cookie to the database, allowing the user to complete the payment.
 
 This plugin allows the admin to set a discount amount or percentage for each course. 
-Additionally, by implementing the `enrol_cart\object\coupon_interface` class and setting 
+Additionally, by implementing the `enrol_cart\local\object\coupon_interface` class and setting 
 the `coupon_class` in the cart enrollment settings, users can use discount coupons during 
 checkout.
 

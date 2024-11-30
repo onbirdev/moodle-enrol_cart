@@ -24,11 +24,11 @@
  * @license     http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-namespace enrol_cart\form;
+namespace enrol_cart\local\form;
 
 defined('MOODLE_INTERNAL') || die();
 
-use enrol_cart\object\cart;
+use enrol_cart\local\object\cart;
 use moodle_exception;
 use moodleform;
 

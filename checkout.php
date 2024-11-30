@@ -27,11 +27,11 @@
 require_once('../../config.php');
 
 use core\notification;
-use enrol_cart\form\coupon_code_form;
-use enrol_cart\helper\cart_helper;
-use enrol_cart\helper\coupon_helper;
-use enrol_cart\helper\payment_helper;
-use enrol_cart\object\cart;
+use enrol_cart\local\form\coupon_code_form;
+use enrol_cart\local\helper\cart_helper;
+use enrol_cart\local\helper\coupon_helper;
+use enrol_cart\local\helper\payment_helper;
+use enrol_cart\local\object\cart;
 
 global $PAGE, $OUTPUT, $CFG;
 

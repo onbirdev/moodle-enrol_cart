@@ -24,9 +24,9 @@
  * @license     http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-namespace enrol_cart\object;
+namespace enrol_cart\local\object;
 
-use enrol_cart\helper\coupon_helper;
+use enrol_cart\local\helper\coupon_helper;
 
 /**
  * Class coupon_result_dto

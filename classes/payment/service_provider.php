@@ -28,8 +28,8 @@ namespace enrol_cart\payment;
 
 use core\notification;
 use core_payment\local\entities\payable;
-use enrol_cart\helper\cart_helper;
-use enrol_cart\object\cart;
+use enrol_cart\local\helper\cart_helper;
+use enrol_cart\local\object\cart;
 use moodle_url;
 
 /**

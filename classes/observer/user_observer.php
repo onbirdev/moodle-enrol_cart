@@ -27,7 +27,7 @@
 namespace enrol_cart\observer;
 
 use core\event\user_loggedin;
-use enrol_cart\helper\cart_helper;
+use enrol_cart\local\helper\cart_helper;
 
 /**
  * The user_observer class observes user login events and performs actions accordingly.
