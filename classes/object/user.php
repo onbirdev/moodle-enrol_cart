@@ -38,18 +38,39 @@ use moodle_url;
  * @property string $email The email of the user.
  * @property string $first_name The first name of the user.
  * @property string $last_name The last name of the user.
+ * @property string $first_name_phonetic
+ * @property string $last_name_phonetic
+ * @property string $middle_name
+ * @property string $alternate_name
  *
  * @property string $full_name The full name of the user.
  * @property string $profile_url The url of the user profile.
  */
 class user extends base_model {
     /**
+     * Stores the full name of the user as a private string property.
+     *
+     * @var string
+     */
+    private string $_full_name = '';
+
+    /**
      * Retrieves the attributes of the course.
      *
      * @return array An array of course attributes including id, name, and title.
      */
     public function attributes(): array {
-        return ['id', 'username', 'email', 'first_name', 'last_name'];
+        return [
+            'id',
+            'username',
+            'email',
+            'first_name',
+            'last_name',
+            'first_name_phonetic',
+            'last_name_phonetic',
+            'middle_name',
+            'alternate_name',
+        ];
     }
 
     /**
@@ -63,7 +84,9 @@ class user extends base_model {
 
         // SQL query to retrieve user details based on user ID.
         $row = $DB->get_record_sql(
-            'SELECT id, username, email, firstname as first_name, lastname as last_name
+            'SELECT id, username, email, firstname as first_name, lastname as last_name,
+       firstnamephonetic as first_name_phonetic, lastnamephonetic as last_name_phonetic,
+       middlename as middle_name, alternatename as alternate_name
                  FROM {user} u
                  WHERE id = :id',
             ['id' => $userid],
@@ -78,7 +101,19 @@ class user extends base_model {
      * @return string The full name of the user.
      */
     public function get_full_name(): string {
-        return $this->first_name . ' ' . $this->last_name;
+        if (empty($this->_full_name)) {
+            $user = (object) [
+                'firstname' => $this->first_name,
+                'lastname' => $this->last_name,
+                'firstnamephonetic' => $this->first_name_phonetic,
+                'lastnamephonetic' => $this->last_name_phonetic,
+                'middlename' => $this->middle_name,
+                'alternatename' => $this->alternate_name,
+            ];
+            $this->_full_name = fullname($user);
+        }
+
+        return $this->_full_name;
     }
 
     /**
