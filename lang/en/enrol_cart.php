@@ -27,19 +27,22 @@
 $string['pluginname'] = 'Cart';
 $string['pluginname_desc'] =
     'The cart enrolment method creates a shopping cart on the whole site and provides the possibility of adding the course to the shopping cart.';
-$string['privacy:metadata:enrol_cart'] = 'Stores shopping cart details for users.';
-$string['privacy:metadata:enrol_cart:user_id'] = 'The ID of the user who owns the shopping cart.';
-$string['privacy:metadata:enrol_cart:status'] = 'The status of the shopping cart.';
-$string['privacy:metadata:enrol_cart:currency'] = 'The currency used for transactions in the cart.';
-$string['privacy:metadata:enrol_cart:price'] = 'The total price of items in the cart.';
-$string['privacy:metadata:enrol_cart:data'] = 'Additional metadata stored about the cart.';
-$string['privacy:metadata:enrol_cart_items'] = 'Stores the items added to a user\'s shopping cart.';
-$string['privacy:metadata:enrol_cart_items:cart_id'] = 'The ID of the shopping cart the item belongs to.';
-$string['privacy:metadata:enrol_cart_items:instance_id'] = 'The instance ID of the course or module.';
-$string['privacy:metadata:enrol_cart_items:price'] = 'The price of the item in the cart.';
-$string['privacy:metadata'] = 'The enrol_cart plugin stores shopping cart data related to users for processing course enrolment transactions.';
-$string['privacy:metadata:reason'] = 'This plugin stores user ID required for shopping cart operations.';
-$string['privacy:path'] = 'Shopping Cart';
+$string['privacy:metadata:reason'] = 'The enrol_cart plugin does not store any user data directly.';
+$string['privacy:metadata:enrol_cart'] = 'Details of the shopping carts used for enrolment.';
+$string['privacy:metadata:enrol_cart:user_id'] = 'The ID of the user associated with the cart.';
+$string['privacy:metadata:enrol_cart:status'] = 'The status of the cart (e.g., pending, completed).';
+$string['privacy:metadata:enrol_cart:currency'] = 'The currency used in the cart.';
+$string['privacy:metadata:enrol_cart:price'] = 'The total price of the cart.';
+$string['privacy:metadata:enrol_cart:payable'] = 'The total amount payable in the cart.';
+$string['privacy:metadata:enrol_cart:coupon_id'] = 'The ID of the coupon applied to the cart, if any.';
+$string['privacy:metadata:enrol_cart:coupon_code'] = 'The code of the coupon applied to the cart, if any.';
+$string['privacy:metadata:enrol_cart:checkout_at'] = 'The timestamp when the cart was checked out.';
+$string['privacy:metadata:enrol_cart:created_at'] = 'The timestamp when the cart was created.';
+$string['privacy:metadata:enrol_cart_items'] = 'Details of the items in a shopping cart.';
+$string['privacy:metadata:enrol_cart_items:cart_id'] = 'The ID of the cart containing the item.';
+$string['privacy:metadata:enrol_cart_items:instance_id'] = 'The ID of the enrolment instance associated with the item.';
+$string['privacy:metadata:enrol_cart_items:price'] = 'The price of the item.';
+$string['privacy:metadata:enrol_cart_items:payable'] = 'The amount payable for the item.';
 
 $string['cart:config'] = 'Configure cart enrol instances';
 $string['cart:manage'] = 'Manage enrolled users';

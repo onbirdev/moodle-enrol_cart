@@ -27,19 +27,22 @@
 $string['pluginname'] = 'سبد خرید';
 $string['pluginname_desc'] =
     'روش ثبت نام با سبد خرید، یک سبد خرید در کل سایت ایجاد کرده و امکان اضافه کردن دوره به سبد خرید و خرید دوره را فراهم می‌کند.';
-$string['privacy:metadata:enrol_cart'] = 'اطلاعات مربوط به جزئیات سبد خرید کاربران را ذخیره می‌کند.';
-$string['privacy:metadata:enrol_cart:user_id'] = 'شناسه کاربری که مالک سبد خرید است.';
-$string['privacy:metadata:enrol_cart:status'] = 'وضعیت سبد خرید.';
-$string['privacy:metadata:enrol_cart:currency'] = 'ارزی که برای تراکنش‌های سبد خرید استفاده شده است.';
-$string['privacy:metadata:enrol_cart:price'] = 'مجموع قیمت اقلام در سبد خرید.';
-$string['privacy:metadata:enrol_cart:data'] = 'اطلاعات اضافی ذخیره‌شده در مورد سبد خرید.';
-$string['privacy:metadata:enrol_cart_items'] = 'اطلاعات مربوط به اقلام اضافه شده به سبد خرید کاربر را ذخیره می‌کند.';
-$string['privacy:metadata:enrol_cart_items:cart_id'] = 'شناسه سبد خریدی که این آیتم متعلق به آن است.';
-$string['privacy:metadata:enrol_cart_items:instance_id'] = 'شناسه مربوط به دوره یا ماژول.';
-$string['privacy:metadata:enrol_cart_items:price'] = 'قیمت آیتم موجود در سبد خرید.';
-$string['privacy:metadata'] = 'پلاگین enrol_cart داده‌های مربوط به عملیات سبد خرید کاربران را برای پردازش تراکنش‌های ثبت‌نام دوره ذخیره می‌کند.';
-$string['privacy:metadata:reason'] = 'این پلاگین شناسه کاربران را برای عملیات مربوط به سبد خرید ذخیره می‌کند.';
-$string['privacy:path'] = 'سبد خرید';
+$string['privacy:metadata:reason'] = 'افزونه enrol_cart به طور مستقیم هیچ اطلاعات کاربری را ذخیره نمی‌کند.';
+$string['privacy:metadata:enrol_cart'] = 'جزئیات مربوط به سبدهای خرید مورد استفاده برای ثبت‌نام.';
+$string['privacy:metadata:enrol_cart:user_id'] = 'شناسه کاربری مرتبط با این سبد خرید.';
+$string['privacy:metadata:enrol_cart:status'] = 'وضعیت سبد خرید (مانند در انتظار، تکمیل‌شده).';
+$string['privacy:metadata:enrol_cart:currency'] = 'واحد پولی مورد استفاده در این سبد خرید.';
+$string['privacy:metadata:enrol_cart:price'] = 'قیمت کل سبد خرید.';
+$string['privacy:metadata:enrol_cart:payable'] = 'مبلغ قابل پرداخت در سبد خرید.';
+$string['privacy:metadata:enrol_cart:coupon_id'] = 'شناسه کد تخفیف اعمال شده روی سبد خرید، در صورت وجود.';
+$string['privacy:metadata:enrol_cart:coupon_code'] = 'کد تخفیف اعمال شده روی سبد خرید، در صورت وجود.';
+$string['privacy:metadata:enrol_cart:checkout_at'] = 'زمانی که سبد خرید تسویه شده است.';
+$string['privacy:metadata:enrol_cart:created_at'] = 'زمانی که سبد خرید ایجاد شده است.';
+$string['privacy:metadata:enrol_cart_items'] = 'جزئیات آیتم‌های موجود در یک سبد خرید.';
+$string['privacy:metadata:enrol_cart_items:cart_id'] = 'شناسه سبد خرید حاوی این آیتم.';
+$string['privacy:metadata:enrol_cart_items:instance_id'] = 'شناسه مورد ثبت‌نام مرتبط با این آیتم.';
+$string['privacy:metadata:enrol_cart_items:price'] = 'قیمت آیتم.';
+$string['privacy:metadata:enrol_cart_items:payable'] = 'مبلغ قابل پرداخت برای آیتم.';
 
 $string['cart:config'] = 'پیکربندی ثبت نام سبد خرید';
 $string['cart:manage'] = 'مدیریت کاربران ثبت نام شده';
