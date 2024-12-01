@@ -33,15 +33,17 @@ use core_privacy\local\metadata\null_provider;
 use core_privacy\local\request\approved_contextlist;
 use core_privacy\local\request\approved_userlist;
 use core_privacy\local\request\contextlist;
+use core_privacy\local\request\core_userlist_provider;
 use core_privacy\local\request\userlist;
 use core_privacy\local\request\writer;
+use Exception;
 
 /**
  * Privacy provider for the enrol_cart plugin.
  *
  * Implements Privacy API to handle user data related to the shopping cart.
  */
-class provider implements null_provider, \core_privacy\local\request\plugin\provider {
+class provider implements core_userlist_provider, null_provider, \core_privacy\local\request\plugin\provider {
     /**
      * Provides the reason why no user data is stored.
      *
@@ -99,7 +101,9 @@ class provider implements null_provider, \core_privacy\local\request\plugin\prov
 
         $sql = "SELECT ctx.id
                   FROM {context} ctx
-                  JOIN {enrol_cart} ec ON ec.id = ctx.instanceid
+                  JOIN {enrol} e ON e.courseid = ctx.instanceid
+                  JOIN {enrol_cart_item} eci ON eci.instance_id = e.id
+                  JOIN {enrol_cart} ec ON ec.id = eci.cart_id
                  WHERE ec.user_id = :userid AND ctx.contextlevel = :contextlevel";
 
         $params = [
@@ -113,6 +117,29 @@ class provider implements null_provider, \core_privacy\local\request\plugin\prov
     }
 
     /**
+     * Get the list of users with data in the given context.
+     *
+     * @param userlist $userlist The userlist to add users to.
+     */
+    public static function get_users_in_context(userlist $userlist) {
+        $context = $userlist->get_context();
+
+        if ($context instanceof context_course) {
+            $sql = "SELECT ec.user_id
+                      FROM {enrol_cart} ec
+                      JOIN {enrol_cart_item} eci ON eci.cart_id = ec.id
+                      JOIN {enrol} e ON e.id = eci.instance_id
+                     WHERE e.courseid = :instanceid";
+
+            $params = [
+                'instanceid' => $context->instanceid,
+            ];
+
+            $userlist->add_from_sql('user_id', $sql, $params);
+        }
+    }
+
+    /**
      * Export all user data for approved contexts.
      *
      * @param approved_contextlist $contextlist The approved contexts to export data for.
@@ -122,36 +149,72 @@ class provider implements null_provider, \core_privacy\local\request\plugin\prov
 
         $userid = $contextlist->get_user()->id;
 
+        [$contextsql, $contextparams] = $DB->get_in_or_equal($contextlist->get_contextids(), SQL_PARAMS_NAMED);
+
+        $sql = "SELECT ec.*, e.courseid as course_id, e.id as enrol_id
+              FROM {enrol_cart} ec
+              JOIN {enrol_cart_items} eci ON eci.cart_id = ec.id
+              JOIN {enrol} e ON eci.instance_id = e.id
+              JOIN {context} ctx ON e.courseid = ctx.instanceid AND ctx.contextlevel = :context_course
+             WHERE ctx.id {$contextsql} AND ec.user_id = :user_id
+          ORDER BY e.courseid";
+        $params = [
+            'context_course' => CONTEXT_COURSE,
+            'user_id' => $userid,
+        ];
+        $params += $contextparams;
+
         // Retrieve all carts for the user.
-        $carts = $DB->get_records('enrol_cart', ['user_id' => $userid]);
+        $carts = $DB->get_records_sql($sql, $params);
+        $data = [];
+        $lastcourseid = null;
 
-        foreach ($carts as $cart) {
-            $context = context_course::instance($cart->id);
+        try {
+            foreach ($carts as $cart) {
+                if ($lastcourseid != $cart->course_id) {
+                    if (!empty($data)) {
+                        $coursecontext = context_course::instance($lastcourseid);
+                        writer::with_context($coursecontext)->export_data([], (object) ['carts' => $data]);
+                    }
+                    $data = [];
+                }
 
-            // Prepare data for export.
-            $data = (object) [
-                'status' => $cart->status,
-                'currency' => $cart->currency,
-                'price' => $cart->price,
-                'payable' => $cart->payable,
-                'coupon_code' => $cart->coupon_code,
-                'checkout_at' => userdate($cart->checkout_at),
-                'created_at' => userdate($cart->created_at),
-            ];
-
-            // Retrieve and attach cart items.
-            $items = $DB->get_records('enrol_cart_items', ['cart_id' => $cart->id]);
-            $data->items = [];
-            foreach ($items as $item) {
-                $data->items[] = (object) [
-                    'instance_id' => $item->instance_id,
-                    'price' => $item->price,
-                    'payable' => $item->payable,
+                // Prepare data for export.
+                $cartdata = (object) [
+                    'status' => $cart->status,
+                    'currency' => $cart->currency,
+                    'price' => $cart->price,
+                    'payable' => $cart->payable,
+                    'coupon_code' => $cart->coupon_code,
+                    'checkout_at' => userdate($cart->checkout_at),
+                    'created_at' => userdate($cart->created_at),
                 ];
+
+                // Retrieve and attach cart items.
+                $items = $DB->get_records('enrol_cart_items', [
+                    'cart_id' => $cart->id,
+                    'instance_id' => $cart->enrol_id,
+                ]);
+                $cartdata->items = [];
+                foreach ($items as $item) {
+                    $cartdata->items[] = (object) [
+                        'instance_id' => $item->instance_id,
+                        'price' => $item->price,
+                        'payable' => $item->payable,
+                    ];
+                }
+
+                $data[] = $cartdata;
+                $lastcourseid = $cart->course_id;
             }
 
-            // Write data to the context.
-            writer::with_context($context)->export_data([], $data);
+            // Export the remaining data for the last course.
+            if (!empty($data)) {
+                $coursecontext = context_course::instance($lastcourseid);
+                writer::with_context($coursecontext)->export_data([], (object) ['carts' => $data]);
+            }
+        } catch (Exception $e) {
+            debugging('Error exporting user data: ' . $e->getMessage(), DEBUG_DEVELOPER);
         }
     }
 
@@ -163,10 +226,46 @@ class provider implements null_provider, \core_privacy\local\request\plugin\prov
     public static function delete_data_for_all_users_in_context(context $context) {
         global $DB;
 
-        $DB->delete_records_select('enrol_cart_items', 'cart_id IN (SELECT id FROM {enrol_cart} WHERE id = :cartid)', [
-            'cartid' => $context->instanceid,
-        ]);
-        $DB->delete_records('enrol_cart', ['id' => $context->instanceid]);
+        if (!($context instanceof context_course)) {
+            return; // Skip non-course contexts.
+        }
+
+        $courseid = $context->instanceid;
+
+        // Get all enrol instances of type 'cart' for the course.
+        $enrols = $DB->get_records('enrol', ['enrol' => 'cart', 'courseid' => $courseid]);
+
+        if (empty($enrols)) {
+            return; // No enrolments of type 'cart' found for this course.
+        }
+
+        foreach ($enrols as $enrol) {
+            try {
+                // Start a transaction for safe deletion.
+                $transaction = $DB->start_delegated_transaction();
+
+                // Delete all cart items linked to the enrol instance.
+                $DB->delete_records_select('enrol_cart_items', 'instance_id = :instance_id', [
+                    'instance_id' => $enrol->id,
+                ]);
+
+                // Get and delete empty carts.
+                $emptycartids = $DB->get_fieldset_select(
+                    'enrol_cart',
+                    'id',
+                    'NOT EXISTS (SELECT 1 FROM {enrol_cart_items} WHERE cart_id = {enrol_cart}.id)',
+                );
+
+                if (!empty($emptycartids)) {
+                    $DB->delete_records_list('enrol_cart', 'id', $emptycartids);
+                }
+
+                $transaction->allow_commit();
+            } catch (Exception $e) {
+                $transaction->rollback($e);
+                throw $e; // Rethrow exception for logging or further handling.
+            }
+        }
     }
 
     /**
@@ -177,36 +276,43 @@ class provider implements null_provider, \core_privacy\local\request\plugin\prov
     public static function delete_data_for_users(approved_userlist $userlist) {
         global $DB;
 
-        foreach ($userlist->get_users() as $user) {
-            $DB->delete_records_select(
-                'enrol_cart_items',
-                'cart_id IN (SELECT id FROM {enrol_cart} WHERE user_id = :userid)',
-                [
-                    'userid' => $user->id,
-                ],
-            );
-            $DB->delete_records('enrol_cart', ['user_id' => $user->id]);
-        }
-    }
-
-    /**
-     * Get the list of users with data in the given context.
-     *
-     * @param userlist $userlist The userlist to add users to.
-     */
-    public static function get_users_in_context(userlist $userlist) {
         $context = $userlist->get_context();
 
-        if ($context instanceof context_course) {
-            $sql = "SELECT ec.user_id
-                      FROM {enrol_cart} ec
-                     WHERE ec.id = :instanceid";
+        if (!($context instanceof context_course)) {
+            return; // Skip non-course contexts.
+        }
 
-            $params = [
-                'instanceid' => $context->instanceid,
-            ];
+        $courseid = $context->instanceid;
 
-            $userlist->add_from_sql('user_id', $sql, $params);
+        // Get all enrol instances of type 'cart' for the course.
+        $enrols = $DB->get_records('enrol', ['enrol' => 'cart', 'courseid' => $courseid]);
+
+        if (empty($enrols)) {
+            return; // No enrolments of type 'cart' found for this course.
+        }
+
+        $enrolids = array_column($enrols, 'id');
+        [$insql, $inparams] = $DB->get_in_or_equal($enrolids, SQL_PARAMS_NAMED);
+
+        foreach ($userlist->get_users() as $user) {
+            // Start a transaction for safe deletion.
+            $transaction = $DB->start_delegated_transaction();
+
+            // Delete all cart items linked to the enrol instances and user.
+            $DB->delete_records_select(
+                'enrol_cart_items',
+                "instance_id {$insql} AND cart_id IN (SELECT id FROM {enrol_cart} WHERE user_id = :userid)",
+                $inparams + ['userid' => $user->id],
+            );
+
+            // Delete any empty carts for the user.
+            $DB->delete_records_select(
+                'enrol_cart',
+                'user_id = :userid AND NOT EXISTS (SELECT 1 FROM {enrol_cart_items} WHERE cart_id = {enrol_cart}.id)',
+                ['userid' => $user->id],
+            );
+
+            $transaction->allow_commit();
         }
     }
 
@@ -220,15 +326,35 @@ class provider implements null_provider, \core_privacy\local\request\plugin\prov
 
         $userid = $contextlist->get_user()->id;
 
-        foreach ($contextlist as $context) {
-            if ($context instanceof context_course) {
+        foreach ($contextlist->get_contexts() as $context) {
+            if (!($context instanceof context_course)) {
+                continue; // Skip non-course contexts.
+            }
+
+            $courseid = $context->instanceid;
+
+            // Get all enrol instances of type 'cart' for the course.
+            $enrols = $DB->get_records('enrol', ['enrol' => 'cart', 'courseid' => $courseid]);
+
+            foreach ($enrols as $enrol) {
+                // Start a transaction for safe deletion.
+                $transaction = $DB->start_delegated_transaction();
+
+                // Delete all cart items linked to the enrol instance and user.
                 $DB->delete_records_select(
                     'enrol_cart_items',
-                    'cart_id IN (SELECT id FROM {enrol_cart} WHERE user_id = :userid)',
+                    'instance_id = :instance_id AND cart_id IN (SELECT id FROM {enrol_cart} WHERE user_id = :userid)',
+                    ['instance_id' => $enrol->id, 'userid' => $userid],
+                );
+
+                // Delete any empty carts for the user.
+                $DB->delete_records_select(
+                    'enrol_cart',
+                    'user_id = :userid AND NOT EXISTS (SELECT 1 FROM {enrol_cart_items} WHERE cart_id = {enrol_cart}.id)',
                     ['userid' => $userid],
                 );
 
-                $DB->delete_records('enrol_cart', ['user_id' => $userid]);
+                $transaction->allow_commit();
             }
         }
     }

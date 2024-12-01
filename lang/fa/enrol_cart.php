@@ -38,7 +38,7 @@ $string['privacy:metadata:enrol_cart_items:cart_id'] = 'شناسه سبد خری
 $string['privacy:metadata:enrol_cart_items:instance_id'] = 'شناسه مربوط به دوره یا ماژول.';
 $string['privacy:metadata:enrol_cart_items:price'] = 'قیمت آیتم موجود در سبد خرید.';
 $string['privacy:metadata'] = 'پلاگین enrol_cart داده‌های مربوط به عملیات سبد خرید کاربران را برای پردازش تراکنش‌های ثبت‌نام دوره ذخیره می‌کند.';
-$string['privacy:metadata:reason'] = 'این پلاگین اطلاعات کاربران را برای عملیات مربوط به سبد خرید ذخیره می‌کند.';
+$string['privacy:metadata:reason'] = 'این پلاگین شناسه کاربران را برای عملیات مربوط به سبد خرید ذخیره می‌کند.';
 $string['privacy:path'] = 'سبد خرید';
 
 $string['cart:config'] = 'پیکربندی ثبت نام سبد خرید';

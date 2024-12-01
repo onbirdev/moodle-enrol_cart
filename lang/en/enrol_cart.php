@@ -38,7 +38,7 @@ $string['privacy:metadata:enrol_cart_items:cart_id'] = 'The ID of the shopping c
 $string['privacy:metadata:enrol_cart_items:instance_id'] = 'The instance ID of the course or module.';
 $string['privacy:metadata:enrol_cart_items:price'] = 'The price of the item in the cart.';
 $string['privacy:metadata'] = 'The enrol_cart plugin stores shopping cart data related to users for processing course enrolment transactions.';
-$string['privacy:metadata:reason'] = 'This plugin stores user data required for shopping cart operations.';
+$string['privacy:metadata:reason'] = 'This plugin stores user ID required for shopping cart operations.';
 $string['privacy:path'] = 'Shopping Cart';
 
 $string['cart:config'] = 'Configure cart enrol instances';
