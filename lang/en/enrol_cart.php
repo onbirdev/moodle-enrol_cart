@@ -27,7 +27,19 @@
 $string['pluginname'] = 'Cart';
 $string['pluginname_desc'] =
     'The cart enrolment method creates a shopping cart on the whole site and provides the possibility of adding the course to the shopping cart.';
-$string['privacy:metadata'] = 'The cart enrolment plugin does not store any personal data.';
+$string['privacy:metadata:enrol_cart'] = 'Stores shopping cart details for users.';
+$string['privacy:metadata:enrol_cart:user_id'] = 'The ID of the user who owns the shopping cart.';
+$string['privacy:metadata:enrol_cart:status'] = 'The status of the shopping cart.';
+$string['privacy:metadata:enrol_cart:currency'] = 'The currency used for transactions in the cart.';
+$string['privacy:metadata:enrol_cart:price'] = 'The total price of items in the cart.';
+$string['privacy:metadata:enrol_cart:data'] = 'Additional metadata stored about the cart.';
+$string['privacy:metadata:enrol_cart_items'] = 'Stores the items added to a user\'s shopping cart.';
+$string['privacy:metadata:enrol_cart_items:cart_id'] = 'The ID of the shopping cart the item belongs to.';
+$string['privacy:metadata:enrol_cart_items:instance_id'] = 'The instance ID of the course or module.';
+$string['privacy:metadata:enrol_cart_items:price'] = 'The price of the item in the cart.';
+$string['privacy:metadata'] = 'The enrol_cart plugin stores shopping cart data related to users for processing course enrolment transactions.';
+$string['privacy:metadata:reason'] = 'This plugin stores user data required for shopping cart operations.';
+$string['privacy:path'] = 'Shopping Cart';
 
 $string['cart:config'] = 'Configure cart enrol instances';
 $string['cart:manage'] = 'Manage enrolled users';
