@@ -76,6 +76,14 @@ class cookie_cart extends base_cart {
     public function init() {
         if (isset($_COOKIE[$this->cookiename])) {
             $this->_cookie_items = json_decode(stripslashes($_COOKIE[$this->cookiename]), true);
+
+            // Validate each item in the decoded data to ensure it is an integer.
+            // Remove any invalid (non-integer) items from the list.
+            foreach ($this->_cookie_items as $key => $instanceid) {
+                if (!is_int($instanceid)) {
+                    unset($this->_cookie_items[$key]);
+                }
+            }
         }
     }
 
