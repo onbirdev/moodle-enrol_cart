@@ -48,6 +48,7 @@ $string['cart:config'] = 'پیکربندی ثبت نام سبد خرید';
 $string['cart:manage'] = 'مدیریت کاربران ثبت نام شده';
 $string['cart:unenrol'] = 'لغو ثبت نام کاربران دوره';
 $string['cart:unenrolself'] = 'لغو ثبت نام من';
+$string['cart:view'] = 'مشاهده سبد خرید';
 
 $string['delete_expired_carts'] = 'حذف سبد خریدهای منقضی شده';
 $string['event_cart_deleted'] = 'سبد خرید حذف شد';

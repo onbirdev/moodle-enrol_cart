@@ -48,6 +48,7 @@ $string['cart:config'] = 'Configure cart enrol instances';
 $string['cart:manage'] = 'Manage enrolled users';
 $string['cart:unenrol'] = 'Unenrol users from course';
 $string['cart:unenrolself'] = 'Unenrol self from the course';
+$string['cart:view'] = 'View shopping cart';
 
 $string['delete_expired_carts'] = 'Delete expired carts';
 $string['event_cart_deleted'] = 'Cart cleared';

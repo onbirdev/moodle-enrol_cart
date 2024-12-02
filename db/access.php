@@ -54,4 +54,11 @@ $capabilities = [
         'contextlevel' => CONTEXT_COURSE,
         'archetypes' => [],
     ],
+    'enrol/cart:view' => [
+        'captype' => 'write',
+        'contextlevel' => CONTEXT_SYSTEM,
+        'archetypes' => [
+            'user' => CAP_ALLOW,
+        ],
+    ],
 ];

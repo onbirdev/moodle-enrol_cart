@@ -34,15 +34,22 @@ global $PAGE, $OUTPUT, $CFG, $USER;
 // Retrieve the cart ID from the request.
 $id = optional_param('id', null, PARAM_INT);
 
-// Require login if cart ID is provided.
-if ($id) {
-    require_login();
-}
-
 // Set up the page context and layout.
 $title = get_string($id ? 'order' : 'pluginname', 'enrol_cart');
 $url = cart_helper::get_cart_view_url($id);
 $context = context_system::instance();
+
+// Require login if cart ID is provided.
+// If guest cart access is disabled, require user login.
+$enableguestcart = cart_helper::get_config('enable_guest_cart');
+if ($id || !$enableguestcart) {
+    require_login();
+}
+
+// Check if the user is logged in, then verify that the user has the 'enrol/cart:view' capability in the current context.
+if ($USER && $USER->id) {
+    require_capability('enrol/cart:view', $context);
+}
 
 $PAGE->set_context($context);
 $PAGE->set_pagelayout('base');
