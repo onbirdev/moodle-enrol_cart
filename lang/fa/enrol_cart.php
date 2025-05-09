@@ -101,9 +101,6 @@ $string['user'] = 'کاربر';
 
 $string['payment_account'] = 'حساب پرداخت';
 $string['payment_currency'] = 'واحد پول';
-$string['auto_select_payment_gateway'] = 'انتخاب خودکار درگاه پرداخت';
-$string['auto_select_payment_gateway_desc'] =
-    'با انتخاب این گزینه کاربر بدون نیاز به انتخاب درگاه به سمت یکی از درگاه پرداخت‌های بالا هدایت می‌شود.';
 $string['canceled_cart_lifetime'] = 'مدت زمان نگهداری سبد خریدهای لغو شده';
 $string['canceled_cart_lifetime_desc'] =
     'سبد خریدهای <b>لغو شده</b> بعد از مدت زمان تعیین شده بطور کامل حذف خواهند شد. مقدار صفر به معنی نامحدود می‌باشد.';

@@ -79,16 +79,6 @@ if ($ADMIN->fulltree) {
         );
     }
 
-    // Auto select payment gateway.
-    $settings->add(
-        new admin_setting_configcheckbox(
-            'enrol_cart/auto_select_payment_gateway',
-            get_string('auto_select_payment_gateway', 'enrol_cart'),
-            get_string('auto_select_payment_gateway_desc', 'enrol_cart'),
-            false,
-        ),
-    );
-
     // Guest cart.
     $settings->add(
         new admin_setting_configcheckbox(

@@ -102,9 +102,6 @@ $string['choose_gateway'] = 'Choose a payment gateway:';
 
 $string['payment_account'] = 'Payment Account';
 $string['payment_currency'] = 'Currency';
-$string['auto_select_payment_gateway'] = 'Auto-select Payment Gateway';
-$string['auto_select_payment_gateway_desc'] =
-    'When this option is selected, the user will be directed to one of the above payment gateways without needing to select a gateway.';
 $string['canceled_cart_lifetime'] = 'Lifetime of Canceled Carts';
 $string['canceled_cart_lifetime_desc'] =
     'Canceled carts will be completely removed after the specified time. A value of zero means unlimited.';

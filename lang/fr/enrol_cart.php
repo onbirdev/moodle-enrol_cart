@@ -102,9 +102,6 @@ $string['choose_gateway'] = 'Choisir un moyen de paiement :';
 
 $string['payment_account'] = 'Compte de paiement';
 $string['payment_currency'] = 'Devise';
-$string['auto_select_payment_gateway'] = 'Sélection automatique de la passerelle de paiement';
-$string['auto_select_payment_gateway_desc'] =
-    'Lorsque cette option est sélectionnée, l’utilisateur sera dirigé vers l’une des passerelles de paiement ci-dessus sans avoir besoin de sélectionner une passerelle.';
 $string['canceled_cart_lifetime'] = 'Durée de vie des paniers annulés';
 $string['canceled_cart_lifetime_desc'] =
     'Les paniers annulés seront complètement supprimés après le temps spécifié. Une valeur de zéro signifie illimité.';
