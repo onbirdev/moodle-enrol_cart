@@ -26,8 +26,6 @@
 
 use enrol_cart\local\helper\cart_helper;
 
-defined('MOODLE_INTERNAL') || die();
-
 /**
  * Renders the shopping cart button in the Moodle navbar.
  *
