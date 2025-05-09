@@ -34,50 +34,45 @@ defined('MOODLE_INTERNAL') || die();
 if ($ADMIN->fulltree) {
     $settings->add(new admin_setting_heading('enrol_cart_settings', '', get_string('pluginname_desc', 'enrol_cart')));
 
-    $account = cart_helper::get_config('payment_account');
-    $currency = cart_helper::get_config('payment_currency');
     // Available payment accounts.
     $availableaccounts = payment_helper::get_available_payment_accounts();
+    // No payment account warning.
+    $nopaymentaccountwarning = '';
+    if (empty($availableaccounts)) {
+        $nopaymentaccountwarning = html_writer::tag('p', get_string('error_no_payment_accounts_available', 'enrol_cart'), [
+            'class' => 'alert alert-warning',
+        ]);
+    }
+    // Payment account.
+    $settings->add(
+        new admin_setting_configselect(
+            'enrol_cart/payment_account',
+            get_string('payment_account', 'enrol_cart'),
+            $nopaymentaccountwarning,
+            '',
+            ['' => ''] + $availableaccounts,
+        ),
+    );
+
     // Available currencies.
     $availablecurrencies = payment_helper::get_available_currencies();
-
-    // No payment account warning.
-    if (empty($availableaccounts)) {
-        $notify = new notification(
-            get_string('error_no_payment_accounts_available', 'enrol_cart'),
-            notification::NOTIFY_WARNING,
-        );
-        $settings->add(new admin_setting_heading('enrol_cart_no_payment_account', '', $OUTPUT->render($notify)));
-    } else {
-        $settings->add(
-            new admin_setting_configselect(
-                'enrol_cart/payment_account',
-                get_string('payment_account', 'enrol_cart'),
-                '',
-                '',
-                $availableaccounts,
-            ),
-        );
-    }
-
     // No payment currency warning.
+    $nopaymentcurrencywarning = '';
     if (empty($availablecurrencies)) {
-        $notify = new notification(
-            get_string('error_no_payment_currency_available', 'enrol_cart'),
-            notification::NOTIFY_WARNING,
-        );
-        $settings->add(new admin_setting_heading('enrol_cart_no_payment_currency', '', $OUTPUT->render($notify)));
-    } else {
-        $settings->add(
-            new admin_setting_configselect(
-                'enrol_cart/payment_currency',
-                get_string('payment_currency', 'enrol_cart'),
-                '',
-                '',
-                $availablecurrencies,
-            ),
-        );
+        $nopaymentcurrencywarning = html_writer::tag('p', get_string('error_no_payment_currency_available', 'enrol_cart'), [
+            'class' => 'alert alert-warning',
+        ]);
     }
+    // Payment currency.
+    $settings->add(
+        new admin_setting_configselect(
+            'enrol_cart/payment_currency',
+            get_string('payment_currency', 'enrol_cart'),
+            $nopaymentcurrencywarning,
+            '',
+            ['' => ''] + $availablecurrencies,
+        ),
+    );
 
     // Guest cart.
     $settings->add(
