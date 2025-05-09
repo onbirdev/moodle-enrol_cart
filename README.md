@@ -17,12 +17,13 @@ checkout.
 
 
 ## Requirements
-1. Moodle version 3.10 or later
+1. Moodle version 3.11 or later
 2. PHP 7.4 or later
 
 
 ## Translations available
 - Persian (fa)
+- French (fr)
 
 
 ## Installation
