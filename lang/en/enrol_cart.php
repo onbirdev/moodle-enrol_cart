@@ -102,8 +102,6 @@ $string['choose_gateway'] = 'Choose a payment gateway:';
 
 $string['payment_account'] = 'Payment Account';
 $string['payment_currency'] = 'Currency';
-$string['payment_gateways'] = 'Allowed Payment Gateways';
-$string['payment_gateways_desc'] = 'Specify the payment gateways that the user can use to make payments.';
 $string['auto_select_payment_gateway'] = 'Auto-select Payment Gateway';
 $string['auto_select_payment_gateway_desc'] =
     'When this option is selected, the user will be directed to one of the above payment gateways without needing to select a gateway.';
@@ -168,7 +166,6 @@ $string['error_enrol_end_date'] = 'The enrolment end date cannot be earlier than
 $string['error_cost'] = 'The cost must be a number.';
 $string['error_status_no_payment_account'] = 'Enrolments can not be enabled without specifying the payment account.';
 $string['error_status_no_payment_currency'] = 'Enrolments can not be enabled without specifying the payment currency';
-$string['error_status_no_payment_gateways'] = 'Enrolments can not be enabled without specifying the payment gateway.';
 $string['error_invalid_cart'] = 'Invalid cart';
 $string['error_disabled'] = 'The cart is disabled.';
 $string['error_coupon_disabled'] = 'Coupon disabled.';

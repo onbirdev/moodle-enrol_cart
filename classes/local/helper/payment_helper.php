@@ -108,19 +108,14 @@ class payment_helper {
         global $CFG;
         $accountid = cart_helper::get_config('payment_account');
         $currency = cart_helper::get_config('payment_currency');
-        $allowedgateways = explode(',', cart_helper::get_config('payment_gateways'));
         $availablegateways = self::get_available_payment_gateways($accountid, $currency);
 
         $gateways = [];
 
-        foreach ($allowedgateways as $plugin) {
-            if (!isset($availablegateways[$plugin])) {
-                continue;
-            }
-
-            $gateways[] = (object) [
+        foreach ($availablegateways as $plugin => $title) {
+            $gateways[] = (object)[
                 'name' => $plugin,
-                'title' => $availablegateways[$plugin],
+                'title' => $title,
                 'icon_url' => (new moodle_url('/theme/image.php', [
                     'theme' => $CFG->theme,
                     'component' => 'paygw_' . $plugin,

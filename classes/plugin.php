@@ -454,8 +454,6 @@ class enrol_cart_plugin extends enrol_plugin {
                 $errors['status'] = get_string('error_status_no_payment_account', 'enrol_cart');
             } else if (!cart_helper::get_config('payment_currency')) {
                 $errors['status'] = get_string('error_status_no_payment_currency', 'enrol_cart');
-            } else if (!cart_helper::get_config('payment_gateways')) {
-                $errors['status'] = get_string('error_status_no_payment_gateways', 'enrol_cart');
             }
         }
 

@@ -102,8 +102,6 @@ $string['choose_gateway'] = 'Choisir un moyen de paiement :';
 
 $string['payment_account'] = 'Compte de paiement';
 $string['payment_currency'] = 'Devise';
-$string['payment_gateways'] = 'Moyens de paiement autorisés';
-$string['payment_gateways_desc'] = 'Indiquez les passerelles de paiement que l’utilisateur peut utiliser pour effectuer des paiements.';
 $string['auto_select_payment_gateway'] = 'Sélection automatique de la passerelle de paiement';
 $string['auto_select_payment_gateway_desc'] =
     'Lorsque cette option est sélectionnée, l’utilisateur sera dirigé vers l’une des passerelles de paiement ci-dessus sans avoir besoin de sélectionner une passerelle.';
@@ -168,7 +166,6 @@ $string['error_enrol_end_date'] = 'La date de fin d’inscription ne peut être 
 $string['error_cost'] = 'Le coût doit être un nombre.';
 $string['error_status_no_payment_account'] = 'Les inscriptions ne peuvent pas être activées sans spécifier le compte de paiement.';
 $string['error_status_no_payment_currency'] = 'Les inscriptions ne peuvent pas être activées sans spécifier la devise de paiement';
-$string['error_status_no_payment_gateways'] = 'Les inscriptions ne peuvent pas être activées sans spécifier le moyen de paiement.';
 $string['error_invalid_cart'] = 'Panier non valide';
 $string['error_disabled'] = 'Le panier est désactivé.';
 $string['error_coupon_disabled'] = 'Coupon désactivé.';

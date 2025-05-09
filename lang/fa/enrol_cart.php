@@ -101,8 +101,6 @@ $string['user'] = 'کاربر';
 
 $string['payment_account'] = 'حساب پرداخت';
 $string['payment_currency'] = 'واحد پول';
-$string['payment_gateways'] = 'درگاه پرداخت‌های مجاز';
-$string['payment_gateways_desc'] = 'درگاه پرداخت‌هایی که کاربر می‌توانید با آنها پرداخت انجام دهد را مشخص نمایید.';
 $string['auto_select_payment_gateway'] = 'انتخاب خودکار درگاه پرداخت';
 $string['auto_select_payment_gateway_desc'] =
     'با انتخاب این گزینه کاربر بدون نیاز به انتخاب درگاه به سمت یکی از درگاه پرداخت‌های بالا هدایت می‌شود.';
@@ -167,7 +165,6 @@ $string['error_enrol_end_date'] = 'تاریخ پایان ثبت نام نمی‌
 $string['error_cost'] = 'مبلغ باید عدد باشد.';
 $string['error_status_no_payment_account'] = 'فعال سازی روش ثبت نام سبد خرید بدون حساب پرداخت امکان پذیر نمی‌باشد.';
 $string['error_status_no_payment_currency'] = 'فعال سازی روش ثبت نام سبد خرید بدون واحد پول امکان پذیر نمی‌باشد.';
-$string['error_status_no_payment_gateways'] = 'فعال سازی روش ثبت نام سبد خرید بدون درگاه پرداخت امکان پذیر نمی‌باشد.';
 $string['error_invalid_cart'] = 'سفارش نامعتبر';
 $string['error_disabled'] = 'سبد خرید غیرفعال است.';
 $string['error_coupon_disabled'] = 'کد تخفیف فعال نمی‌باشد.';

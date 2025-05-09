@@ -40,8 +40,6 @@ if ($ADMIN->fulltree) {
     $availableaccounts = payment_helper::get_available_payment_accounts();
     // Available currencies.
     $availablecurrencies = payment_helper::get_available_currencies();
-    // Available payment gateways.
-    $availablegateways = $account && $currency ? payment_helper::get_available_payment_gateways($account, $currency) : [];
 
     // No payment account warning.
     if (empty($availableaccounts)) {
@@ -77,25 +75,6 @@ if ($ADMIN->fulltree) {
                 '',
                 '',
                 $availablecurrencies,
-            ),
-        );
-    }
-
-    // No payment gateways warning.
-    if (empty($availablegateways)) {
-        $notify = new notification(
-            get_string('error_no_payment_gateway_available', 'enrol_cart'),
-            notification::NOTIFY_WARNING,
-        );
-        $settings->add(new admin_setting_heading('enrol_cart_no_payment_gateway', '', $OUTPUT->render($notify)));
-    } else {
-        $settings->add(
-            new admin_setting_configmultiselect(
-                'enrol_cart/payment_gateways',
-                get_string('payment_gateways', 'enrol_cart'),
-                get_string('payment_gateways_desc', 'enrol_cart'),
-                [],
-                $availablegateways,
             ),
         );
     }
