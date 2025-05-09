@@ -100,89 +100,86 @@ $string['six_months'] = 'Six months';
 $string['user'] = 'User';
 $string['choose_gateway'] = 'Choose a payment gateway:';
 
-$string['payment_account'] = 'Payment Account';
-$string['payment_currency'] = 'Currency';
-$string['canceled_cart_lifetime'] = 'Lifetime of Canceled Carts';
+$string['payment_account'] = 'Payment account';
+$string['payment_currency'] = 'Currency unit';
+$string['canceled_cart_lifetime'] = 'Cancelled cart retention period';
 $string['canceled_cart_lifetime_desc'] =
-    'Canceled carts will be completely removed after the specified time. A value of zero means unlimited.';
-$string['pending_payment_cart_lifetime'] = 'Lifetime of Pending Payment Carts';
+    'Cancelled shopping carts will be permanently deleted after the specified period. A value of zero means unlimited.';
+$string['pending_payment_cart_lifetime'] = 'Pending payment cart retention period';
 $string['pending_payment_cart_lifetime_desc'] =
-    'Pending payment carts will be completely removed after the specified time. A value of zero means unlimited.';
-$string['verify_payment_on_delivery'] = 'Verify Final Amount with Payment on Delivery';
+    'Shopping carts with pending payment will be permanently deleted after the specified period. A value of zero means unlimited.';
+$string['verify_payment_on_delivery'] = 'Match final amount with payment on delivery';
 $string['verify_payment_on_delivery_desc'] =
-    'When this option is selected, the final cart amount will be compared with the payment amount during delivery, and the cart will be delivered if they match.';
-$string['convert_irr_to_irt'] = 'Convert IRR to IRT';
+    'If enabled, the final cart amount will be compared with the amount paid at the time of delivery. The cart will only be delivered if the amounts match.';
+$string['convert_irr_to_irt'] = 'Convert IRR to Toman';
 $string['convert_irr_to_irt_desc'] =
-    'When this option is selected, amounts in Iranian Rial will be converted to Toman and displayed. <b>(This setting is only applicable for displaying amounts to the user. When creating or editing enrolment methods, amounts must still be entered in Rial.)</b>';
-$string['convert_numbers_to_persian'] = 'Convert English Numbers to Persian';
+    'If enabled, Iranian Rial amounts will be converted to Toman for display purposes. <b>(This setting only affects how the amount is shown to users; when creating or editing enrolment methods, amounts must still be entered in Rial.)</b>';
+$string['convert_numbers_to_persian'] = 'Convert English numbers to Persian';
 $string['convert_numbers_to_persian_desc'] =
-    'When this option is selected, English numbers will be converted to Persian numbers when displaying amounts.';
-$string['enrol_instance_defaults'] = 'Enrolment Defaults';
+    'If enabled, English numerals will be converted to Persian numerals when displaying amounts.';
+$string['enrol_instance_defaults'] = 'Enrolment defaults';
 $string['enrol_instance_defaults_desc'] = 'Default settings for enrolling in new courses';
-$string['payment_completion_time'] = 'Payment Completion Time';
+$string['payment_completion_time'] = 'Payment completion time';
 $string['payment_completion_time_desc'] =
-    'This variable specifies the maximum time a user has to complete their payment after initiating it. During this period, the items, cart amount, and discount code will be locked for the user.';
-$string['coupon_enable'] = 'Enable Discount Coupon';
+    'This setting defines the maximum allowed time after initiating a payment for the user to complete it. During this time, cart items, amount, and any discount code will be locked for payment.';
+$string['choose_gateway'] = 'Choose payment gateway:';
+$string['coupon_enable'] = 'Enable discount coupons';
 $string['coupon_enable_desc'] =
-    'The shopping cart supports the use of discount coupons if the discount coupon plugin is available in the system. If so, it can be used in the shopping cart.';
-$string['coupon_class'] = 'Discount Coupon Class';
+    'The shopping cart supports the use of discount coupons if a compatible coupon plugin is installed in the system.';
+$string['coupon_class'] = 'Discount coupon class';
 $string['coupon_class_desc'] =
-    'Specify the path to the discount coupon class. For example: <code>local_coupon\object\coupon</code>. The discount coupon class must implement <code>enrol_cart\local\object\coupon_interface</code>.';
+    'Specify the class path of the discount coupon. Example: <code dir="ltr">local_coupon\object\coupon</code>. The coupon class must implement <code dir="ltr">enrol_cart\local\object\coupon_interface</code>.';
 $string['not_delete_cart_with_payment_record'] = 'Do not delete carts with payment records';
 $string['not_delete_cart_with_payment_record_desc'] =
-    'If this option is selected, carts with records in the payment table will not be deleted.';
-$string['enable_guest_cart'] = 'Allow guests to add and remove courses from cart';
-$string['enable_guest_cart_desc'] = 'If enabled, guest users will be able to add courses to their cart and remove them.';
+    'If enabled, carts that have records in the payment table will not be deleted.';
+$string['enable_guest_cart'] = 'Allow guests to add/remove courses to/from cart';
+$string['enable_guest_cart_desc'] =
+    'If enabled, guest users can add courses to the shopping cart and remove them if needed.';
 
-$string['status'] = 'Enable manual enrolments';
-$string['status_desc'] = 'Allow users to add a course to cart by default.';
-$string['payment_account_help'] = 'Enrolment fees will be paid to this account.';
+$string['status'] = 'Enable enrolment via shopping cart';
+$string['status_desc'] = 'Allows users to add courses to the shopping cart by default.';
+$string['payment_account_help'] = 'Payments will be deposited into this account.';
 $string['cost'] = 'Cost';
-$string['cost_help'] = 'The cost of the course can start from 0. The value 0 means that the course is free.';
+$string['cost_help'] = 'The course price can start from 0. A value of 0 means the course is free.';
 $string['currency'] = 'Currency';
 $string['discount_type'] = 'Discount type';
 $string['discount_amount'] = 'Discount amount';
-$string['assign_role'] = 'Assign role';
-$string['assign_role_desc'] = 'Select the role to assign to users after making a payment.';
+$string['assign_role'] = 'User role';
+$string['assign_role_desc'] = 'The role assigned to users after payment and enrolment.';
 $string['enrol_period'] = 'Enrolment duration';
-$string['enrol_period_desc'] =
-    'Default length of time that the enrolment is valid. If set to zero, the enrolment duration will be unlimited by default.';
-$string['enrol_period_help'] =
-    'Length of time that the enrolment is valid, starting with the moment the user is enrolled. If disabled, the enrolment duration will be unlimited.';
-$string['enrol_start_date'] = 'Start date';
-$string['enrol_start_date_help'] = 'If enabled, users can only be enrolled from this date onwards.';
-$string['enrol_end_date'] = 'End date';
-$string['enrol_end_date_help'] = 'If enabled, users can be enrolled until this date only.';
+$string['enrol_period_desc'] = 'The period users remain enrolled in the course. A value of 0 means unlimited.';
+$string['enrol_period_help'] = 'The duration of enrolment after the user is enrolled. A value of 0 means unlimited.';
+$string['enrol_start_date'] = 'Enrolment start date';
+$string['enrol_start_date_help'] = 'If enabled, users can enrol starting from this date.';
+$string['enrol_end_date'] = 'Enrolment end date';
+$string['enrol_end_date_help'] = 'If enabled, users can enrol until this date.';
 
-$string['error_no_payment_accounts_available'] = 'No payment accounts available.';
-$string['error_no_payment_currency_available'] =
-    'Payments cannot be made in any currency. Please ensure at least one payment gateway is active.';
-$string['error_no_payment_gateway_available'] =
-    'No payment gateway is available. Please specify the payment account and payment gateway to select a payment gateway.';
+$string['error_no_payment_accounts_available'] = 'No payment account is available.';
+$string['error_no_payment_currency_available'] = 'Payments cannot be made in any currency. Please ensure that at least one payment gateway is active.';
+$string['error_no_payment_gateway_available'] = 'No payment gateway is available. Please specify both the payment account and currency before selecting a gateway.';
 $string['error_enrol_end_date'] = 'The enrolment end date cannot be earlier than the start date.';
-$string['error_cost'] = 'The cost must be a number.';
-$string['error_status_no_payment_account'] = 'Enrolments can not be enabled without specifying the payment account.';
-$string['error_status_no_payment_currency'] = 'Enrolments can not be enabled without specifying the payment currency';
-$string['error_invalid_cart'] = 'Invalid cart';
+$string['error_cost'] = 'The amount must be a number.';
+$string['error_status_no_payment_account'] = 'Enrolment via cart cannot be enabled without specifying a payment account.';
+$string['error_status_no_payment_currency'] = 'Enrolment via cart cannot be enabled without specifying a payment currency.';
+$string['error_invalid_cart'] = 'The cart is invalid.';
 $string['error_disabled'] = 'The cart is disabled.';
-$string['error_coupon_disabled'] = 'Coupon disabled.';
-$string['error_coupon_apply_failed'] = 'Coupon apply failed';
-$string['error_coupon_is_invalid'] = 'The coupon is invalid.';
+$string['error_coupon_disabled'] = 'The discount code is disabled.';
+$string['error_coupon_apply_failed'] = 'Failed to apply the discount code.';
+$string['error_coupon_is_invalid'] = 'The discount code is invalid.';
 $string['error_discount_type_is_invalid'] = 'The discount type is invalid.';
 $string['error_discount_amount_is_invalid'] = 'The discount amount is invalid.';
-$string['error_discount_amount_is_higher'] = 'The discount amount cannot be higher than the original amount';
+$string['error_discount_amount_is_higher'] = 'The discount amount cannot exceed the original price.';
 $string['error_discount_amount_must_be_a_number'] = 'The discount amount must be a number.';
-$string['error_discount_amount_percentage_is_invalid'] =
-    'The discount percentage must be an integer between 0 and 100.';
-$string['error_gateway_is_invalid'] = 'The selected gateway is invalid.';
-$string['error_coupon_class_not_found'] = 'Discount coupon class not found.';
-$string['error_coupon_class_not_implemented'] = 'Discount coupon class not implemented correctly.';
+$string['error_discount_amount_percentage_is_invalid'] = 'The discount percentage must be an integer between 0 and 100.';
+$string['error_gateway_is_invalid'] = 'The selected payment gateway is invalid.';
+$string['error_coupon_class_not_found'] = 'The discount coupon class was not found.';
+$string['error_coupon_class_not_implemented'] = 'The discount coupon class is not implemented correctly.';
 
-$string['msg_delivery_successful'] = 'Your enrolment for the course(s) below has been successfully completed.';
-$string['msg_delivery_filed'] = 'There was a problem with your enrolment process.';
-$string['msg_instance_deleted'] = 'One of the course enrolments has been deleted.';
-$string['msg_already_enrolled'] = 'You have already enrolled for "{$a->title}" course.';
+$string['msg_enrolment_success'] = 'Your enrolment for the course(s) below has been successfully completed.';
+$string['msg_enrolment_failed'] = 'There was a problem with your enrolment process.';
+$string['msg_enrolment_deleted'] = 'One of the course enrolments has been deleted.';
+$string['msg_enrolment_already'] = 'You have already enrolled for "{$a->title}" course.';
 $string['msg_cart_changed'] = 'The item(s) or the payable amount in the cart have changed.';
-$string['msg_cancel_successful'] = 'Your cart has been canceled.';
-$string['msg_cancel_filed'] = 'There was a problem with your cart process.';
-$string['msg_cart_cannot_be_edited'] = 'It is currently not possible to edit or change the shopping cart.';
+$string['msg_cart_cancel_success'] = 'Your cart has been canceled.';
+$string['msg_cart_cancel_failed'] = 'There was a problem with your cart process.';
+$string['msg_cart_edit_blocked'] = 'It is currently not possible to edit or change the shopping cart.';

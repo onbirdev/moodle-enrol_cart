@@ -329,7 +329,7 @@ class cart extends base_cart {
                 $course = course::find_one_by_instance_id($instanceid);
                 // User already enrolled.
                 notification::info(
-                    get_string('msg_already_enrolled', 'enrol_cart', [
+                    get_string('msg_enrolment_already', 'enrol_cart', [
                         'title' => $course ? $course->title : '',
                     ]),
                 );
@@ -404,7 +404,7 @@ class cart extends base_cart {
             if (!cart_helper::has_instance($item->instance_id)) {
                 $this->_changed = true;
                 $item->delete();
-                notification::info(get_string('msg_instance_deleted', 'enrol_cart'));
+                notification::info(get_string('msg_enrolment_deleted', 'enrol_cart'));
                 continue;
             }
 
@@ -412,7 +412,7 @@ class cart extends base_cart {
                 $this->_changed = true;
                 $item->delete();
                 notification::info(
-                    get_string('msg_already_enrolled', 'enrol_cart', [
+                    get_string('msg_enrolment_already', 'enrol_cart', [
                         'title' => $item->course ? $item->course->title : '',
                     ]),
                 );
@@ -495,11 +495,11 @@ class cart extends base_cart {
     public function process_free_items(): bool {
         if ($this->get_final_payable() <= 0) {
             if ($this->checkout() && $this->deliver()) {
-                notification::success(get_string('msg_delivery_successful', 'enrol_cart'));
+                notification::success(get_string('msg_enrolment_success', 'enrol_cart'));
 
                 return true;
             }
-            notification::error(get_string('msg_delivery_filed', 'enrol_cart'));
+            notification::error(get_string('msg_enrolment_failed', 'enrol_cart'));
         }
 
         return false;
@@ -531,14 +531,14 @@ class cart extends base_cart {
 
             $transaction->allow_commit();
 
-            notification::info(get_string('msg_cancel_successful', 'enrol_cart'));
+            notification::info(get_string('msg_cart_cancel_success', 'enrol_cart'));
 
             return true;
         } catch (Exception $e) {
             // Rollback the transaction in case of an exception.
             $transaction->rollback($e);
 
-            notification::warning(get_string('msg_cancel_filed', 'enrol_cart'));
+            notification::warning(get_string('msg_cart_cancel_failed', 'enrol_cart'));
 
             return false;
         }
@@ -623,7 +623,7 @@ class cart extends base_cart {
     public function get_can_use_coupon(): bool {
         if (!$this->can_edit_items) {
             $this->_coupon_result->set_ok(false);
-            $this->_coupon_result->set_error_message(get_string('msg_cart_cannot_be_edited', 'enrol_cart'));
+            $this->_coupon_result->set_error_message(get_string('msg_cart_edit_blocked', 'enrol_cart'));
             return false;
         }
 
@@ -726,7 +726,7 @@ class cart extends base_cart {
                     return $this->save() && $this->refresh(true);
                 }
             } else {
-                notification::error(get_string('msg_cart_cannot_be_edited', 'enrol_cart'));
+                notification::error(get_string('msg_cart_edit_blocked', 'enrol_cart'));
             }
         }
 

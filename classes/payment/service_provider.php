@@ -99,11 +99,11 @@ class service_provider implements \core_payment\local\callback\service_provider 
         }
 
         if ($verified && $cart->deliver()) {
-            notification::success(get_string('msg_delivery_successful', 'enrol_cart'));
+            notification::success(get_string('msg_enrolment_success', 'enrol_cart'));
             return true;
         }
 
-        notification::error(get_string('msg_delivery_filed', 'enrol_cart'));
+        notification::error(get_string('msg_enrolment_failed', 'enrol_cart'));
         return false;
     }
 }
