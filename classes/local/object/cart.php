@@ -195,7 +195,7 @@ class cart extends base_cart {
                 'status' => cart_status_interface::STATUS_CURRENT,
             ]);
             if (!$cart && $forcenew) {
-                $cart = (object) [
+                $cart = (object)[
                     'user_id' => $USER->id,
                     'status' => cart_status_interface::STATUS_CURRENT,
                     'created_at' => time(),
@@ -294,7 +294,7 @@ class cart extends base_cart {
         if (empty($data['id'])) {
             $data['created_at'] = time();
             $data['created_by'] = $USER->id;
-            $this->id = $DB->insert_record('enrol_cart', (object) $data);
+            $this->id = $DB->insert_record('enrol_cart', (object)$data);
             if (!$this->id) {
                 return false;
             }
@@ -305,7 +305,7 @@ class cart extends base_cart {
         $data['updated_at'] = time();
         $data['updated_by'] = $USER->id;
 
-        return $DB->update_record('enrol_cart', (object) $data);
+        return $DB->update_record('enrol_cart', (object)$data);
     }
 
     /**
@@ -550,7 +550,8 @@ class cart extends base_cart {
      * @return bool True if the delivery is successful, false otherwise.
      */
     public function deliver(): bool {
-        global $DB;
+        global $DB, $CFG;
+        require_once($CFG->dirroot . '/group/lib.php');
 
         if (!$this->is_checkout) {
             return false;
@@ -586,6 +587,12 @@ class cart extends base_cart {
 
                 // Enrol the user in the course using the cart plugin.
                 $plugin->enrol_user($instance, $this->user_id, $instance->roleid, $timestart, $timeend);
+
+                // Add user to the groups.
+                $groups = explode(',', $instance->customchar2);
+                foreach ($groups as $groupid) {
+                    groups_add_member($groupid, $this->user_id);
+                }
             }
 
             // Update the cart status to indicate successful delivery.
@@ -786,7 +793,10 @@ class cart extends base_cart {
      */
     public function get_coupon_discount_amount_formatted(): ?string {
         if ($this->coupon_discount_amount) {
-            return currency_formatter::get_cost_as_formatted((float) $this->coupon_discount_amount, $this->final_currency);
+            return currency_formatter::get_cost_as_formatted(
+                (float)$this->coupon_discount_amount,
+                $this->final_currency
+            );
         }
 
         return null;

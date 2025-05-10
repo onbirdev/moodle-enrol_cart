@@ -47,6 +47,7 @@ use moodle_url;
  * @property int $enrol_start_date Start date of the enrollment.
  * @property int $enrol_end_date End date of the enrollment.
  * @property string $instructions Enrollment instructions text.
+ * @property string $groups Groups the user will be added to after enrollment.
  *
  * @property float $has_discount Whether the enrollment has a discount.
  * @property string $discount_percentage The discount percentage if applicable.
@@ -80,6 +81,7 @@ class cart_enrollment_instance extends base_model {
             'enrol_start_date',
             'enrol_end_date',
             'instructions',
+            'groups',
         ];
     }
 
@@ -96,7 +98,8 @@ class cart_enrollment_instance extends base_model {
         // SQL query to fetch all enrollment instances for the specified course ID.
         $rows = $DB->get_records_sql(
             'SELECT id, enrol, status, courseid as course_id, name, customint1 as discount_type, customchar1 as discount_amount,
-       cost, currency, enrolstartdate as enrol_start_date, enrolenddate as enrol_end_date
+       cost, currency, enrolstartdate as enrol_start_date, enrolenddate as enrol_end_date, customtext1 as instructions,
+       customchar2 as groups
              FROM {enrol}
              WHERE enrol = :enrol AND status = :status AND courseid = :course_id
              ORDER BY sortorder ASC',
@@ -119,7 +122,8 @@ class cart_enrollment_instance extends base_model {
         // SQL query to fetch the enrollment instance for the specified ID.
         $row = $DB->get_record_sql(
             'SELECT id, enrol, status, courseid as course_id, name, customint1 as discount_type, customchar1 as discount_amount,
-       cost, currency, enrolstartdate as enrol_start_date, enrolenddate as enrol_end_date, customtext1 as instructions
+       cost, currency, enrolstartdate as enrol_start_date, enrolenddate as enrol_end_date, customtext1 as instructions,
+       customchar2 as groups
              FROM {enrol}
              WHERE id = :instance_id AND enrol = :enrol AND status = :status',
             ['enrol' => 'cart', 'status' => ENROL_INSTANCE_ENABLED, 'instance_id' => $instanceid],
@@ -137,8 +141,17 @@ class cart_enrollment_instance extends base_model {
      */
     public function after_find() {
         if (empty($this->currency)) {
-            $this->currency = (string) cart_helper::get_config('payment_currency');
+            $this->currency = (string)cart_helper::get_config('payment_currency');
         }
+    }
+
+    /**
+     * Retrieves the groups associated with the enrollment.
+     *
+     * @return array An array of group IDs split by commas.
+     */
+    public function get_groups(): array {
+        return explode(',', $this->groups);
     }
 
     /**
@@ -147,7 +160,7 @@ class cart_enrollment_instance extends base_model {
      * @return bool True if there is a discount, otherwise false.
      */
     public function get_has_discount(): bool {
-        return (bool) $this->applied_discount;
+        return (bool)$this->applied_discount;
     }
 
     /**
@@ -227,7 +240,7 @@ class cart_enrollment_instance extends base_model {
      * @return float The original price amount.
      */
     public function get_price(): float {
-        return (float) $this->cost;
+        return (float)$this->cost;
     }
 
     /**
@@ -236,7 +249,7 @@ class cart_enrollment_instance extends base_model {
      * @return string|null The formatted original price string, or 'free' if the price is zero.
      */
     public function get_price_formatted(): ?string {
-        if ($this->price !== null && (float) $this->price > 0) {
+        if ($this->price !== null && (float)$this->price > 0) {
             return currency_formatter::get_cost_as_formatted($this->price, $this->currency);
         }
 
@@ -259,7 +272,7 @@ class cart_enrollment_instance extends base_model {
      * @return string The formatted payable amount string, or 'free' if the payable amount is zero.
      */
     public function get_payable_formatted(): string {
-        if ($this->payable !== null && (float) $this->payable > 0) {
+        if ($this->payable !== null && (float)$this->payable > 0) {
             return currency_formatter::get_cost_as_formatted($this->payable, $this->currency);
         }
 

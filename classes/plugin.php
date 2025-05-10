@@ -68,6 +68,23 @@ class enrol_cart_plugin extends enrol_plugin {
     }
 
     /**
+     * Retrieves an array of group options for a given course context.
+     *
+     * @param context $coursecontext The course context for which the group options are retrieved.
+     * @return array An associative array of group options, where the keys are group IDs and the values are the formatted group
+     *     names.
+     */
+    protected function get_group_options(context $coursecontext): array {
+        $groups = [];
+
+        foreach (groups_get_all_groups($coursecontext->instanceid) as $group) {
+            $groups[$group->id] = format_string($group->name, true, ['context' => $coursecontext]);
+        }
+
+        return $groups;
+    }
+
+    /**
      * {@inheritdoc}
      *
      * @param array $instances all enrol instances of this type in one course
@@ -176,6 +193,7 @@ class enrol_cart_plugin extends enrol_plugin {
             $fields['customint1'] = unformat_float($fields['customint1']);
             $fields['customchar1'] = unformat_float($fields['customchar1'] ?? '');
             $fields['customtext1'] = $fields['customtext1']['text'];
+            $fields['customchar2'] = implode(',', $fields['customchar2']);
             unset($fields['currency']);
         }
 
@@ -195,6 +213,7 @@ class enrol_cart_plugin extends enrol_plugin {
             $data->customint1 = unformat_float($data->customint1);
             $data->customchar1 = unformat_float($data->customchar1 ?? '');
             $data->customtext1 = $data->customtext1['text'];
+            $data->customchar2 = implode(',', $data->customchar2);
             $instance->currency = null;
             unset($data->currency);
         }
@@ -266,6 +285,8 @@ class enrol_cart_plugin extends enrol_plugin {
                 'currency' => $data->currency,
                 'customint1' => $data->customint1,
                 'customchar1' => $data->customchar1 ?? '',
+                'customtext1' => $data->customtext1 ?? '',
+                'customchar2' => $data->customchar2 ?? '',
             ];
         }
 
@@ -273,7 +294,7 @@ class enrol_cart_plugin extends enrol_plugin {
             $instance = reset($instances);
             $instanceid = $instance->id;
         } else {
-            $instanceid = $this->add_instance($course, (array) $data);
+            $instanceid = $this->add_instance($course, (array)$data);
         }
 
         $step->set_mapping('enrol', $oldid, $instanceid);
@@ -362,6 +383,17 @@ class enrol_cart_plugin extends enrol_plugin {
         // Instructions.
         $mform->addElement('editor', 'customtext1', get_string('instructions', 'enrol_cart'), ['rows' => 5]);
         $mform->setType('customtext1', PARAM_RAW);
+
+        $mform->addElement('html', '<hr/>');
+
+        // Add to group.
+        $select = $mform->addElement(
+            'select',
+            'customchar2',
+            get_string('add_to_group', 'enrol_cart'),
+            $this->get_group_options($context)
+        );
+        $select->setMultiple(true);
 
         $mform->addElement('html', '<hr/>');
 
@@ -465,6 +497,13 @@ class enrol_cart_plugin extends enrol_plugin {
                 $errors['status'] = get_string('error_status_no_payment_account', 'enrol_cart');
             } else if (!cart_helper::get_config('payment_currency')) {
                 $errors['status'] = get_string('error_status_no_payment_currency', 'enrol_cart');
+            }
+        }
+
+        $groupoptions = array_keys($this->get_group_options($context));
+        foreach ($data['customchar2'] as $groupid) {
+            if (!in_array($groupid, $groupoptions)) {
+                $errors['customchar2'] = get_string('error_group_is_invalid', 'enrol_cart');
             }
         }
 
