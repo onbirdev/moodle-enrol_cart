@@ -175,6 +175,7 @@ class enrol_cart_plugin extends enrol_plugin {
             $fields['cost'] = unformat_float($fields['cost']);
             $fields['customint1'] = unformat_float($fields['customint1']);
             $fields['customchar1'] = unformat_float($fields['customchar1'] ?? '');
+            $fields['customtext1'] = $fields['customtext1']['text'];
             unset($fields['currency']);
         }
 
@@ -193,6 +194,7 @@ class enrol_cart_plugin extends enrol_plugin {
             $data->cost = unformat_float($data->cost);
             $data->customint1 = unformat_float($data->customint1);
             $data->customchar1 = unformat_float($data->customchar1 ?? '');
+            $data->customtext1 = $data->customtext1['text'];
             $instance->currency = null;
             unset($data->currency);
         }
@@ -310,10 +312,9 @@ class enrol_cart_plugin extends enrol_plugin {
     public function edit_instance_form($instance, MoodleQuickForm $mform, $context) {
         global $PAGE;
         $PAGE->requires->js_call_amd('enrol_cart/instance', 'init');
-
-        // Instance name.
-        $mform->addElement('text', 'name', get_string('custominstancename', 'enrol'));
-        $mform->setType('name', PARAM_TEXT);
+        $instance->customtext1 = [
+            'text' => $instance->customtext1 ?? '',
+        ];
 
         // Instance status.
         $mform->addElement('select', 'status', get_string('status', 'enrol_cart'), $this->get_status_options());
@@ -351,6 +352,16 @@ class enrol_cart_plugin extends enrol_plugin {
 
         // Payable amount (only show).
         $mform->addElement('static', 'payable', get_string('payable', 'enrol_cart'));
+
+        $mform->addElement('html', '<hr/>');
+
+        // Instance name.
+        $mform->addElement('text', 'name', get_string('custominstancename', 'enrol'));
+        $mform->setType('name', PARAM_TEXT);
+
+        // Instructions.
+        $mform->addElement('editor', 'customtext1', get_string('instructions', 'enrol_cart'), ['rows' => 5]);
+        $mform->setType('customtext1', PARAM_RAW);
 
         $mform->addElement('html', '<hr/>');
 
@@ -457,6 +468,8 @@ class enrol_cart_plugin extends enrol_plugin {
             }
         }
 
+        $data['customtext1'] = $data['customtext1']['text'];
+
         // Validate params.
         $typeerrors = $this->validate_param_types($data, [
             'name' => PARAM_TEXT,
@@ -465,6 +478,7 @@ class enrol_cart_plugin extends enrol_plugin {
             'enrolperiod' => PARAM_INT,
             'enrolstartdate' => PARAM_INT,
             'enrolenddate' => PARAM_INT,
+            'customtext1' => PARAM_RAW,
         ]);
 
         // Return errors.

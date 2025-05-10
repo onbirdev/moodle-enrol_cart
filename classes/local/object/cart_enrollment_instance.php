@@ -46,6 +46,7 @@ use moodle_url;
  * @property string $currency Currency used for the cost.
  * @property int $enrol_start_date Start date of the enrollment.
  * @property int $enrol_end_date End date of the enrollment.
+ * @property string $instructions Enrollment instructions text.
  *
  * @property float $has_discount Whether the enrollment has a discount.
  * @property string $discount_percentage The discount percentage if applicable.
@@ -78,6 +79,7 @@ class cart_enrollment_instance extends base_model {
             'currency',
             'enrol_start_date',
             'enrol_end_date',
+            'instructions',
         ];
     }
 
@@ -117,7 +119,7 @@ class cart_enrollment_instance extends base_model {
         // SQL query to fetch the enrollment instance for the specified ID.
         $row = $DB->get_record_sql(
             'SELECT id, enrol, status, courseid as course_id, name, customint1 as discount_type, customchar1 as discount_amount,
-       cost, currency, enrolstartdate as enrol_start_date, enrolenddate as enrol_end_date
+       cost, currency, enrolstartdate as enrol_start_date, enrolenddate as enrol_end_date, customtext1 as instructions
              FROM {enrol}
              WHERE id = :instance_id AND enrol = :enrol AND status = :status',
             ['enrol' => 'cart', 'status' => ENROL_INSTANCE_ENABLED, 'instance_id' => $instanceid],

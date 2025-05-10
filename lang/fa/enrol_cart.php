@@ -111,6 +111,7 @@ $string['event_cart_deleted'] = 'سبد خرید حذف شد';
 $string['fixed'] = 'مبلغ ثابت';
 $string['free'] = 'رایگان';
 $string['gateway_wait'] = 'درحال اتصال به درگاه پرداخت ...';
+$string['instructions'] = 'دستورالعمل صفحه ثبت‌نام';
 
 $string['msg_cart_cancel_failed'] = 'در لغو سبد خرید شما مشکلی پیش آمد.';
 $string['msg_cart_cancel_success'] = 'سبد خرید شما با موفقیت لغو شد.';

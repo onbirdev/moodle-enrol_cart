@@ -113,6 +113,7 @@ $string['event_cart_deleted'] = 'Le panier a été effacé';
 $string['fixed'] = 'Montant fixe';
 $string['free'] = 'Gratuit';
 $string['gateway_wait'] = 'Veuillez patienter...';
+$string['instructions'] = 'Instructions sur la page d’inscription';
 
 $string['msg_cart_cancel_failed'] = 'Il y a eu un problème avec le processus de votre panier.';
 $string['msg_cart_cancel_success'] = 'Votre panier a été annulé.';

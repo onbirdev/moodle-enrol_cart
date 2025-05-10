@@ -108,6 +108,7 @@ $string['event_cart_deleted'] = 'Cart cleared';
 $string['fixed'] = 'Fixed amount';
 $string['free'] = 'Free';
 $string['gateway_wait'] = 'Please wait...';
+$string['instructions'] = 'Enrollment page instructions';
 
 $string['msg_cart_cancel_failed'] = 'There was a problem with your cart process.';
 $string['msg_cart_cancel_success'] = 'Your cart has been canceled.';
