@@ -1,20 +1,15 @@
-# Moodle Cart Enrolment Method
+# Moodle Shoping Cart
 
-This is a complete shopping cart plugin for Moodle that adds a "Cart" enrolment
-method to courses, allowing users to add courses to their cart and complete the
-payment using the available payment methods in Moodle.
+This plugin adds a complete shopping cart system to Moodle by introducing a new "Cart" enrolment method.
+Users can add courses to their cart and proceed to payment using any of the supported Moodle payment gateways
 
-Users can view their shopping cart using the cart icon in the top navigation bar 
-and see their purchase history through the "My Purchases" option in the user menu.
-Additionally, users can add courses to their cart before logging in, with the cart 
-information stored in a cookie. After logging in, the cart is transferred from the 
-cookie to the database, allowing the user to complete the payment.
+Users can access their shopping cart from the cart icon in the top navigation bar and view their purchase history via the "My Purchases" option in the user menu.
+Courses can also be added to the cart before logging in — the cart data is stored in a cookie and automatically transferred to the database upon login, allowing users to proceed with payment seamlessly.
 
-This plugin allows the admin to set a discount amount or percentage for each course. 
-Additionally, by implementing the `enrol_cart\local\object\coupon_interface` class and setting 
-the `coupon_class` in the cart enrollment settings, users can use discount coupons during 
-checkout.
+This plugin allows administrators to define a fixed discount amount or a percentage discount for each course.
+Additionally, it supports the use of coupon codes during checkout by implementing the `enrol_cart\local\object\coupon_interface` interface and configuring the `coupon_class` in the cart enrollment settings.
 
+An example implementation (`enrol_cart\local\object\coupon_example` class) is included in the plugin to demonstrate how to build your own coupon logic.
 
 ## Requirements
 1. Moodle version 3.11 or later
@@ -32,9 +27,9 @@ checkout.
 3. Visit the "Site Administration > Plugins > Enrolments" page.
 4. Click the eye symbol next to "Cart" to enable the plugin.
 
-> During installation, you need to set up the "Payment Account", "Currency", and
-> "Payment Gateway" in three steps. These settings can also be adjusted later under
-> "Site Administration > Plugins > Enrolments > Cart".
+> During installation, you’ll need to configure the **Payment Account** and **Currency** settings.
+> You can always update these settings later by navigating to:
+> **Site Administration > Plugins > Enrolments > Cart**
 
 
 ## License
