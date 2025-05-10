@@ -1,4 +1,4 @@
-# Moodle Shoping Cart
+# Moodle Shopping Cart
 
 This plugin adds a complete shopping cart system to Moodle by introducing a new "Cart" enrolment method.
 Users can add courses to their cart and proceed to payment using any of the supported Moodle payment gateways
