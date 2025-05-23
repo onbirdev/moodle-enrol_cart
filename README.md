@@ -34,3 +34,14 @@ An example implementation (`enrol_cart\local\object\coupon_example` class) is in
 
 ## License
 Released Under the GNU http://www.gnu.org/copyleft/gpl.html
+
+
+## 🙌 Support This Project
+
+If you find this plugin useful, consider supporting its development:
+
+[☕ Donate via Ko-fi](https://ko-fi.com/onbirdev)
+
+[☕ Donate via PayPal](https://www.paypal.me/onbirdev)
+
+Your support helps keep this project alive and free for everyone!
