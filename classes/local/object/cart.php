@@ -591,7 +591,9 @@ class cart extends base_cart {
                 // Add user to the groups.
                 $groups = explode(',', $instance->customchar2);
                 foreach ($groups as $groupid) {
-                    groups_add_member($groupid, $this->user_id);
+                    if (!empty($groupid)) {
+                        groups_add_member($groupid, $this->user_id);
+                    }
                 }
             }
 
