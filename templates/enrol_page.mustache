@@ -40,7 +40,7 @@
     {{/instance.instructions}}
     <div class="cart-enrol__price">
         {{#instance.has_discount}}<div class="cart-item__price"><span class="price currency">{{{instance.price_formatted}}}</span></div>{{/instance.has_discount}}
-        {{#instance.payable}}<div class="cart-item__payable"><span class="payable currency">{{{instance.payable_formatted}}}</span></div>{{/instance.payable}}
+        {{#instance.payable_formatted}}<div class="cart-item__payable"><span class="payable currency">{{{instance.payable_formatted}}}</span></div>{{/instance.payable_formatted}}
     </div>
     <div class="cart-enrol__btn mt-2">
         <a class="btn btn-secondary btn-add-to-cart" href="{{{instance.add_to_cart_url}}}">
