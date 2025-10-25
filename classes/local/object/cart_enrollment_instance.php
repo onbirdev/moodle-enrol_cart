@@ -27,6 +27,7 @@
 namespace enrol_cart\local\object;
 
 use dml_exception;
+use enrol_cart\local\availability\info;
 use enrol_cart\local\formatter\currency_formatter;
 use enrol_cart\local\helper\cart_helper;
 use moodle_url;
@@ -295,5 +296,26 @@ class cart_enrollment_instance extends base_model {
             'action' => 'add', // Specifies the action to be performed: adding an instance to the cart.
             'instance' => $this->id, // The ID of the current enrolment instance.
         ]);
+    }
+
+    /**
+     * Determines whether a user can enroll based on availability conditions.
+     *
+     * @param int|null $userid The ID of the user to check enrollment for. Defaults to the current user's ID if not provided.
+     * @param string|null &$information Additional information regarding availability, passed by reference.
+     * @return bool True if the user can enroll, otherwise false.
+     */
+    public function can_enrol_user(?int $userid = null, ?string &$information = ''): bool {
+        global $USER;
+        if (empty($userid)) {
+            $userid = $USER->id;
+        }
+
+        if (!empty($userid) && !empty($this->availability_conditions_json)) {
+            $info = new info($this);
+            return $info->is_available($information, false, $userid);
+        }
+
+        return true;
     }
 }
