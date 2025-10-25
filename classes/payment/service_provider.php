@@ -92,7 +92,7 @@ class service_provider implements \core_payment\local\callback\service_provider 
         $cart = cart::find_one($itemid);
         $verified = $cart->user_id == $userid && $cart->is_checkout;
 
-        if ($verifypaymentondelivery) {
+        if ($verified && $verifypaymentondelivery) {
             global $DB;
             $payment = $DB->get_record('payments', ['id' => $paymentid], '*', MUST_EXIST);
             $verified = $payment->amount == $cart->final_payable;

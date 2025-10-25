@@ -188,14 +188,23 @@ class enrol_cart_plugin extends enrol_plugin {
      * @throws coding_exception
      */
     public function add_instance($course, ?array $fields = null): ?int {
-        if ($fields && !empty($fields['cost'])) {
-            $fields['cost'] = unformat_float($fields['cost']);
-            $fields['customint1'] = unformat_float($fields['customint1']);
-            $fields['customchar1'] = unformat_float($fields['customchar1'] ?? '');
-            $fields['customtext1'] = $fields['customtext1']['text'];
-            $fields['customchar2'] = implode(',', $fields['customchar2']);
-            unset($fields['currency']);
+        if (!empty($fields)) {
+            if (!empty($fields['cost'])) {
+                $fields['cost'] = unformat_float($fields['cost']);
+                $fields['customint1'] = unformat_float($fields['customint1']);
+                $fields['customchar1'] = unformat_float($fields['customchar1'] ?? '');
+                $fields['customtext1'] = $fields['customtext1']['text'];
+                $fields['customchar2'] = implode(',', $fields['customchar2']);
+                unset($fields['currency']);
+            }
+
+            // Store availability conditions in customtext2.
+            if (!empty($fields['availabilityconditionsjson'])) {
+                $fields['customtext2'] = $fields['availabilityconditionsjson'];
+                unset($fields['availabilityconditionsjson']);
+            }
         }
+
 
         return parent::add_instance($course, $fields);
     }
@@ -216,6 +225,12 @@ class enrol_cart_plugin extends enrol_plugin {
             $data->customchar2 = implode(',', $data->customchar2);
             $instance->currency = null;
             unset($data->currency);
+        }
+
+        // Store availability conditions in customtext2.
+        if (!empty($data->availabilityconditionsjson)) {
+            $data->customtext2 = $data->availabilityconditionsjson;
+            unset($data->availabilityconditionsjson);
         }
 
         return parent::update_instance($instance, $data);
@@ -251,11 +266,19 @@ class enrol_cart_plugin extends enrol_plugin {
             return '';
         }
 
+        $information = '';
+        $canenrol = cart_helper::can_user_enrol($instance->id, $USER->id, $information);
+        if (!$canenrol && empty($information)) {
+            return '';
+        }
+
         $instanceobject = cart_enrollment_instance::find_one_by_id($instance->id);
 
         return $OUTPUT->box(
             $OUTPUT->render_from_template('enrol_cart/enrol_page', [
                 'instance' => $instanceobject,
+                'can_enrol' => $canenrol,
+                'information' => $information,
             ]),
         );
     }
@@ -331,7 +354,7 @@ class enrol_cart_plugin extends enrol_plugin {
      * @throws coding_exception
      */
     public function edit_instance_form($instance, MoodleQuickForm $mform, $context) {
-        global $PAGE;
+        global $PAGE, $SITE;
         $PAGE->requires->js_call_amd('enrol_cart/instance', 'init');
         $instance->customtext1 = [
             'text' => $instance->customtext1 ?? '',
@@ -383,6 +406,17 @@ class enrol_cart_plugin extends enrol_plugin {
         // Instructions.
         $mform->addElement('editor', 'customtext1', get_string('instructions', 'enrol_cart'), ['rows' => 5]);
         $mform->setType('customtext1', PARAM_RAW);
+
+        $mform->addElement('html', '<hr/>');
+
+        // The User filter definition.
+        if (!empty($instance->customtext2)) {
+            $instance->availabilityconditionsjson = $instance->customtext2;
+            unset($instance->customtext2);
+        }
+        $mform->addElement('textarea', 'availabilityconditionsjson', get_string('availability', 'enrol_cart'));
+        $mform->addHelpButton('availabilityconditionsjson', 'availability', 'enrol_cart');
+        \core_availability\frontend::include_all_javascript($SITE);
 
         $mform->addElement('html', '<hr/>');
 
@@ -449,6 +483,9 @@ class enrol_cart_plugin extends enrol_plugin {
      */
     public function edit_instance_validation($data, $files, $instance, $context): array {
         $errors = [];
+
+        // Validate availability conditions.
+        \core_availability\frontend::report_validation_errors($data, $errors);
 
         // Enrol end date validate.
         if (!empty($data['enrolenddate']) && $data['enrolenddate'] < $data['enrolstartdate']) {

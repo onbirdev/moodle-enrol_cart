@@ -282,6 +282,22 @@ abstract class base_cart extends base_model {
     }
 
     /**
+     * Determines if the user can add an item to the cart.
+     *
+     * @param int $instanceid The enrolment instance ID to check.
+     * @param null|string &$information Output parameter to store additional information about the enrolment status.
+     * @return bool True if the user can add the item, false otherwise.
+     */
+    public function can_add_item(int $instanceid, ?string &$information = ''): bool {
+        // If the user is not logged in, then it can be added. (cookie cart).
+        if (empty($this->user_id)) {
+            return true;
+        }
+
+        return cart_helper::can_user_enrol($instanceid, $this->user_id, $information);
+    }
+
+    /**
      * Refreshes the cart items.
      *
      * @return bool

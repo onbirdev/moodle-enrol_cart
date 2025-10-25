@@ -48,6 +48,7 @@ use moodle_url;
  * @property int $enrol_end_date End date of the enrollment.
  * @property string $instructions Enrollment instructions text.
  * @property string $groups Groups the user will be added to after enrollment.
+ * @property string $availability_conditions_json JSON string containing availability conditions.
  *
  * @property float $has_discount Whether the enrollment has a discount.
  * @property string $discount_percentage The discount percentage if applicable.
@@ -82,6 +83,7 @@ class cart_enrollment_instance extends base_model {
             'enrol_end_date',
             'instructions',
             'groups',
+            'availability_conditions_json',
         ];
     }
 
@@ -99,7 +101,7 @@ class cart_enrollment_instance extends base_model {
         $rows = $DB->get_records_sql(
             'SELECT id, enrol, status, courseid as course_id, name, customint1 as discount_type, customchar1 as discount_amount,
        cost, currency, enrolstartdate as enrol_start_date, enrolenddate as enrol_end_date, customtext1 as instructions,
-       customchar2 as groups
+       customchar2 as groups, customtext2 as availability_conditions_json
              FROM {enrol}
              WHERE enrol = :enrol AND status = :status AND courseid = :course_id
              ORDER BY sortorder ASC',
@@ -123,7 +125,7 @@ class cart_enrollment_instance extends base_model {
         $row = $DB->get_record_sql(
             'SELECT id, enrol, status, courseid as course_id, name, customint1 as discount_type, customchar1 as discount_amount,
        cost, currency, enrolstartdate as enrol_start_date, enrolenddate as enrol_end_date, customtext1 as instructions,
-       customchar2 as groups
+       customchar2 as groups, customtext2 as availability_conditions_json
              FROM {enrol}
              WHERE id = :instance_id AND enrol = :enrol AND status = :status',
             ['enrol' => 'cart', 'status' => ENROL_INSTANCE_ENABLED, 'instance_id' => $instanceid],

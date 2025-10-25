@@ -27,6 +27,7 @@
 namespace enrol_cart\local\helper;
 
 use context_course;
+use enrol_cart\local\availability\info;
 use enrol_cart\local\object\cart;
 use enrol_cart\local\object\cart_enrollment_instance;
 use enrol_cart\local\object\cookie_cart;
@@ -141,6 +142,25 @@ class cart_helper {
             'enrolid' => $instanceid,
             'userid' => $userid,
         ]);
+    }
+
+    /**
+     * Determines if the user can enrol in the specified instance.
+     *
+     * @param int $instanceid The ID of the enrolment instance.
+     * @param int $userid The ID of the user to check enrolment eligibility for.
+     * @param null|string &$information Output parameter to store additional information about the enrolment status.
+     * @return bool Returns true if the user can enrol, otherwise false.
+     */
+    public static function can_user_enrol(int $instanceid, int $userid, ?string &$information = ''): bool {
+        $instance = self::get_instance($instanceid);
+
+        if (!empty($instance->availability_conditions_json)) {
+            $info = new info($instance);
+            return $info->is_available($information, false, $userid);
+        }
+
+        return true;
     }
 
     /**

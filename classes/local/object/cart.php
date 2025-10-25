@@ -317,6 +317,14 @@ class cart extends base_cart {
      * @return bool True if the item is successfully added, false otherwise.
      */
     public function add_item(int $instanceid): bool {
+        // Check if the user has permission to add items to the cart.
+        if (!$this->can_add_item($instanceid, $information)) {
+            if (!empty($information)) {
+                notification::info($information);
+            }
+            return false;
+        }
+
         // Check if the user has permission to edit items in the cart, and the item does not already exist in the cart.
         if ($this->can_edit_items && !$this->has_item($instanceid)) {
             // Ensure the user is not already enrolled in the instance, and add item to cart.
@@ -416,6 +424,15 @@ class cart extends base_cart {
                         'title' => $item->course ? $item->course->title : '',
                     ]),
                 );
+                continue;
+            }
+
+            if (!cart_helper::can_user_enrol($item->instance_id, $this->user_id, $information)) {
+                $this->_changed = true;
+                $item->delete();
+                if (!empty($information)) {
+                    notification::info($information);
+                }
                 continue;
             }
 
