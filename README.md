@@ -36,12 +36,8 @@ An example implementation (`enrol_cart\local\object\coupon_example` class) is in
 Released Under the GNU http://www.gnu.org/copyleft/gpl.html
 
 
-## 🙌 Support This Project
+## 💖 Love This Plugin?
 
-If you find this plugin useful, consider supporting its development:
+Keep it updated and free for everyone!
 
-[☕ Donate via Ko-fi](https://ko-fi.com/onbirdev)
-
-[☕ Donate via PayPal](https://www.paypal.me/onbirdev)
-
-Your support helps keep this project alive and free for everyone!
+[☕ Buy Me a Coffee (Ko-fi)](https://ko-fi.com/onbirdev) | [💸 Support via PayPal](https://www.paypal.me/onbirdev)
