@@ -149,7 +149,7 @@ class cart_helper {
      *
      * @param int $instanceid The ID of the enrolment instance.
      * @param int $userid The ID of the user to check enrolment eligibility for.
-     * @param null|string &$information Output parameter to store additional information about the enrolment status.
+     * @param null|string $information Output parameter to store additional information about the enrolment status.
      * @return bool Returns true if the user can enrol, otherwise false.
      */
     public static function can_user_enrol(int $instanceid, int $userid, ?string &$information = ''): bool {

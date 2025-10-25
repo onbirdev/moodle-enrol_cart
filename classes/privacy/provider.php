@@ -43,11 +43,7 @@ use Exception;
  *
  * Implements Privacy API to handle user data related to the shopping cart.
  */
-class provider implements
-    \core_privacy\local\metadata\provider,
-    core_userlist_provider,
-    null_provider,
-    \core_privacy\local\request\plugin\provider {
+class provider implements core_userlist_provider, null_provider, \core_privacy\local\metadata\provider, \core_privacy\local\request\plugin\provider {
     /**
      * Provides the reason why no user data is stored.
      *

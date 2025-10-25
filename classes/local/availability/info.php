@@ -80,7 +80,7 @@ class info extends \core_availability\info {
     /**
      * Set availability in database
      *
-     * @param $availability
+     * @param string $availability
      * @return void
      * @throws dml_exception
      */

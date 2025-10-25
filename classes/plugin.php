@@ -205,7 +205,6 @@ class enrol_cart_plugin extends enrol_plugin {
             }
         }
 
-
         return parent::add_instance($course, $fields);
     }
 

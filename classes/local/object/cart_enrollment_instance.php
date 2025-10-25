@@ -302,7 +302,7 @@ class cart_enrollment_instance extends base_model {
      * Determines whether a user can enroll based on availability conditions.
      *
      * @param int|null $userid The ID of the user to check enrollment for. Defaults to the current user's ID if not provided.
-     * @param string|null &$information Additional information regarding availability, passed by reference.
+     * @param string|null $information Additional information regarding availability, passed by reference.
      * @return bool True if the user can enroll, otherwise false.
      */
     public function can_enrol_user(?int $userid = null, ?string &$information = ''): bool {

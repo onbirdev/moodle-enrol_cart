@@ -33,7 +33,6 @@ use moodle_url;
  * Event class for when a cart is deleted in Moodle.
  */
 class cart_deleted extends base {
-
     /**
      * Initializes the event data.
      *
@@ -73,4 +72,3 @@ class cart_deleted extends base {
         return new moodle_url('/enrol/cart/view.php', ['id' => $this->objectid]);
     }
 }
-
