@@ -44,7 +44,7 @@ An example implementation (`enrol_cart\local\object\coupon_example` class) is in
 Released Under the GNU http://www.gnu.org/copyleft/gpl.html
 
 
-## 💖 Love This Plugin?
+## 💖 Support the development of this plugin
 
 Keep it updated and free for everyone!
 
