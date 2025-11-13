@@ -17,8 +17,16 @@ An example implementation (`enrol_cart\local\object\coupon_example` class) is in
 
 
 ## Translations available
-- Persian (fa)
-- French (fr)
+-   English (en)
+-   Persian (fa)
+-   Spanish (es)
+-   French (fr)
+-   German (de)
+-   Russian (ru)
+-   Chinese (zh_cn)
+-   Brazilian Portuguese (pt_br)
+-   Turkish (tr)
+-   Arabic (ar)
 
 
 ## Installation
