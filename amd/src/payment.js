@@ -20,14 +20,10 @@ export const init = (gateway, component, paymentArea, itemId, successUrl, descri
                     location.href = successUrl;
                 }, 2000);
 
-                return message; // Satisfies eslint, although it's never reached
+                return;
             })
             .catch((message) => {
-                Notification.alert('', message);
-
-                setTimeout(() => {
-                    location.href = successUrl;
-                }, 2000);
+                Notification.alert('', message.message);
             });
     }
 };
