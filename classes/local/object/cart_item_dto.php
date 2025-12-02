@@ -33,7 +33,7 @@ namespace enrol_cart\local\object;
  */
 class cart_item_dto {
     /** @var cart_item|null The cart item object to be used for data transfer. */
-    private ?cart_item $_cart_item;
+    private ?cart_item $cartitem;
 
     /**
      * Constructor for cart_item_dto.
@@ -41,7 +41,7 @@ class cart_item_dto {
      * @param cart_item $cartitem The cart item object to be used for data transfer.
      */
     public function __construct(cart_item $cartitem) {
-        $this->_cart_item = $cartitem;
+        $this->cartitem = $cartitem;
     }
 
     /**
@@ -50,7 +50,7 @@ class cart_item_dto {
      * @return int The ID of the cart item.
      */
     public function get_item_id(): int {
-        return $this->_cart_item->id;
+        return $this->cartitem->id;
     }
 
     /**
@@ -59,7 +59,7 @@ class cart_item_dto {
      * @return int The ID of the course.
      */
     public function get_course_id(): int {
-        return $this->_cart_item->course->id;
+        return $this->cartitem->course->id;
     }
 
     /**
@@ -68,7 +68,7 @@ class cart_item_dto {
      * @return float The price of the cart item.
      */
     public function get_price(): float {
-        return $this->_cart_item->price;
+        return $this->cartitem->price;
     }
 
     /**
@@ -77,7 +77,7 @@ class cart_item_dto {
      * @return float The payable amount for the cart item.
      */
     public function get_payable(): float {
-        return $this->_cart_item->payable;
+        return $this->cartitem->payable;
     }
 
     /**
@@ -86,6 +86,6 @@ class cart_item_dto {
      * @return bool True if a discount is applied, false otherwise.
      */
     public function has_discount(): bool {
-        return $this->_cart_item->has_discount;
+        return $this->cartitem->has_discount;
     }
 }

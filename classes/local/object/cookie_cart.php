@@ -68,20 +68,23 @@ class cookie_cart extends base_cart {
      *
      * @var array
      */
-    private array $_cookie_items = [];
+    private array $cookieitems = [];
+
+    /** @var array An array of the cart items */
+    private array $cartitems = [];
 
     /**
      * Initializes the shopping cart by loading items from the cookie.
      */
     public function init() {
         if (isset($_COOKIE[$this->cookiename])) {
-            $this->_cookie_items = json_decode(stripslashes($_COOKIE[$this->cookiename]), true);
+            $this->cookieitems = json_decode(stripslashes($_COOKIE[$this->cookiename]), true);
 
             // Validate each item in the decoded data to ensure it is an integer.
             // Remove any invalid (non-integer) items from the list.
-            foreach ($this->_cookie_items as $key => $instanceid) {
+            foreach ($this->cookieitems as $key => $instanceid) {
                 if (!is_int($instanceid)) {
-                    unset($this->_cookie_items[$key]);
+                    unset($this->cookieitems[$key]);
                 }
             }
         }
@@ -104,7 +107,7 @@ class cookie_cart extends base_cart {
     protected function update_cookie(): bool {
         return setcookie(
             $this->cookiename,
-            json_encode($this->_cookie_items),
+            json_encode($this->cookieitems),
             time() + $this->cookieexpiretime,
             $this->cookiepath,
         );
@@ -117,8 +120,8 @@ class cookie_cart extends base_cart {
      * @return bool Returns true if the item is successfully added to the cart, false otherwise.
      */
     public function add_item(int $instanceid): bool {
-        if (!in_array($instanceid, $this->_cookie_items)) {
-            $this->_cookie_items[] = $instanceid;
+        if (!in_array($instanceid, $this->cookieitems)) {
+            $this->cookieitems[] = $instanceid;
         }
 
         $this->refresh();
@@ -133,9 +136,9 @@ class cookie_cart extends base_cart {
      * @return bool Returns true if the item is successfully removed from the cart, false otherwise.
      */
     public function remove_item(int $instanceid): bool {
-        foreach ($this->_cookie_items as $key => $val) {
+        foreach ($this->cookieitems as $key => $val) {
             if ($val == $instanceid) {
-                unset($this->_cookie_items[$key]);
+                unset($this->cookieitems[$key]);
                 $this->refresh();
                 return $this->update_cookie();
             }
@@ -149,10 +152,10 @@ class cookie_cart extends base_cart {
      * @return cart_item[] An array of cart_item objects.
      */
     public function get_items(): array {
-        if (empty($this->_items)) {
-            foreach ($this->_cookie_items as $instanceid) {
+        if (empty($this->cartitems)) {
+            foreach ($this->cookieitems as $instanceid) {
                 if ($instance = cart_helper::get_instance($instanceid)) {
-                    $this->_items[] = cart_item::populate_one([
+                    $this->cartitems[] = cart_item::populate_one([
                         'id' => $instance->id,
                         'cart_id' => 0,
                         'instance_id' => $instance->id,
@@ -163,7 +166,7 @@ class cookie_cart extends base_cart {
                 }
             }
         }
-        return $this->_items;
+        return $this->cartitems;
     }
 
     /**

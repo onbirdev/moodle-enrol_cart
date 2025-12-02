@@ -57,9 +57,9 @@ use moodle_url;
  */
 class cart_item extends base_model {
     /** @var cart|cookie_cart|null The cart object associated with this item. */
-    private $_cart;
+    private $cart;
     /** @var course|null The course object associated with this item. */
-    private ?course $_course = null;
+    private ?course $course = null;
 
     /**
      * Defines the attributes of the cart_item model.
@@ -149,7 +149,7 @@ class cart_item extends base_model {
      * @return void
      */
     public function update_price_and_payable() {
-        if (!$this->cart->can_edit_items) {
+        if (!$this->get_cart()->can_edit_items) {
             return;
         }
 
@@ -180,11 +180,11 @@ class cart_item extends base_model {
      * @return cart|cookie_cart|null The cart model associated with this item.
      */
     public function get_cart() {
-        if (!$this->_cart) {
-            $this->_cart = $this->cart_id ? cart::find_one($this->cart_id) : new cookie_cart();
+        if (!$this->cart) {
+            $this->cart = $this->cart_id ? cart::find_one($this->cart_id) : new cookie_cart();
         }
 
-        return $this->_cart;
+        return $this->cart;
     }
 
     /**
@@ -193,11 +193,11 @@ class cart_item extends base_model {
      * @return course|null The course object associated with the item.
      */
     public function get_course(): ?course {
-        if (!$this->_course) {
-            $this->_course = course::find_one_by_instance_id($this->instance_id);
+        if (!$this->course) {
+            $this->course = course::find_one_by_instance_id($this->instance_id);
         }
 
-        return $this->_course;
+        return $this->course;
     }
 
     /**
@@ -249,7 +249,7 @@ class cart_item extends base_model {
      */
     public function get_price_formatted(): string {
         if ($this->price > 0) {
-            return currency_formatter::get_cost_as_formatted((float) $this->price, $this->cart->final_currency);
+            return currency_formatter::get_cost_as_formatted((float) $this->price, $this->get_cart()->final_currency);
         }
 
         return get_string('free', 'enrol_cart'); // Return 'free' string if price is zero.
@@ -262,7 +262,7 @@ class cart_item extends base_model {
      */
     public function get_payable_formatted(): string {
         if ($this->payable > 0) {
-            return currency_formatter::get_cost_as_formatted((float) $this->payable, $this->cart->final_currency);
+            return currency_formatter::get_cost_as_formatted((float) $this->payable, $this->get_cart()->final_currency);
         }
 
         return get_string('free', 'enrol_cart'); // Return 'free' string if payable is zero.
@@ -275,7 +275,7 @@ class cart_item extends base_model {
      * @throws moodle_exception Thrown when moodle_url instantiation fails.
      */
     public function get_view_url(): moodle_url {
-        return new moodle_url('/course/view.php', ['id' => $this->course->id]);
+        return new moodle_url('/course/view.php', ['id' => $this->get_course()->id]);
     }
 
     /**

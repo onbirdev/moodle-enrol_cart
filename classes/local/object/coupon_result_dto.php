@@ -44,32 +44,32 @@ class coupon_result_dto {
     /**
      * @var int|null The ID of the coupon.
      */
-    private ?int $_coupon_id = null;
+    private ?int $couponid = null;
 
     /**
      * @var string|null The code of the coupon.
      */
-    private ?string $_coupon_code = null;
+    private ?string $couponcode = null;
 
     /**
      * @var string|null The error code if the coupon is invalid.
      */
-    private ?string $_error_code = null;
+    private ?string $errorcode = null;
 
     /**
      * @var string|null The error message if the coupon is invalid.
      */
-    private ?string $_error_message = null;
+    private ?string $errormessage = null;
 
     /**
      * @var float|null The discount amount provided by the coupon.
      */
-    private ?float $_discount_amount = null;
+    private ?float $discountamount = null;
 
     /**
      * @var float|null The payable amount after applying the coupon.
      */
-    private ?float $_payable_amount = null;
+    private ?float $payableamount = null;
 
     /**
      * @var array|null The items affected by the coupon.
@@ -79,7 +79,7 @@ class coupon_result_dto {
     /**
      * @var int|null The usage ID of the coupon.
      */
-    private ?int $_coupon_usage_id = null;
+    private ?int $couponusageid = null;
 
     /**
      * CouponResult constructor.
@@ -118,7 +118,7 @@ class coupon_result_dto {
      * @return int|null The coupon ID.
      */
     public function get_coupon_id(): ?int {
-        return $this->_coupon_id;
+        return $this->couponid;
     }
 
     /**
@@ -128,7 +128,7 @@ class coupon_result_dto {
      * @return coupon_result_dto The current instance for method chaining.
      */
     public function set_coupon_id(?int $couponid): coupon_result_dto {
-        $this->_coupon_id = $couponid;
+        $this->couponid = $couponid;
         return $this;
     }
 
@@ -138,7 +138,7 @@ class coupon_result_dto {
      * @return string|null The coupon code.
      */
     public function get_coupon_code(): ?string {
-        return $this->_coupon_code;
+        return $this->couponcode;
     }
 
     /**
@@ -148,7 +148,7 @@ class coupon_result_dto {
      * @return coupon_result_dto The current instance for method chaining.
      */
     public function set_coupon_code(?string $couponcode): coupon_result_dto {
-        $this->_coupon_code = $couponcode;
+        $this->couponcode = $couponcode;
         return $this;
     }
 
@@ -158,7 +158,7 @@ class coupon_result_dto {
      * @return string|null The error code.
      */
     public function get_error_code(): ?string {
-        return $this->_error_code;
+        return $this->errorcode;
     }
 
     /**
@@ -168,7 +168,7 @@ class coupon_result_dto {
      * @return coupon_result_dto The current instance for method chaining.
      */
     public function set_error_code(?string $errorcode): coupon_result_dto {
-        $this->_error_code = $errorcode;
+        $this->errorcode = $errorcode;
         return $this;
     }
 
@@ -178,7 +178,7 @@ class coupon_result_dto {
      * @return string|null The error message.
      */
     public function get_error_message(): ?string {
-        return $this->_error_message;
+        return $this->errormessage;
     }
 
     /**
@@ -188,7 +188,7 @@ class coupon_result_dto {
      * @return coupon_result_dto The current instance for method chaining.
      */
     public function set_error_message(?string $errormessage): coupon_result_dto {
-        $this->_error_message = $errormessage;
+        $this->errormessage = $errormessage;
         return $this;
     }
 
@@ -198,7 +198,7 @@ class coupon_result_dto {
      * @return float|null The discount amount.
      */
     public function get_discount_amount(): ?float {
-        return $this->_discount_amount;
+        return $this->discountamount;
     }
 
     /**
@@ -208,7 +208,7 @@ class coupon_result_dto {
      * @return coupon_result_dto The current instance for method chaining.
      */
     public function set_discount_amount(?float $discountamount): coupon_result_dto {
-        $this->_discount_amount = $discountamount;
+        $this->discountamount = $discountamount;
         return $this;
     }
 
@@ -218,7 +218,7 @@ class coupon_result_dto {
      * @return float|null The payable amount.
      */
     public function get_payable_amount(): ?float {
-        return $this->_payable_amount;
+        return $this->payableamount;
     }
 
     /**
@@ -228,7 +228,7 @@ class coupon_result_dto {
      * @return coupon_result_dto The current instance for method chaining.
      */
     public function set_payable_amount(?float $payableamount): coupon_result_dto {
-        $this->_payable_amount = $payableamount;
+        $this->payableamount = $payableamount;
         return $this;
     }
 
@@ -258,7 +258,7 @@ class coupon_result_dto {
      * @return int|null The coupon usage ID.
      */
     public function get_coupon_usage_id(): ?int {
-        return $this->_coupon_usage_id;
+        return $this->couponusageid;
     }
 
     /**
@@ -268,7 +268,7 @@ class coupon_result_dto {
      * @return coupon_result_dto The current instance for method chaining.
      */
     public function set_coupon_usage_id(?int $couponusageid): coupon_result_dto {
-        $this->_coupon_usage_id = $couponusageid;
+        $this->couponusageid = $couponusageid;
         return $this;
     }
 }

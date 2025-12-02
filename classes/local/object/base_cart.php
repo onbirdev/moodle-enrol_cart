@@ -56,9 +56,6 @@ use moodle_url;
 abstract class base_cart extends base_model {
     use cart_status_trait;
 
-    /** @var array An array of the cart items */
-    protected array $_items = [];
-
     /**
      * {@inheritdoc}
      */
@@ -92,7 +89,7 @@ abstract class base_cart extends base_model {
      */
     public function get_final_price() {
         $price = 0;
-        foreach ($this->items as $item) {
+        foreach ($this->get_items() as $item) {
             $price += $item->price;
         }
 
@@ -119,7 +116,7 @@ abstract class base_cart extends base_model {
      */
     public function get_final_payable() {
         $payable = 0;
-        foreach ($this->items as $item) {
+        foreach ($this->get_items() as $item) {
             $payable += $item->payable;
         }
 
@@ -147,7 +144,7 @@ abstract class base_cart extends base_model {
     public function get_items_discount_amount() {
         $payable = 0;
         $price = 0;
-        foreach ($this->items as $item) {
+        foreach ($this->get_items() as $item) {
             $payable += $item->payable;
             $price += $item->price;
         }
@@ -195,7 +192,7 @@ abstract class base_cart extends base_model {
      * @return int The total count of items.
      */
     public function get_count(): int {
-        return count($this->items);
+        return count($this->get_items());
     }
 
     /**
@@ -204,7 +201,7 @@ abstract class base_cart extends base_model {
      * @return bool True if the cart is empty, false otherwise.
      */
     public function get_is_empty(): bool {
-        return empty($this->items);
+        return empty($this->get_items());
     }
 
     /**
@@ -272,7 +269,7 @@ abstract class base_cart extends base_model {
      * @return bool True if the item is in the cart, false otherwise.
      */
     public function has_item(int $instanceid): bool {
-        foreach ($this->items as $item) {
+        foreach ($this->get_items() as $item) {
             if ($item->instance_id == $instanceid) {
                 return true;
             }

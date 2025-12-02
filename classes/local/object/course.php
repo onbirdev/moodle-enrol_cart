@@ -43,7 +43,7 @@ class course extends base_model {
     /**
      * @var string|null Private property to store the course image URL.
      */
-    private ?string $_image_url = null;
+    private ?string $imageurl = null;
 
     /**
      * Retrieves the attributes of the course.
@@ -81,8 +81,8 @@ class course extends base_model {
      * @return string The URL of the course image.
      */
     public function get_image_url(): string {
-        if ($this->_image_url === null) {
-            $this->_image_url = ''; // Initialize image URL to an empty string.
+        if ($this->imageurl === null) {
+            $this->imageurl = ''; // Initialize image URL to an empty string.
 
             // Create a new core_course_list_element object for the course.
             $courselistelement = new core_course_list_element(
@@ -106,11 +106,11 @@ class course extends base_model {
                     ]);
 
                     // Generate and set the image URL using moodle_url class.
-                    $this->_image_url = (new moodle_url($path))->out();
+                    $this->imageurl = (new moodle_url($path))->out();
                 }
             }
         }
 
-        return $this->_image_url; // Return the URL of the course image.
+        return $this->imageurl; // Return the URL of the course image.
     }
 }

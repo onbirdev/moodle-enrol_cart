@@ -52,7 +52,7 @@ class user extends base_model {
      *
      * @var string
      */
-    private string $_full_name = '';
+    private string $fullname = '';
 
     /**
      * Retrieves the attributes of the course.
@@ -101,7 +101,7 @@ class user extends base_model {
      * @return string The full name of the user.
      */
     public function get_full_name(): string {
-        if (empty($this->_full_name)) {
+        if (empty($this->fullname)) {
             $user = (object) [
                 'firstname' => $this->first_name,
                 'lastname' => $this->last_name,
@@ -110,10 +110,10 @@ class user extends base_model {
                 'middlename' => $this->middle_name,
                 'alternatename' => $this->alternate_name,
             ];
-            $this->_full_name = fullname($user);
+            $this->fullname = fullname($user);
         }
 
-        return $this->_full_name;
+        return $this->fullname;
     }
 
     /**

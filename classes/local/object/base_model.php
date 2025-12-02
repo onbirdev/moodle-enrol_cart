@@ -39,7 +39,7 @@ class base_model extends base_object {
     /**
      * @var array dynamic attribute values (name => value).
      */
-    private array $_attributes = [];
+    private array $attributes = [];
 
     /**
      * Constructor.
@@ -50,9 +50,9 @@ class base_model extends base_object {
     public function __construct(array $attributes = [], array $config = []) {
         foreach ($attributes as $name => $value) {
             if (is_int($name)) {
-                $this->_attributes[$value] = null;
+                $this->attributes[$value] = null;
             } else {
-                $this->_attributes[$name] = $value;
+                $this->attributes[$name] = $value;
             }
         }
         parent::__construct($config);
@@ -73,8 +73,8 @@ class base_model extends base_object {
             return $this->$getter();
         }
 
-        if (array_key_exists($name, $this->_attributes)) {
-            return $this->_attributes[$name];
+        if (array_key_exists($name, $this->attributes)) {
+            return $this->attributes[$name];
         }
 
         if ($this->has_attribute($name)) {
@@ -93,7 +93,7 @@ class base_model extends base_object {
      */
     public function __set(string $name, $value) {
         if ($this->has_attribute($name)) {
-            $this->_attributes[$name] = $value;
+            $this->attributes[$name] = $value;
         } else {
             parent::__set($name, $value);
         }
@@ -120,7 +120,7 @@ class base_model extends base_object {
      */
     public function __unset(string $name) {
         if ($this->has_attribute($name)) {
-            unset($this->_attributes[$name]);
+            unset($this->attributes[$name]);
         }
     }
 
@@ -165,7 +165,7 @@ class base_model extends base_object {
      * @param mixed $value the attribute value.
      */
     public function define_attribute(string $name, $value = null) {
-        $this->_attributes[$name] = $value;
+        $this->attributes[$name] = $value;
     }
 
     /**
@@ -174,7 +174,7 @@ class base_model extends base_object {
      * @return string[] list of attribute names.
      */
     public function attributes(): array {
-        return array_keys($this->_attributes);
+        return array_keys($this->attributes);
     }
 
     /**
@@ -184,7 +184,7 @@ class base_model extends base_object {
      * @return bool whether the model has an attribute with the specified name.
      */
     public function has_attribute(string $name): bool {
-        return isset($this->_attributes[$name]) || in_array($name, $this->attributes(), true);
+        return isset($this->attributes[$name]) || in_array($name, $this->attributes(), true);
     }
 
     /**
@@ -195,7 +195,7 @@ class base_model extends base_object {
      * @see has_attribute()
      */
     public function get_attribute(string $name) {
-        return $this->_attributes[$name] ?? null;
+        return $this->attributes[$name] ?? null;
     }
 
     /**
@@ -208,7 +208,7 @@ class base_model extends base_object {
      */
     public function set_attribute(string $name, $value) {
         if ($this->has_attribute($name)) {
-            $this->_attributes[$name] = $value;
+            $this->attributes[$name] = $value;
         } else {
             throw new Exception(get_class($this) . ' has no attribute named "' . $name . '".');
         }
@@ -266,7 +266,7 @@ class base_model extends base_object {
         $columns = array_flip($record->attributes());
         foreach ($row as $name => $value) {
             if (isset($columns[$name])) {
-                $record->_attributes[$name] = $value;
+                $record->attributes[$name] = $value;
             } else if ($record->can_set_property($name)) {
                 $record->$name = $value;
             }
